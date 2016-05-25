@@ -1,0 +1,17 @@
+{
+  "name": "myperfectice",
+  "version": "1.0.0",
+  "description": "Simple CRUD app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "mongodb": "^2.1.19",
+    "mongoose": "*"
+  },
+  "author": "Aman Sachan",
+  "license": "ISC"
+}
