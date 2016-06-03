@@ -84,6 +84,7 @@ app.get('/api/grades/:_id', function(req,res){
 
 app.post('/api/grades', function(req,res){
 	var grade = req.body;
+	
 	Grade.addGrade(grade, function(err, grade){
 		if(err){
 			throw err;

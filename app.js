@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
+app.use(express.static(__dirname+'/client'));
 //to create json document
 app.use(bodyParser.json());
 
@@ -14,15 +15,19 @@ Topic = require('./models/topic');
 
 //Connect to Mongoose
 mongoose.connect('mongodb://localhost/ProdDb');
-var db = mongoose.connection;
 
 
 //ROUTES -- START
-
 var routes = require('./routes/index');
-app.use('/', routes);
-
 //ROUTES --END
+
+//ROUTES FOR MONGODB QUERIES  -- START
+var queries = require('./routes/queries');
+// ROUTES FOR MONGODB QUERIES --END
+
+app.use('/', routes,queries);
+
+
 
 app.listen(3000);
 console.log('Running on  port 3000...');
