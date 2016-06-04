@@ -16,6 +16,8 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 
 
 //ALL ROUTES FOR QUERIES
+
+//List / count of students who are added to the classroom but never registered.  -- Institute wise
 app.get('/api/query1', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
@@ -125,7 +127,13 @@ app.get('/api/query6', function(req,res){
 
 
 app.get('/api/query7', function(req,res){
-	db.questions.aggregate({$group: {_id: "$subject.name",No_of_questions: {$sum : 1}, Questions: {$addToSet: "$questionHeader"}}},
+	db.questions.aggregate([
+	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
+	{$unwind: "$userinfo"},
+	{$project: {teacher_name: "$userinfo.name", subject_name: "$subject.name"}},
+	{$group: {_id: { teacher: "$teacher_name", subject: "$subject_name"}, No_of_questions: {$sum : 1}}},
+	{$sort : {_id: 1} }
+	],
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -343,3 +351,47 @@ app.get('/api/query22', function(req,res){
 		res.json(que);
 	});
 });
+
+
+
+app.get('/api/query23', function(req,res){
+	db.questions.aggregate([
+	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
+	{$unwind: "$userinfo"},
+	{$project: {teacher_name: "$userinfo.name", topic_name: "$topic.name"}},
+	{$group: {_id: { teacher: "$teacher_name", topic: "$topic_name"}, No_of_questions: {$sum : 1}}},
+	{$sort : {_id: 1} }
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+app.get('/api/query24', function(req,res){
+	db.grades.aggregate([
+	{$unwind: "$subjects"},
+	{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
+	{$unwind: "$questionsforexam"},
+	{$project: {id: "$questionsforexam._id", _id:0, exam: "$name", teacher_id: "$questionsforexam.user"}},
+	{$lookup:{from: "users", localField: "teacher_id", foreignField: "_id", as:"teacherinfo"}},
+	{$unwind: "$teacherinfo"},
+	{$project: {id: 1, exam: 1, teacher_name: "$teacherinfo.name"}},
+	{$group: {_id: { teacher: "$teacher_name", exam: "$exam"}, No_of_questions: {$sum : 1}}},
+	{$sort : {_id: 1} }
+
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+
+
+
+
+

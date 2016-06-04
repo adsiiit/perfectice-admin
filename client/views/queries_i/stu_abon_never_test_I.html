@@ -1,0 +1,33 @@
+<div class="panel panel-default" ng-init="getQuery5()">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>List of students who abandoned the test and never took any test afterwards: </center></h3>
+    <ul>
+  </div>
+  <div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-3"><h4>Name</h4></div>
+		<div class="col-md-3"><h4>Email</h4></div>
+		<div class="col-md-3"><h4>Last-Attempt</h4></div>
+    <div class="col-md-3"><h4>No. of Attempt</h4></div>
+	</div>
+	<div ng-repeat="query in query5 | orderBy: 'studentName'">
+		<div class="row">
+    		<div class="col-md-3">
+    			<h5>{{$index+1}}. {{query.studentName}}</h5>
+    		</div>
+    		<div class="col-md-3">
+    			<h5>{{query.email}}</h5>
+    		</div>
+    		<div class="col-md-3">
+    			<h5>{{query.last_attempt | date}}</h5>
+    		</div>
+			  <div class="col-md-3">
+          <h5>{{query.no_of_attempts}}</h5>
+        </div>
+			
+		</div>
+	</div>
+
+  </div>
+</div>

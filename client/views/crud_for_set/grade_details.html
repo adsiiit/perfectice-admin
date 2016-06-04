@@ -1,0 +1,26 @@
+<div class="panel panel-default" ng-init="getGrade()">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>{{ exam.name }}</center></h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+	  	<div class="col-md-6">
+	  		<ul class="list-group">
+		  		<li class="list-group-item">Created At: {{ exam.createdAt }}</li>
+		  		<li class="list-group-item">Updated At: {{ exam.updatedAt }}</li>
+		  		<li class="list-group-item">Slugfly: {{ exam.slugfly }}</li>
+		  		<!-- <ul class="list-group">Subjects: 
+		  		<li class="list-group-item" ng-repeat="subject in exam.subjects">{{ subject }}</li>
+		  		</ul> -->
+	  		</ul>
+	  	</div>
+	</div>
+  </div>
+</div>
+
+<div class="pull-left">
+<a class="btn btn-primary" href="#/grades/">Back</a>
+</div>
+<div class="pull-right">
+<a class="btn btn-default" href="#/grades/edit/{{exam._id}}">Edit</a> | <a class="btn btn-danger" href="#" ng-click="removeGrade(exam._id)">Delete</a>
+</div>

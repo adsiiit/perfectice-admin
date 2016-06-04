@@ -1,0 +1,28 @@
+<div class="panel panel-default" ng-init="getQuery8()">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>Count the no. Of questions based on Subject: </center></h3>
+    <ul>
+  </div>
+  <div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-4"><h4>Subject</h4></div>
+		<div class="col-md-4"><h4>No. of Questions</h4></div>
+	</div>
+	<div ng-repeat="query in query8 | orderBy: '_id'">
+		<div class="row">
+    		<div class="col-md-2"></div>
+    		<div class="col-md-4">
+    			<h5>{{query._id}}</h5>
+    		</div>
+    		<div class="col-md-4">
+    			<h5>{{query.No_of_questions}}</h5>
+    		</div>
+
+			
+		</div>
+	</div>
+
+  </div>
+</div>

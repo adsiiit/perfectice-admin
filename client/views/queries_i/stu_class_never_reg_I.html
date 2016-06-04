@@ -1,0 +1,52 @@
+<div class="panel panel-default" ng-init="getQuery1()">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>List / count of students who are added to the classroom but never registered</center></h3>
+    <ul>
+  </div>
+  <div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-4"><h4>Teacher Name</h4></div>
+		<div class="col-md-4"><h4>Students Count</h4></div>
+		<div class="col-md-4"><h4>Email of Students</h4></div>
+	</div>
+	<div ng-repeat="query in query1 | orderBy: '_id'">
+		<div class="row">
+    		<div class="col-md-4">
+    			<h5>{{$index+1}}. {{query._id}}</h5>
+    		</div>
+    		<div class="col-md-4">
+    			<h5>{{query.count}}</h5>
+    		</div>
+    		<div class="col-md-4">
+    			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{$index}}">List of Students</button>
+
+	    						 <!-- Modal -->
+				  <div class="modal fade" id="myModal{{$index}}" role="dialog">
+				    <div class="modal-dialog modal-sm">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Emails</h4>
+				        </div>
+				        <div class="modal-body">
+				        	<li ng-repeat="student in query.Students">
+						      {{ student }}
+						    </li>
+
+				        </div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+
+    		</div>
+			
+			
+		</div>
+	</div>
+
+  </div>
+</div>

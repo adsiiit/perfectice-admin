@@ -1,0 +1,30 @@
+<div class="panel panel-default" ng-init="getQuery3()">
+  <div class="panel-heading" ng-init="getQuery4()">
+    <h3 class="panel-title"><center>List / count of students who are registered but never took a test: <b>{{query4}}</b></center></h3>
+    <ul>
+  </div>
+  <div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-4"><h4>ID</h4></div>
+		<div class="col-md-4"><h4>Name</h4></div>
+		<div class="col-md-4"><h4>Last-Login</h4></div>
+	</div>
+	<div ng-repeat="query in query3 | orderBy: 'name'">
+		<div class="row">
+    		<div class="col-md-4">
+    			<h5>{{$index+1}}. {{query._id}}</h5>
+    		</div>
+    		<div class="col-md-4">
+    			<h5>{{query.name}}</h5>
+    		</div>
+    		<div class="col-md-4">
+    			<h5>{{query.last_login | date}}</h5>
+    		</div>
+			
+			
+		</div>
+	</div>
+
+  </div>
+</div>
