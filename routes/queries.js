@@ -28,7 +28,8 @@ app.get('/api/query1', function(req,res){
 		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
 		{$unwind: "$teacherdetail"},
 		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name"}},
-		{$group: {_id: "$teacher_name", Students: {$addToSet: "$email"}, count: {$sum: 1}}}
+		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name"}, Students: {$addToSet: "$email"}}},
+		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", count: {$size: "$Students"}, Students: "$Students"}}
 			], function(err, que){
 			if(err)
 				res.send(err);
@@ -262,25 +263,7 @@ app.get('/api/query16', function(req,res){
 });
 
 
-app.get('/api/query17', function(req,res){
-	db.students.aggregate([{$match:{
-          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24)}
-    }},
-    {$project:{
-          "year":{$year:"$createdAt"}, 
-          "month":{$month:"$createdAt"}, 
-          "day": {$dayOfMonth:"$createdAt"}
-    }}, 
-    {$group:{
-          _id:{year:"$year", month:"$month", day:"$day"},
-          "count":{$sum:1}
-    }}],
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
+
 
 app.get('/api/query18', function(req,res){
 	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24)}},
@@ -392,6 +375,46 @@ app.get('/api/query24', function(req,res){
 
 
 
+app.get('/api/query25', function(req,res){
+	db.students.aggregate([
+	{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
+	{$unwind: "$teacherdetail"},
+	{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name"}},
+	{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name"}, Students: {$addToSet: "$email"}}},
+	{$project: {_id: 0, teacher_name: "$_id.teacher_name", count: {$size: "$Students"}}}
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
 
 
+app.get('/api/query26', function(req,res){
+	db.users.count({role: "student"},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+app.get('/api/query27', function(req,res){
+	db.attempts.distinct("user", {},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que.length);
+	});
+});
+
+app.get('/api/query28', function(req,res){
+	db.classrooms.distinct("students",{},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que.length);
+	});
+});
 

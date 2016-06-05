@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>Student Counts:</center></h3>
+    <ul>
+  </div>
+  <div class="panel-body" style="padding-left: 45px;">
+
+  <div class="row" ng-init="getQuery26()">
+    <h4>No. of Registered students: <b>{{query26}}</b></h4>
+  </div>
+  <hr>
+  <div class="row" ng-init="getQuery27()">
+    <h4>No. of students who took at least one attempt: <b>{{query27}}</b></h4>
+  </div>
+  <hr>
+  <div class="row" ng-init="getQuery28()">
+    <h4>No. of students added to at least one classroom: <b>{{query28}}</b></h4>
+  </div>
+  <hr>
+
+  <div class="row" ng-init="getQuery25()">
+    <h4>Student count by institute: </h4>
+    <div class="row">
+        <div class="col-md-4"><h4>Teacher Name:</h4></div>
+        <div class="col-md-4"><h4>Count:</h4></div>
+    </div>
+    
+    <div ng-repeat="query in query25 | orderBy: 'teacher_name'">
+      <div class="row">
+          <div class="col-md-4">
+            <h5>{{$index+1}}. {{query.teacher_name}}</h5>
+          </div>
+          <div class="col-md-4">
+            <h5>{{query.count}}</h5>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>

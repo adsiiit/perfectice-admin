@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><center>Student count/trend who are added since a date (yesterday, last week, last month etc.)</center></h3>
+    <ul>
+  </div>
+  <div class="panel-body" style="padding-left: 45px;">
+
+    <div class="row" ng-init="getQuery18()">
+      <h4>Student count who are added since yesterday: {{query18}}</h4>
+    </div>
+    <hr>
+    <div class="row" ng-init="getQuery20()">
+      <h4>Student count who are added since last week: {{query20}}</h4>
+      <div class="row" ng-hide="query20 == 0" ng-init="getQuery19()">
+        <div class="col-md-4"><h4>Date</h4></div>
+        <div class="col-md-4"><h4>Count</h4></div>
+      </div>
+      <div ng-repeat="query in query19 | orderBy: ['_id.month', '_id.day']">
+        <div class="row">
+            <div class="col-md-4">
+              <h5>{{query._id.day}}-{{query._id.month}}-{{query._id.year}}  </h5>
+            </div>
+            <div class="col-md-4">
+              <h5>{{query.count}}</h5>
+            </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row" ng-init="getQuery22()">
+      <h4>Student count who are added since last month: {{query22}}</h4>
+      <div class="row" ng-hide="query22 == 0" ng-init="getQuery21()">
+        <div class="col-md-4"><h4>Date</h4></div>
+        <div class="col-md-4"><h4>Count</h4></div>
+      </div>
+      <div ng-repeat="query in query21 | orderBy: ['_id.month', '_id.day']">
+        <div class="row">
+            <div class="col-md-4">
+              <h5>{{query._id.day}}-{{query._id.month}}-{{query._id.year}} </h5>
+            </div>
+            <div class="col-md-4">
+              <h5>{{query.count}}</h5>
+            </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

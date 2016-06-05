@@ -89,6 +89,18 @@ myApp.config(function($routeProvider){
 		controller: 'QueriesIIController',
 		templateUrl: 'views/queries_ii/ques_by_exam_II.html'
 	})
+	.when('/stu_count_trend_ii', {
+		controller: 'QueriesIIController',
+		templateUrl: 'views/queries_ii/stu_count_trend_II.html'
+	})
+	.when('/attempt_count_trend_ii', {
+		controller: 'QueriesIIController',
+		templateUrl: 'views/queries_ii/attempt_count_trend_II.html'
+	})
+	.when('/srss_ii', {
+		controller: 'QueriesIIController',
+		templateUrl: 'views/queries_ii/srss_II.html'
+	})
 	.otherwise({
 		redirectTo: '/'
 	})
