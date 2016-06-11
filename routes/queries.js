@@ -444,7 +444,7 @@ app.get('/api/AttemptSummary', function(req,res){
 			_id: 1, practiceTestID: 1, createdAt: 1, totalQuestions: 1, totalTime: 1, totalMark: 1, totalCorrects: 1, totalErrors:1, totalMissed: 1, practicesetId: 1
 			}},
 
-			{"$match": {"year": new Date().getFullYear(),"month": new Date().getMonth() + 1,"day": new Date().getDate()}},
+/*			{"$match": {"year": new Date().getFullYear(),"month": new Date().getMonth() ,"day": new Date().getDate()}},*/
 
 			{$project: {_id: 0, attemptID: "$_id", practiceTestID:"$practicesetId", attemptDateTime: "$createdAt", questionCount: "$totalQuestions",
 			  timeTaken: { $divide: [ "$totalTime", 1000.0] }, avgTime: { $divide: [{$divide: [ "$totalTime", "$totalQuestions"]},1000.0] }, totalMarks: "$totalMark", correctCount: "$totalCorrects",
