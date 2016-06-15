@@ -10,7 +10,9 @@
     "body-parser": "*",
     "express": "*",
     "mongojs": "^2.4.0",
-    "mongoose": "*"
+    "mongoose": "*",
+    "jsonwebtoken": "^7.0.0",
+    "morgan": "^1.7.0"
   },
   "author": "Aman Sachan",
   "license": "ISC"

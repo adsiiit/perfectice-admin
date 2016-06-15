@@ -3,6 +3,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
+var morgan      = require('morgan');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+
 app.use(express.static(__dirname+'/client'));
 //to create json document
 app.use(bodyParser.json());
@@ -12,9 +15,19 @@ app.use(bodyParser.json());
 Subject = require('./models/subject');
 Grade = require('./models/grade');
 Topic = require('./models/topic');
+User = require('./models/user');
+
+var config = require('./config');
 
 //Connect to Mongoose
 mongoose.connect('mongodb://localhost/ProdDb');
+app.set('SecretKey', config.secret);
+// use body parser so we can get info from POST and/or URL parameters
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// use morgan to log requests to the console
+app.use(morgan('dev'));
+
 
 
 //ROUTES -- START
@@ -25,7 +38,14 @@ var routes = require('./routes/index');
 var queries = require('./routes/queries');
 // ROUTES FOR MONGODB QUERIES --END
 
-app.use('/', routes,queries);
+
+//ROUTES FOR INTEGRATION WITH NIIT  -- START
+var mpniit = require('./routes/perfecticeNiit');
+var mpniit_api = mpniit.app;
+var mpniit_apiR = mpniit.apiRoutes;
+// ROUTES FOR INTEGRATION WITH NIIT  --END
+
+app.use('/', routes,queries, mpniit_api, mpniit_apiR);
 
 
 
