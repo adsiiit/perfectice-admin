@@ -24,7 +24,7 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 
 
 app.get('/api/practiceSets', function(req,res){
-	db.practicesets.find({},{studentEmails: 0, classRooms:0, inviteeEmails:0, instructions:0, titleLower:0},
+	db.practicesets.find({"status" : "published"},{studentEmails: 0, classRooms:0, inviteeEmails:0, instructions:0, titleLower:0, user:0},
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -36,12 +36,12 @@ app.get('/api/practiceSets', function(req,res){
 app.get('/api/AttemptSummary', function(req,res){
 	db.attempts.aggregate([
 			{"$project": {"year": {"$year": "$updatedAt"},"month": {"$month": "$updatedAt"},"day": {"$dayOfMonth": "$updatedAt"},
-			_id: 1, practiceTestID: 1, createdAt: 1, totalQuestions: 1, totalTime: 1, totalMark: 1, totalCorrects: 1, totalErrors:1, totalMissed: 1, practicesetId: 1
+			_id: 1, practiceTestID: 1, createdAt: 1, totalQuestions: 1, totalTime: 1, totalMark: 1, totalCorrects: 1, totalErrors:1, totalMissed: 1, practicesetId: 1, email: 1
 			}},
 
 /*			{"$match": {"year": new Date().getFullYear(),"month": new Date().getMonth() ,"day": new Date().getDate()}},*/
 
-			{$project: {_id: 0, attemptID: "$_id", practiceTestID:"$practicesetId", attemptDateTime: "$createdAt", questionCount: "$totalQuestions",
+			{$project: {_id: 0, attemptID: "$_id", email: "$email", practiceTestID:"$practicesetId", attemptDateTime: "$createdAt", questionCount: "$totalQuestions",
 			  timeTaken: { $divide: [ "$totalTime", 1000.0] }, avgTime: { $divide: [{$divide: [ "$totalTime", "$totalQuestions"]},1000.0] }, totalMarks: "$totalMark", correctCount: "$totalCorrects",
 			  incorrectCount: "$totalErrors", missedCount: "$totalMissed"
 			  }}
