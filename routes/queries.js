@@ -421,7 +421,94 @@ app.get('/api/query28', function(req,res){
 
 
 
+/*No. of questions by subject -- id is passed */
+
+/*app.get('/api/query29/:_id', function(req,res){
+	db.questions.aggregate([
+		{$group: {_id: {subId: "$subject._id", subName: "$subject.name"},No_of_questions: {$sum : 1}}},
+		{$project: {_id: "$_id.subId", name: "$_id.subName", No_of_questions: "$No_of_questions"}},
+		{$match: {_id: mongojs.ObjectId(req.params._id)}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que[0].No_of_questions);
+	});
+});
+*/
 
 
+/*Subjects with question count -- query30*/
+
+app.get('/api/query30', function(req,res){
+	db.subjects.aggregate([
+		{$lookup:{from: "questions", localField: "_id", foreignField: "subject._id", as:"questionsforsubject"}},
+		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", countryCode: "$countryCode", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt", topics: "$topics", grade: "$grade"},
+		   questionsCount: {$sum: { $size: "$questionsforsubject" }}}},
+		 {$project: {_id: "$_id._id", slugfly: "$_id.slugfly", name: "$_id.name", countryCode: "$_id.countryCode", topics: "$_id.topics", grade: "$_id.grade",
+		  updatedAt: "$_id.updatedAt", createdAt: "$_id.createdAt", questionsCount: "$questionsCount"}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
 
 
+/*Exams with question count -- query31*/
+
+app.get('/api/query31', function(req,res){
+	db.grades.aggregate([
+		{$unwind: "$subjects"},
+		{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
+		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", countryCode: "$countryCode", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt"},
+		  subjects: {$addToSet: "$subjects"}, questionsCount: {$sum: { $size: "$questionsforexam" }}}},
+		 {$project: {_id: "$_id._id", slugfly: "$_id.slugfly", name: "$_id.name",countryCode: "$_id.countryCode",subjects: "$subjects", 
+		  updatedAt: "$_id.updatedAt", createdAt: "$_id.createdAt", questionsCount: "$questionsCount"}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+/*Topics with question count -- query32*/
+
+app.get('/api/query32', function(req,res){
+	db.topics.aggregate([
+		{$lookup:{from: "questions", localField: "_id", foreignField: "topic._id", as:"questionsfortopic"}},
+		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt",subject: "$subject"},
+		   questionsCount: {$sum: { $size: "$questionsfortopic" }}}},
+		 {$project: {_id: "$_id._id", slugfly: "$_id.slugfly", name: "$_id.name", subject: "$_id.subject",
+		  updatedAt: "$_id.updatedAt", createdAt: "$_id.createdAt", questionsCount: "$questionsCount"}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+/*Pass id and get email,name and phonenumber of all students who appeared in that practice set*/
+
+app.get('/api/query33/:_id', function(req,res){
+	db.practicesets.aggregate([
+		{$lookup:{from: "attempts", localField: "_id", foreignField: "practicesetId", as:"setattempts"}},
+		{$unwind: "$setattempts"},
+		{$project: {_id: 1, attemptByUser: "$setattempts.user"}},
+		{$lookup:{from: "users", localField: "attemptByUser", foreignField: "_id", as:"s_info"}},
+		{$unwind: "$s_info"},
+		{$project: {_id: 1, "s_info._id": 1, "s_info.name": 1, "s_info.email": 1, "s_info.phoneNumber": 1}},
+		{$group: {_id: "$_id", Students_attempted: {$addToSet: "$s_info"}}},
+		{$match: {_id: mongojs.ObjectId(req.params._id)}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});

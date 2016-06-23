@@ -4,7 +4,7 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 	function($scope, $http, $location, $routeParams){
 	console.log('Topics controller...');
 	$scope.getTopics = function(){
-		$http.get('/api/topics').success(function(response){
+		$http.get('/api/query32').success(function(response){
 			$scope.topics = response;
 		});
 	}
@@ -41,5 +41,11 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 			window.location.href='#/topics';
 		});
 	}
+
+	$scope.getSubject = function(){
+		var par = $routeParams.id;
+		var topic = {"subject": par}
+		$scope.topic = topic
+	}	
 
 }]);

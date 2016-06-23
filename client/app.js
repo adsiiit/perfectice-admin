@@ -29,7 +29,7 @@ myApp.config(function($routeProvider){
 		controller: 'SubjectsController',
 		templateUrl: 'views/crud_for_set/subject_details.html'
 	})
-	.when('/subjects/add', {
+	.when('/subjects/add/:id', {
 		controller: 'SubjectsController',
 		templateUrl: 'views/crud_for_set/add_subject.html'
 	})
@@ -45,7 +45,7 @@ myApp.config(function($routeProvider){
 		controller: 'TopicsController',
 		templateUrl: 'views/crud_for_set/topic_details.html'
 	})
-	.when('/topics/add', {
+	.when('/topics/add/:id', {
 		controller: 'TopicsController',
 		templateUrl: 'views/crud_for_set/add_topic.html'
 	})
@@ -101,7 +101,14 @@ myApp.config(function($routeProvider){
 		controller: 'QueriesIIController',
 		templateUrl: 'views/queries_ii/srss_II.html'
 	})
+
+
+
+	.when('/master_data', {
+		controller: 'MasterDataController',
+		templateUrl: 'views/master_data/master1.html'
+	})
 	.otherwise({
 		redirectTo: '/'
 	})
-})
+});

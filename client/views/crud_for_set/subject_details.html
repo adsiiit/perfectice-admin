@@ -1,26 +1,48 @@
-<div class="panel panel-default" ng-init="getSubject()">
-  <div class="panel-heading">
-    <h3 class="panel-title"><center>{{ subject.name }}</center></h3>
-  </div>
-  <div class="panel-body">
-    <div class="row">
-	  	<div class="col-md-6">
-	  		<ul class="list-group">
-		  		<li class="list-group-item">Created At: {{ subject.createdAt | date }}</li>
-		  		<li class="list-group-item">Updated At: {{ subject.updatedAt | date }}</li>
-		  		<li class="list-group-item">Slugfly: {{ subject.slugfly }}</li>
-		  		<!-- <ul class="list-group">Subjects: 
-		  		<li class="list-group-item" ng-repeat="subject in exam.subjects">{{ subject }}</li>
-		  		</ul> -->
-	  		</ul>
-	  	</div>
-	</div>
-  </div>
+
+<div class="row" ng-init="getSubject()">
+<div class="col-md-1"></div>
+<div class="col-md-10">
+
+	      <h3>Subject Name: {{ subject.name }}</h3><br>
+		  <div ng-init="getTopicsWQC()">
+		    <div class="row">
+			  	<table class="table">
+				    <thead>
+				      <tr>
+				        <th>Topic Name</th>
+				        <th>Question Count</th>
+				        <th>Date</th>
+				        <th></th>
+				        <th></th>
+				        <th></th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat="topic in topics" ng-if="subject['topics'].indexOf(topic._id)!=-1">
+				        <td>{{topic.name}}</td>
+				        <td><button class="btn btn-primary"><span class="badge">{{topic.questionsCount}}</span></button></td>
+				        <td>{{topic.updatedAt | date}}</td>
+				        <td><a href="#/topics/details/{{topic._id}}">View</a></td>
+				        <td><a href="#/topics/edit/{{topic._id}}">Edit</a></td>
+				        <!-- <td><a href="#/master_data" ng-click="removeGrade(exam._id)">Delete</a></td> -->
+				      </tr>
+				    </tbody>
+				</table>
+			</div>
+		  </div>
+<a class="btn btn-info pull-right" href="#/topics/add/{{ subject._id }}">Add Topic</a> <br><br>
+
+</div>
+<div class="col-md-1"></div>
 </div>
 
-<div class="pull-left">
-<a class="btn btn-primary" href="#/subjects/">Back</a>
-</div>
-<div class="pull-right">
-<a class="btn btn-default" href="#/subjects/edit/{{subject._id}}">Edit</a> | <a class="btn btn-danger" href="#" ng-click="removeSubject(subject._id)">Delete</a>
-</div>
+
+<style>
+
+table tbody tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style> 

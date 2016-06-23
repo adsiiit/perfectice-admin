@@ -3,8 +3,11 @@ var myApp = angular.module('myApp');
 myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams',
 	function($scope, $http, $location, $routeParams){
 	console.log('Subjects controller...');
+
+
+
 	$scope.getSubjects = function(){
-		$http.get('/api/subjects').success(function(response){
+		$http.get('/api/query30').success(function(response){
 			$scope.subjects = response;
 		});
 	}
@@ -15,11 +18,20 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		});
 	}
 
+
+
 	$scope.getTopics = function(){
 		$http.get('/api/topics').success(function(response){
 			$scope.topics = response;
 		});
 	}
+
+	$scope.getTopicsWQC = function(){
+		$http.get('/api/query32').success(function(response){
+			$scope.topics = response;
+		});
+	}
+
 
 	$scope.getSubject = function(){
 		var id = $routeParams.id;
@@ -48,4 +60,14 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		});
 	}
 
+
+	$scope.getGrade = function(){
+		var par = $routeParams.id;
+		var subject = {"grade": par}
+		$scope.subject = subject
+	}	
+
+
 }]);
+
+

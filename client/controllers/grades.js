@@ -3,15 +3,26 @@ var myApp = angular.module('myApp');
 myApp.controller('GradesController', ['$scope', '$http', '$location', '$routeParams',
 	function($scope, $http, $location, $routeParams){
 	console.log('Grades controller...');
+
+	
+
 	$scope.getGrades = function(){
-		$http.get('/api/grades').success(function(response){
+		$http.get('/api/query31').success(function(response){
 			$scope.exams = response;
+			
 		});
 	}
 
 	$scope.getSubjects = function(){
 		$http.get('/api/subjects').success(function(response){
 			$scope.subjects = response;
+		});
+	}
+
+	$scope.getSubjectsWQC = function(){
+		$http.get('/api/query30').success(function(response){
+			$scope.subjects = response;
+			/*drawChart1($scope.subjects, $scope.exam);*/
 		});
 	}
 
@@ -41,5 +52,9 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 			window.location.href='#/grades';
 		});
 	}
+
+
+
+
 
 }]);

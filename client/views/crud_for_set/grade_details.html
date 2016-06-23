@@ -1,26 +1,54 @@
-<div class="panel panel-default" ng-init="getGrade()">
-  <div class="panel-heading">
-    <h3 class="panel-title"><center>{{ exam.name }}</center></h3>
-  </div>
-  <div class="panel-body">
-    <div class="row">
-	  	<div class="col-md-6">
-	  		<ul class="list-group">
-		  		<li class="list-group-item">Created At: {{ exam.createdAt }}</li>
-		  		<li class="list-group-item">Updated At: {{ exam.updatedAt }}</li>
-		  		<li class="list-group-item">Slugfly: {{ exam.slugfly }}</li>
-		  		<!-- <ul class="list-group">Subjects: 
-		  		<li class="list-group-item" ng-repeat="subject in exam.subjects">{{ subject }}</li>
-		  		</ul> -->
-	  		</ul>
-	  	</div>
-	</div>
-  </div>
+<div class="row" ng-init="getGrade()">
+<div class="col-md-1" data-ng-init="getSubjectsWQC()"></div>
+<div class="col-md-10">
+
+	      <h3>Exam Name: {{ exam.name }}</h3><br>
+		  <div ng-init="getSubjectsWQC()">
+		    <div class="row">
+			  	<table class="table">
+				    <thead>
+				      <tr>
+				        <th>Subject Name</th>
+				        <th>Question Count</th>
+				        <th>Date</th>
+				        <th>Topics</th>
+				        <th></th>
+				        <th></th>
+				        <th></th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr ng-repeat="subject in subjects" ng-if="exam['subjects'].indexOf(subject._id)!=-1">
+				        <td>{{subject.name}}</td>
+				        <td><button class="btn btn-primary"><span class="badge">{{subject.questionsCount}}</span></button></td>
+				        <td>{{subject.updatedAt | date}}</td>
+				        <td><a class="btn btn-success" href="#/subjects/details/{{subject._id}}"><span class="badge">{{(subject.topics).length}}</span></a></td>
+				        <td><a href="#/subjects/details/{{subject._id}}">View</a></td>
+				        <td><a href="#/subjects/edit/{{subject._id}}">Edit</a></td>
+				        <!-- <td><a href="#/master_data" ng-click="removeGrade(exam._id)">Delete</a></td> -->
+				      </tr>
+				    </tbody>
+				</table>
+			</div>
+		  </div>
+<a class="btn btn-info pull-right" href="#/subjects/add/{{exam._id}}">Add Subject</a>
+
+
+</div>
+<div class="col-md-1"></div>
 </div>
 
-<div class="pull-left">
-<a class="btn btn-primary" href="#/grades/">Back</a>
-</div>
-<div class="pull-right">
-<a class="btn btn-default" href="#/grades/edit/{{exam._id}}">Edit</a> | <a class="btn btn-danger" href="#" ng-click="removeGrade(exam._id)">Delete</a>
-</div>
+
+<!-- <div id="piechart" style="width: 900px; height: 500px;"></div> -->
+
+
+
+<style>
+
+table tbody tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style> 
