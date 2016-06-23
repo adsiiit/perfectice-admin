@@ -9,9 +9,9 @@
   "dependencies": {
     "body-parser": "*",
     "express": "*",
+    "jsonwebtoken": "^7.0.0",
     "mongojs": "^2.4.0",
     "mongoose": "*",
-    "jsonwebtoken": "^7.0.0",
     "morgan": "^1.7.0"
   },
   "author": "Aman Sachan",

@@ -203,7 +203,8 @@ app.get('/api/query12', function(req,res){
     {$group:{
           _id:{year:"$year", month:"$month", day:"$day"},
           "count":{$sum:1}
-    }}],
+    }},
+    {$sort: {_id: -1}}],
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -234,7 +235,8 @@ app.get('/api/query14', function(req,res){
     {$group:{
           _id:{year:"$year", month:"$month", day:"$day", weekday: "$weekday"},
           "count":{$sum:1}
-      }}],
+      }},
+    {$sort: {_id: -1}}],
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -287,7 +289,8 @@ app.get('/api/query19', function(req,res){
     {$group:{
           _id:{year:"$year", month:"$month", day:"$day", weekday: "$weekday"},
           "count":{$sum:1}
-      }}],
+      }},
+    {$sort: {_id: -1}}],
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -317,7 +320,8 @@ app.get('/api/query21', function(req,res){
     {$group:{
           _id:{year:"$year", month:"$month", day:"$day"},
           "count":{$sum:1}
-    }}],
+    }},
+    {$sort: {_id: -1}}],
 		function(err, que){
 		if(err)
 			res.send(err);

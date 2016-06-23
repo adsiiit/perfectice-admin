@@ -3,14 +3,51 @@ var myApp = angular.module('myApp');
 myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams',
 	function($scope, $http, $location, $routeParams){
 	console.log('Subjects controller...');
-
-
+	
+	$scope.options = {
+            chart: {
+                type: 'pieChart',
+                height: 560,
+                width: 560,
+                x: function(d){return d.key;},
+                y: function(d){return d.y;},
+                showLabels: true,
+                "showLegend": false,
+                duration: 500,
+                labelThreshold: 0.01,
+                labelSunbeamLayout: true,
+                "labelType":"percent",
+                "donut": true,
+                legend: {
+                    margin: {
+                        top: 5,
+                        right: 0,
+                        bottom: 5,
+                        left: 0
+                    }
+                }
+            },
+            
+/*            "title":{
+              "enable":true,
+              "text":"Question Distribution",
+              "className":"h4",
+              "css":{"width":"nullpx",
+              "textAlign":"center"}}*/
+        };
 
 	$scope.getSubjects = function(){
 		$http.get('/api/query30').success(function(response){
 			$scope.subjects = response;
 		});
 	}
+
+	$scope.getSubjectsWOC = function(){
+		$http.get('/api/subjects').success(function(response){
+			$scope.subjects = response;
+
+		});
+	}	
 
 	$scope.getGrades = function(){
 		$http.get('/api/grades').success(function(response){
@@ -29,6 +66,25 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 	$scope.getTopicsWQC = function(){
 		$http.get('/api/query32').success(function(response){
 			$scope.topics = response;
+
+			
+
+		    var tops = response;
+		    var chartData = [];
+		    var subject = $scope.subject;
+
+			  for(i=0; i<tops.length; i++)
+			  {	
+			  	if((subject.topics).indexOf(tops[i]._id)!=-1){	
+			      var temp = {key: tops[i].name, y: parseInt(tops[i].questionsCount)}
+
+			      chartData.push(temp);
+			  	}
+			  }
+
+		    console.log(chartData);
+		    $scope.data = chartData;
+
 		});
 	}
 

@@ -9,6 +9,13 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 		});
 	}
 
+	$scope.getTopicsWOC = function(){
+		$http.get('/api/topics').success(function(response){
+			$scope.topics = response;
+		});
+	}
+
+
 	$scope.getSubjects = function(){
 		$http.get('/api/subjects').success(function(response){
 			$scope.subjects = response;

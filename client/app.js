@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute']);
+var myApp = angular.module('myApp', ['ngRoute', 'nvd3']);
 
 myApp.config(function($routeProvider){
 	$routeProvider.when('/', {
@@ -107,6 +107,10 @@ myApp.config(function($routeProvider){
 	.when('/master_data', {
 		controller: 'MasterDataController',
 		templateUrl: 'views/master_data/master1.html'
+	})
+	.when('/business_perfo', {
+		controller: 'BusinessPerfoController',
+		templateUrl: 'views/master_data/business_perfo.html'
 	})
 	.otherwise({
 		redirectTo: '/'

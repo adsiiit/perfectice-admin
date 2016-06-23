@@ -4,10 +4,40 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 	function($scope, $http, $location, $routeParams){
 	console.log('Grades controller...');
 
-	
+	$scope.options = {
+            chart: {
+                type: 'pieChart',
+                height: 560,
+                width: 560,
+                x: function(d){return d.key;},
+                y: function(d){return d.y;},
+                showLabels: true,
+                "showLegend": false,
+                duration: 500,
+                labelThreshold: 0.01,
+                labelSunbeamLayout: true,
+                "labelType":"percent",
+                "donut": true,
+                legend: {
+                    margin: {
+                        top: 5,
+                        right: 0,
+                        bottom: 5,
+                        left: 0
+                    }
+                }
+            },
+            
+/*            "title":{
+              "enable":true,
+              "text":"Question Distribution",
+              "className":"h4",
+              "css":{"width":"nullpx",
+              "textAlign":"center"}}*/
+        };
 
 	$scope.getGrades = function(){
-		$http.get('/api/query31').success(function(response){
+		$http.get('/api/grades').success(function(response){
 			$scope.exams = response;
 			
 		});
@@ -22,7 +52,25 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 	$scope.getSubjectsWQC = function(){
 		$http.get('/api/query30').success(function(response){
 			$scope.subjects = response;
-			/*drawChart1($scope.subjects, $scope.exam);*/
+
+
+		    var subs = response;
+		    var chartData = [];
+		    var exam = $scope.exam;
+
+			  for(i=0; i<subs.length; i++)
+			  {	
+			  	if((exam.subjects).indexOf(subs[i]._id)!=-1){	
+			      var temp = {key: subs[i].name, y: parseInt(subs[i].questionsCount)}
+
+			      chartData.push(temp);
+			  	}
+			  }
+
+		    console.log(chartData);
+		    $scope.data = chartData;
+
+
 		});
 	}
 
@@ -52,9 +100,6 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 			window.location.href='#/grades';
 		});
 	}
-
-
-
 
 
 }]);

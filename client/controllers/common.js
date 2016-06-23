@@ -6,5 +6,4 @@ myApp.controller('CommonController', ['$scope', '$http', '$location', '$routePar
 
 	$scope.text="Home Page";
 
-
 }]);

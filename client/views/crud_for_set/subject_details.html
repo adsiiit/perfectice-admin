@@ -2,8 +2,8 @@
 <div class="row" ng-init="getSubject()">
 <div class="col-md-1"></div>
 <div class="col-md-10">
-
-	      <h3>Subject Name: {{ subject.name }}</h3><br>
+		<br>
+	      <span style="font-size: 18px; color: rgb(139, 139, 143); margin-right: 50px;">Subject Name: {{ subject.name }}</span> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Show Distribution</button><br><br><br>
 		  <div ng-init="getTopicsWQC()">
 		    <div class="row">
 			  	<table class="table">
@@ -14,7 +14,7 @@
 				        <th>Date</th>
 				        <th></th>
 				        <th></th>
-				        <th></th>
+<!-- 				        <th></th> -->
 				      </tr>
 				    </thead>
 				    <tbody>
@@ -35,6 +35,27 @@
 </div>
 <div class="col-md-1"></div>
 </div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Question Distribution</h4></center>
+      </div>
+      <div class="modal-body">
+        <nvd3 options="options" data="data"></nvd3>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 
 
 <style>
