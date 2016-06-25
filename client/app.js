@@ -115,7 +115,7 @@ myApp.config(function($routeProvider){
 
 
 
-	.when('/test/:token', {
+	.when('/test/:testid/:token', {
 		controller: 'NIITController',
 		templateUrl: 'views/niit/userinfo.html'
 	})

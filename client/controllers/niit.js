@@ -6,6 +6,7 @@ myApp.controller('NIITController', ['$scope', '$http', '$location', '$routeParam
 
 	$scope.userInfo = function(){
 		var token = $routeParams.token;
+		$scope.testinfo = $routeParams.testid;
 		$http({
 			    method: 'GET', 
 			    url: '/api/niitUser',
