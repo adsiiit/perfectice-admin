@@ -1,0 +1,39 @@
+<br><br>
+<div ng-init="userInfo()" class="row">
+	<div class=" col-md-3 col-lg-3"></div> 
+	<div class=" col-md-6 col-lg-6"> 
+		<div class="panel panel-info">
+		        <div class="panel-heading">
+		          <h3 class="panel-title">{{userinfo.name}}</h3>
+		        </div>
+		        <div class="panel-body">
+		          <table class="table table-user-information">
+		            <tbody>
+		              <tr>
+		                <td>Email:</td>
+		                <td>{{userinfo.email}}</td>
+		              </tr>
+		              <tr>
+		                <td>Examination</td>
+		                <td>{{userinfo.examination}}</td>
+		              </tr>
+		              <tr>
+		                <td>Country</td>
+		                <td>{{userinfo.country}}</td>
+		              </tr>
+		           
+		              <tr>
+		                <td>Contact No.</td>
+		                <td>{{userinfo.phoneNumber}}</td>
+		              </tr>
+		            </tbody>
+		          </table>
+		        </div>
+		</div>
+
+	</div>
+	<div class=" col-md-3 col-lg-3"></div>
+	
+</div>
+
+<center><p>*Registered via <span class="text-danger">{{userinfo.provider}}</span><p></center>	

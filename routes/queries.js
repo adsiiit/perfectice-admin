@@ -191,9 +191,9 @@ app.get('/api/query11', function(req,res){
 });
 
 
-app.get('/api/query12', function(req,res){
+app.get('/api/query12/:n', function(req,res){
 	db.attempts.aggregate([{$match:{
-          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*30)}
+          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}
     }},
     {$project:{
           "year":{$year:"$createdAt"}, 
@@ -213,50 +213,8 @@ app.get('/api/query12', function(req,res){
 });
 
 
-app.get('/api/query13', function(req,res){
-	db.attempts.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*30)}},
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
-
-
-app.get('/api/query14', function(req,res){
-	db.attempts.aggregate([
-    {$match:{"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*7)}}}, 
-    {$project:{
-          "year":{$year:"$createdAt"}, 
-          "month":{$month:"$createdAt"}, 
-          "day": {$dayOfMonth:"$createdAt"},
-          "weekday": {$dayOfWeek: "$createdAt"}
-    }}, 
-    {$group:{
-          _id:{year:"$year", month:"$month", day:"$day", weekday: "$weekday"},
-          "count":{$sum:1}
-      }},
-    {$sort: {_id: -1}}],
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
-
-
-app.get('/api/query15', function(req,res){
-	db.attempts.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*7)}},
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
-
-
-app.get('/api/query16', function(req,res){
-	db.attempts.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24)}},
+app.get('/api/query13/:n', function(req,res){
+	db.attempts.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}},
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -267,8 +225,9 @@ app.get('/api/query16', function(req,res){
 
 
 
-app.get('/api/query18', function(req,res){
-	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24)}},
+
+app.get('/api/query18/:n', function(req,res){
+	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}},
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -277,9 +236,9 @@ app.get('/api/query18', function(req,res){
 });
 
 
-app.get('/api/query19', function(req,res){
+app.get('/api/query19/:n', function(req,res){
 	db.students.aggregate([
-    {$match:{"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*7)}}}, 
+    {$match:{"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}}}, 
     {$project:{
           "year":{$year:"$createdAt"}, 
           "month":{$month:"$createdAt"}, 
@@ -298,46 +257,6 @@ app.get('/api/query19', function(req,res){
 	});
 });
 
-
-app.get('/api/query20', function(req,res){
-	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*7)}},
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
-
-app.get('/api/query21', function(req,res){
-	db.students.aggregate([{$match:{
-          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*30)}
-    }},
-    {$project:{
-          "year":{$year:"$createdAt"}, 
-          "month":{$month:"$createdAt"}, 
-          "day": {$dayOfMonth:"$createdAt"}
-    }}, 
-    {$group:{
-          _id:{year:"$year", month:"$month", day:"$day"},
-          "count":{$sum:1}
-    }},
-    {$sort: {_id: -1}}],
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
-
-
-app.get('/api/query22', function(req,res){
-	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*30)}},
-		function(err, que){
-		if(err)
-			res.send(err);
-		res.json(que);
-	});
-});
 
 
 
@@ -509,6 +428,33 @@ app.get('/api/query33/:_id', function(req,res){
 		{$project: {_id: 1, "s_info._id": 1, "s_info.name": 1, "s_info.email": 1, "s_info.phoneNumber": 1}},
 		{$group: {_id: "$_id", Students_attempted: {$addToSet: "$s_info"}}},
 		{$match: {_id: mongojs.ObjectId(req.params._id)}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+
+/*Signup Trend in last n days */
+
+app.get('/api/query34/:n', function(req,res){
+	db.users.aggregate([
+		{$match:{
+		          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}
+		    }},
+		    {$project:{
+		          "year":{$year:"$createdAt"}, 
+		          "month":{$month:"$createdAt"}, 
+		          "day": {$dayOfMonth:"$createdAt"}
+		    }}, 
+		    {$group:{
+		          _id:{year:"$year", month:"$month", day:"$day", weekday: "$weekday"},
+		          "count":{$sum:1}
+		    }},
+		    {$sort: {_id: -1}}
 		],
 		function(err, que){
 		if(err)

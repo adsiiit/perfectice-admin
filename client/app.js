@@ -112,6 +112,13 @@ myApp.config(function($routeProvider){
 		controller: 'BusinessPerfoController',
 		templateUrl: 'views/master_data/business_perfo.html'
 	})
+
+
+
+	.when('/test/:token', {
+		controller: 'NIITController',
+		templateUrl: 'views/niit/userinfo.html'
+	})
 	.otherwise({
 		redirectTo: '/'
 	})

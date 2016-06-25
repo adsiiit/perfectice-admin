@@ -19,7 +19,7 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 /* **************************************************************  */
 
 /* **************************************************************  */
-/*INTEGRATION PART WITH NIIT -- STARTS */
+
 
 
 
@@ -135,26 +135,27 @@ apiRoutes.get('/api/tokenInfo', function(req, res) {
 
 
 
+/*User.findOneAndUpdate({email: info.email},{$set:{last_login:new Date().toISOString()}},*/
 
 
 apiRoutes.get('/api/niitUser', function(req, res) {
 	info = {name: req.decoded.name, email: req.decoded.email,
 		examination: req.decoded.examination, country: req.decoded.country,
 		phoneNumber: req.decoded.phone, provider: "niit"};
-	User.findOneAndUpdate({email: info.email},{$set:{last_login:new Date().toISOString()}},
+	User.findOne({email: info.email},
 		function(err, que){
 		if(err)
 			res.send(err);
 		if(que){
 		/*	console.log(que._id);*/
-			res.json(que._id);
+			res.json(que);
 		}
 		else{
 			newuser = User(info);
 			newuser.save(function(err){
 				if(err)
 					res.send(err);
-				res.json(newuser._id);
+				res.json(newuser);
 			});
 		}
 	});
@@ -164,12 +165,9 @@ apiRoutes.get('/api/niitUser', function(req, res) {
 
 
 
-
-
 /* **************************************************************  */
 
 /* **************************************************************  */
-/*INTEGRATION PART WITH NIIT -- STOPS */
 
 
 module.exports = {

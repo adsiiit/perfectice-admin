@@ -10,8 +10,8 @@ var UserSchema = mongoose.Schema({
 	country: String,
 	examination: String,
 	phoneNumber: Number,
-	role: String,
-	last_login: { type: Date, default: Date.now }},
+	role: String/*,
+	last_login: { type: Date, default: Date.now }*/},
 	{ timestamps: true }
 	);
 
