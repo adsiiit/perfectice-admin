@@ -1,0 +1,84 @@
+<div class="row" ng-init="getTeacher()">
+<br><br>
+<div class="col-md-2" ng-init="getTeacherQ()"></div>
+<div class="col-md-8" ng-init="getSignedCount()">
+
+	<div class="panel panel-default">
+	  <!-- Default panel contents -->
+	  <div class="panel-heading"><b>Teacher Name: <span class="text-primary">{{teacherdetail.teacher_name}}</span></b></div>
+
+	<table class="table table-bordered">
+	    <thead>
+	      <tr>
+	        <th class="col-md-4">
+	        <center><p>{{(teacherdetail.Students).length}}</p>
+	        <p>Students</p></center>
+	        </th>
+	        <th class="col-md-4">
+	        <center><p>{{signcount}}</p>
+	        <p>Signed Students</p></center>
+	        </th>
+	        <th class="col-md-4">
+	        <center><p>0</p>
+	        <p>Attempted</p></center>
+	        </th>
+	      </tr>
+	    </thead>
+
+	  </table>
+
+
+
+		<div class="tab-container">
+
+
+			<div class="btn-group btn-group-justified" role="group">
+				  <div class="btn-group" role="group">
+				    <a show-tab href="#qs" data-toggle="tab" class="btn btn-default">Question Summary</a>
+				  </div>
+				  <div class="btn-group" role="group">
+				    <a show-tab href="#trend" data-toggle="tab" class="btn btn-default">Trend</a>
+				  </div>
+				  <div class="btn-group" role="group">
+				    <a show-tab href="#report" data-toggle="tab" class="btn btn-default">Report</a>
+				  </div>
+			</div>
+
+		    <!-- <ul class="nav nav-tabs">
+		       <li class="active"><a show-tab href="#qs" data-toggle="tab">Question Summary</a></li>
+		       <li><a show-tab href="#trend" data-toggle="tab">Trend</a></li>
+		       <li><a show-tab href="#report" data-toggle="tab">Report</a></li>
+		    </ul> -->
+		 <div class="tab-content">
+		    <div class="tab-pane cont" id="qs">
+		    	<br><br>
+		        <center><nvd3 options="options" data="data"></nvd3></center>
+		     </div>
+
+		     <div class="tab-pane cont" id="trend">
+		       <h2>TREND</h2>
+		       <p>Trend data</p>
+		     </div>
+
+		     <div class="tab-pane" id="report">
+		     REPORT<br>
+		     Report Data
+		     </div>
+		  </div>
+		</div>
+
+
+	</div>
+</div>
+<div class="col-md-2"></div>
+
+</div>
+
+
+
+
+<!-- {{teacherdetail}} -->
+<!-- {{teacherquestions}} -->
+
+
+

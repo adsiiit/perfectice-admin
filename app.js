@@ -47,7 +47,5 @@ var mpniit_apiR = mpniit.apiRoutes;
 
 app.use('/', routes,queries, mpniit_api, mpniit_apiR);
 
-
-
 app.listen(3030);
 console.log('Running on  port 3030...');

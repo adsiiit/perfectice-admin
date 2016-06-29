@@ -17,43 +17,63 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 
 //ALL ROUTES FOR QUERIES
 
-//List / count of students who are added to the classroom but never registered.  -- Institute wise
-app.get('/api/query1', function(req,res){
+
+//Return id corresponding to email-id
+app.get('/api/query0/:email', function(req,res){
+	db.users.findOne({email: req.params.email },{_id:1},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+//List / count of students who are added to the classroom  -- Institute wise
+app.get('/api/query1/:id', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
 			res.send(err);
-		db.students.aggregate(
-			[
-		{$match: {_id: {$in: id_list}, studentId:{$exists:false}}},
+		db.students.aggregate([
+		{$match: {_id: {$in: id_list}}},
 		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
 		{$unwind: "$teacherdetail"},
-		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name"}},
-		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name"}, Students: {$addToSet: "$email"}}},
-		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", count: {$size: "$Students"}, Students: "$Students"}}
-			], function(err, que){
+		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name", teacher_email: "$teacherdetail.email"}},
+		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name", teacher_email: "$teacher_email"}, Students: {$addToSet: "$email"}}},
+		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}, Students: "$Students"}},
+		{$match:{teacher_id: mongojs.ObjectId(req.params.id)}}
+		], function(err, que){
 			if(err)
 				res.send(err);
-			res.json(que);
+			res.json(que[0]);
 		});
 			
 		
 	});
 });
 
-
-/*app.get('/api/query2', function(req,res){
+//List / count of students who are added to the classroom and registered as well -- Institute wise
+app.get('/api/query2/:id', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
 			res.send(err);
-		db.students.count({_id: {$in: id_list}, studentId:{$exists:false}}, function(err, que){
+		db.students.aggregate([
+		{$match: {_id: {$in: id_list}, studentId:{$exists:true}}},
+		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
+		{$unwind: "$teacherdetail"},
+		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name", teacher_email: "$teacherdetail.email"}},
+		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name", teacher_email: "$teacher_email"}, Students: {$addToSet: "$email"}}},
+		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}, Students: "$Students"}},
+		{$match:{teacher_id: mongojs.ObjectId(req.params.id)}}
+		], function(err, que){
 			if(err)
 				res.send(err);
-			res.json(que);
+			res.json(que[0]);
 		});
 			
 		
 	});
-});*/
+});
 
 
 
@@ -383,7 +403,7 @@ app.get('/api/query30', function(req,res){
 
 app.get('/api/query31', function(req,res){
 	db.grades.aggregate([
-		{$unwind: "$subjects"},
+		{$unwind: {path: "$subjects", preserveNullAndEmptyArrays: true}},
 		{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
 		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", countryCode: "$countryCode", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt"},
 		  subjects: {$addToSet: "$subjects"}, questionsCount: {$sum: { $size: "$questionsforexam" }}}},
@@ -461,4 +481,22 @@ app.get('/api/query34/:n', function(req,res){
 			res.send(err);
 		res.json(que);
 	});
+});
+
+
+
+//Questions count per subject  ~~~  teacher wise  ~~~  teacher-id is passed
+app.get('/api/query14/:id', function(req,res){
+	db.questions.aggregate([
+	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
+	{$unwind: "$userinfo"},
+	{$project: {teacher_name: "$userinfo.name",teacher_id: "$userinfo._id", subject_name: "$subject.name"}},
+	{$group: {_id: { teacher_id: "$teacher_id",teacher_name:"$teacher_name", subject: "$subject_name"}, No_of_questions: {$sum : 1}}},
+	{$project: {_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", subject: "$_id.subject", questionsCount: "$No_of_questions"}},
+	{$match: {_id: mongojs.ObjectId(req.params.id)}}
+	], function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
 });

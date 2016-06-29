@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams','Slug',
+	function($scope, $http, $location, $routeParams, Slug){
 	console.log('Subjects controller...');
 	
 	$scope.options = {
@@ -98,21 +98,23 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 
 
 	$scope.addSubject = function(){
+		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 		$http.post('/api/subjects/', $scope.subject).success(function(response){
-			window.location.href='#/subjects';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.updateSubject = function(){
 		var id = $routeParams.id;
+		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 		$http.put('/api/subjects/'+id, $scope.subject).success(function(response){
-			window.location.href='#/subjects';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.removeSubject = function(id){
 		$http.delete('/api/subjects/'+id).success(function(response){
-			window.location.href='#/subjects';
+			window.location.href='#/master_data';
 		});
 	}
 

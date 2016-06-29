@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'nvd3']);
+var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier']);
 
 myApp.config(function($routeProvider){
 	$routeProvider.when('/', {
@@ -111,6 +111,18 @@ myApp.config(function($routeProvider){
 	.when('/business_perfo', {
 		controller: 'BusinessPerfoController',
 		templateUrl: 'views/master_data/business_perfo.html'
+	})
+	.when('/teacher_perfo', {
+		controller: 'TeacherPerfoController',
+		templateUrl: 'views/master_data/teacher_perfo.html'
+	})
+	.when('/teacher_perfo/:id', {
+		controller: 'TeacherPerfoController',
+		templateUrl: 'views/master_data/teacher_detail.html'
+	})
+	.when('/user_manage', {
+		controller: 'UserManageController',
+		templateUrl: 'views/master_data/user_manage.html'
 	})
 
 

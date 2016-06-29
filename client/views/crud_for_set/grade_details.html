@@ -20,7 +20,7 @@
 				    <tbody>
 				      <tr ng-repeat="subject in subjects" ng-if="exam['subjects'].indexOf(subject._id)!=-1">
 				        <td>{{subject.name}}</td>
-				        <td><button class="btn btn-primary"><span class="badge">{{subject.questionsCount}}</span></button></td>
+				        <td><span class="text-danger">{{subject.questionsCount}}</span></td>
 				        <td>{{subject.updatedAt | date}}</td>
 				        <td><a class="btn btn-success" href="#/subjects/details/{{subject._id}}"><span class="badge">{{(subject.topics).length}}</span></a></td>
 				        <td><a href="#/subjects/details/{{subject._id}}">View</a></td>

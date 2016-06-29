@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routeParams', 'Slug',
+	function($scope, $http, $location, $routeParams, Slug){
 	console.log('Topics controller...');
 	$scope.getTopics = function(){
 		$http.get('/api/query32').success(function(response){
@@ -31,21 +31,23 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 
 
 	$scope.addTopic = function(){
+		($scope.topic).slugfly = Slug.slugify(($scope.topic).name);
 		$http.post('/api/topics/', $scope.topic).success(function(response){
-			window.location.href='#/topics';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.updateTopic = function(){
 		var id = $routeParams.id;
+		($scope.topic).slugfly = Slug.slugify(($scope.topic).name);
 		$http.put('/api/topics/'+id, $scope.topic).success(function(response){
-			window.location.href='#/topics';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.removeTopic = function(id){
 		$http.delete('/api/topics/'+id).success(function(response){
-			window.location.href='#/topics';
+			window.location.href='#/master_data';
 		});
 	}
 

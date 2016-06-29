@@ -1,0 +1,21 @@
+ <div class="row">
+ <div class="col-md-4"></div>
+ <div class="col-md-4">
+ <br><br>
+ <center><h3>Teacher Search</h3></center><br>
+ <form role="form" ng-submit="getID()">
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" ng-model="emailid" class="form-control" required>
+    <div ng-if="err" class="alert alert-danger" role="alert">{{err}}</div>
+    <!-- <center><span ng-if="err" class="text-danger">{{err}}</span><center> -->
+  </div>
+
+  <button type="submit" class="btn btn-default">Go</button>
+</form>
+
+</div>
+ <div class="col-md-4"></div>
+</div>
+
+

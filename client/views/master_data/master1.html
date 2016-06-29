@@ -19,7 +19,7 @@
 	    <tbody>
 	      <tr ng-repeat="exam in exams">
 	        <td>{{exam.name}}</td>
-	        <td><button class="btn btn-primary"><span class="badge">{{exam.questionsCount}}</span></button></td>
+	        <td><span class="text-danger">{{exam.questionsCount}}</span></td>
 	        <td>{{exam.updatedAt | date}}</td>
 	        <td><a class="btn btn-success" href="#/grades/details/{{exam._id}}"><span class="badge">{{(exam.subjects).length}}</span></a></td>
 	        <td><a href="#/grades/details/{{exam._id}}">View</a></td>

@@ -7,18 +7,22 @@
 
 	<div class="row">
 		<div class="col-md-4"><h4>Teacher Name</h4></div>
-		<div class="col-md-4"><h4>Students Count</h4></div>
-		<div class="col-md-4"><h4>Email of Students</h4></div>
+		<div class="col-md-3"><h4>Teacher Email</h4></div>
+		<div class="col-md-2"><h4>Students Count</h4></div>
+		<div class="col-md-3"><h4>Email of Students</h4></div>
 	</div>
 	<div ng-repeat="query in query1 | orderBy: 'teacher_name'">
 		<div class="row">
     		<div class="col-md-4">
     			<h5>{{$index+1}}. {{query.teacher_name}}</h5>
     		</div>
-    		<div class="col-md-4">
+    		<div class="col-md-3">
+    			<h5>{{query.teacher_email}}</h5>
+    		</div>
+    		<div class="col-md-2">
     			<h5>{{query.count}}</h5>
     		</div>
-    		<div class="col-md-4">
+    		<div class="col-md-3">
     			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal{{$index}}">List of Students</button>
 
 	    						 <!-- Modal -->

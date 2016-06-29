@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('GradesController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.controller('GradesController', ['$scope', '$http', '$location', '$routeParams', 'Slug', 
+	function($scope, $http, $location, $routeParams, Slug){
 	console.log('Grades controller...');
 
 	$scope.options = {
@@ -12,12 +12,12 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
                 x: function(d){return d.key;},
                 y: function(d){return d.y;},
                 showLabels: true,
-                "showLegend": false,
+                "showLegend": true,
                 duration: 500,
                 labelThreshold: 0.01,
                 labelSunbeamLayout: true,
                 "labelType":"percent",
-                "donut": true,
+                "donut": false,
                 legend: {
                     margin: {
                         top: 5,
@@ -83,23 +83,26 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 
 
 	$scope.addGrade = function(){
+		($scope.grade).slugfly = Slug.slugify(($scope.grade).name);
 		$http.post('/api/grades/', $scope.grade).success(function(response){
-			window.location.href='#/grades';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.updateGrade = function(){
 		var id = $routeParams.id;
+		($scope.exam).slugfly = Slug.slugify(($scope.exam).name);
 		$http.put('/api/grades/'+id, $scope.exam).success(function(response){
-			window.location.href='#/grades';
+			window.location.href='#/master_data';
 		});
 	}
 
 	$scope.removeGrade = function(id){
 		$http.delete('/api/grades/'+id).success(function(response){
-			window.location.href='#/grades';
+			window.location.href='#/master_data';
 		});
 	}
 
 
 }]);
+

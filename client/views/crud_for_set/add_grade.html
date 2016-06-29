@@ -17,13 +17,13 @@
 					  </div>
 
 					  <div class="form-group">
-					    <label>SlugFly</label>
-					    <input type="text" class="form-control" ng-model="grade.slugfly" placeholder="Slugfly">
-					  </div>
-
-					  <div class="form-group">
 					    <label>Country Code</label>
-					    <input type="text" class="form-control" ng-model="grade.countryCode" placeholder="Country Code">
+					    <!-- <input type="text" class="form-control" ng-model="grade.countryCode" placeholder="Country Code"> -->
+					    <select class="form-control" ng-model="grade.countryCode">
+					    	<option value="" default selected>Select Country</option>
+						   	<option value="IN">India</option>
+						   	<option value="US">USA</option>
+						</select>
 					  </div>
 
 					   <div class="form-group">

@@ -24,36 +24,16 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#/"><b>MyPerfectice</b></a>
+        <a class="navbar-brand" href="#/" style="color: rgb(159, 203, 231);"><b>MyPerfectice</b></a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
 
+          <li class=""><a style="color: rgb(249, 142, 142);" href="#/master_data">Master Data</a></li>
+          <li class=""><a style="color: rgb(249, 142, 142);" href="#/business_perfo">Bussiness Performance</a></li>
+          <li class=""><a style="color: rgb(249, 142, 142);" href="#/teacher_perfo">Teacher Performance</a></li>
+          <li class=""><a style="color: rgb(249, 142, 142);" href="#/user_manage">User Management</a></li>
 
-          <li class=""><a href="#/master_data"><b>Master Data</b></a></li>
-          <li class=""><a href="#/business_perfo"><b>Bussiness Performance</b></a></li>
-
-          <!-- <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Exams <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#/grades">List Exams</a></li>
-              <li><a href="#/grades/add">Add Exam</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Subjects <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#/subjects">List Subjects</a></li>
-              <li><a href="#/subjects/add">Add Subject</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Topics <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#/topics">List Topics</a></li>
-              <li><a href="#/topics/add">Add Topic</a></li>
-            </ul>
-          </li> -->
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Queries-I <span class="caret"></span></a>
             <ul class="dropdown-menu">
@@ -63,7 +43,7 @@
 
             </ul>
           </li>
-          <li class="dropdown">
+          <!-- <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Queries-II <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#/stu_count_trend_ii">Stu_Count_Trend</a></li>
@@ -72,7 +52,7 @@
 
 
             </ul>
-          </li>
+          </li> -->
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Questions-I<span class="caret"></span></a>
             <ul class="dropdown-menu">
@@ -83,7 +63,7 @@
             </ul>
           </li>
 
-          <li class="dropdown">
+          <!-- <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Questions-II<span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#/ques_by_subj_ii">By Subjects</a></li>
@@ -91,7 +71,7 @@
               <li><a href="#/ques_by_exam_ii">By Exams</a></li>
               
             </ul>
-          </li>
+          </li> -->
 
         </ul>
       </div><!--/.nav-collapse -->
@@ -118,6 +98,7 @@
 <script src="/bower_components/d3/d3.js"></script>
 <script src="/bower_components/nvd3/build/nv.d3.js"></script>
 <script src="/bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+<script src="/bower_components/angular-slugify/angular-slugify.js"></script>
 
 
 
@@ -130,6 +111,8 @@
 <script src="/controllers/queries_ii.js"></script>
 <script src="/controllers/master_data.js"></script>
 <script src="/controllers/business_perfo.js"></script>
+<script src="/controllers/teacher_perfo.js"></script>
+<script src="/controllers/user_manage.js"></script>
 <script src="/controllers/niit.js"></script>
 
 
