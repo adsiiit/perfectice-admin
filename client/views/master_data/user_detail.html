@@ -1,0 +1,37 @@
+<div class="row" ng-init="getUser()">
+<br><br>
+<div class="col-md-1"></div>
+<div class="col-md-10">
+
+<center><h3 class="text-primary">{{userdetail.name | uppercase}}</h3></center>
+<br><br>
+
+	<table class="table">
+    <thead>
+      <tr>
+        <th class="col-md-2">Status</th>
+        <th class="col-md-2">Email</th>
+        <th class="col-md-3">Date Registered</th>
+        <th class="col-md-2">Last Login</th>
+        <th class="col-md-2">Last Attempt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><button ng-click="updateStatus()" class="btn btn-primary btn-block">{{sta}}</button></td>
+        <td>{{userdetail.email}}</td>
+        <td>{{userdetail.createdAt | date}}</td>
+        <td>{{userdetail.last_login | date}}</td>
+        <td>{{userdetail.last_attempt | date}}</td>
+      </tr>
+      
+    </tbody>
+  </table>
+
+
+
+</div>
+<div class="col-md-1"></div>
+
+</div>
+

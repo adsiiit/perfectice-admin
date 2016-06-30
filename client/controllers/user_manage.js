@@ -9,8 +9,8 @@ myApp.controller('UserManageController', ['$scope', '$http', '$location', '$rout
 			$http.get('/api/query0/'+email).success(function(response){
 				if(response)
 				{
-					var tid = response._id;
-					window.location.href='#/teacher_perfo/'+tid;
+					var uid = response._id;
+					window.location.href='#/user_manage/'+uid;
 				}
 				else
 					$scope.err = "*Email address is incorrect";
@@ -18,6 +18,42 @@ myApp.controller('UserManageController', ['$scope', '$http', '$location', '$rout
 			});
 		}
 	
+		$scope.getUser = function(){
+			var id = $routeParams.id;
+			$http.get('/api/query15/'+id).success(function(response){
+				$scope.userdetail=response;
+				$scope.st = response.status;
+				if($scope.st==true)
+					$scope.sta = 'Enabled';
+				else
+					$scope.sta = 'Disabled';
+			});
+		}
+
+		$scope.updateStatus = function(){
+			var id = $routeParams.id;
+			if($scope.st==true)
+			{
+				$scope.st = false;
+				$scope.sta = 'Disabled';
+			}
+			else
+			{
+				$scope.st = true;
+				$scope.sta = 'Enabled';
+			}
+			var status = $scope.st;
+			$http({
+				    method: 'PUT', 
+				    url: '/api/query16/'+id,
+				    data:{
+				        'status': status
+				    }
+				}).success(function(response){
+				console.log('status update done');
+			});
+			
+		}
 
 
 

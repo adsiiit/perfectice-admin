@@ -500,3 +500,36 @@ app.get('/api/query14/:id', function(req,res){
 		res.json(que);
 	});	
 });
+
+
+
+// Pass the _id of user and it will user detail along with last login and last attempt
+app.get('/api/query15/:id', function(req,res){
+	db.users.aggregate([
+	{$match: {_id:mongojs.ObjectId(req.params.id)}},
+	{$project: {name: 1, email:1, status: 1, createdAt: 1}},
+	{$lookup:{from: "userlogs", localField: "_id", foreignField: "user", as:"userlog"}},
+	{$project: {_id:1, name:1, email:1, status:1, createdAt: 1, last_login: {$max: "$userlog.updatedAt"}}},
+	{$lookup:{from: "attempts", localField: "_id", foreignField: "user", as:"attemptlog"}},
+	{$project: {_id:1, name:1, email:1, status:1, last_login:1, createdAt: 1, last_attempt: {$max: "$attemptlog.updatedAt"}}}
+	], function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que[0]);
+	});	
+});
+
+
+
+//Update the status of user
+app.put('/api/query16/:id', function(req,res){
+	var s = req.body.status;
+	db.users.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+

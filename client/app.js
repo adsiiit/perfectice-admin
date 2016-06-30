@@ -124,6 +124,10 @@ myApp.config(function($routeProvider){
 		controller: 'UserManageController',
 		templateUrl: 'views/master_data/user_manage.html'
 	})
+	.when('/user_manage/:id', {
+		controller: 'UserManageController',
+		templateUrl: 'views/master_data/user_detail.html'
+	})
 
 
 

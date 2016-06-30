@@ -10,7 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.5/angular-nvd3.min.js"></script> -->
     <link rel="stylesheet" href="/bower_components/nvd3/build/nv.d3.css">
-  
+    <style>
+    .btn
+    {
+      border-radius: 0px;
+    }
+    </style>
 
 </head>
 <body>
@@ -27,7 +32,7 @@
         <a class="navbar-brand" href="#/" style="color: rgb(159, 203, 231);"><b>MyPerfectice</b></a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" bs-active-link>
 
           <li class=""><a style="color: rgb(249, 142, 142);" href="#/master_data">Master Data</a></li>
           <li class=""><a style="color: rgb(249, 142, 142);" href="#/business_perfo">Bussiness Performance</a></li>
