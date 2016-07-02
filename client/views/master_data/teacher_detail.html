@@ -3,45 +3,45 @@
 <div class="col-md-2" ng-init="getTeacherQ()"></div>
 <div class="col-md-8" ng-init="getSignedCount()">
 
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-init="getAttemptedCount()">
 	  <!-- Default panel contents -->
-	  <div class="panel-heading"><b>Teacher Name: <span class="text-primary">{{teacherdetail.teacher_name}}</span></b></div>
+	  <div class="panel-heading" ng-init="lastAttempt()"><b>Teacher Name: <span class="text-primary">{{teacherdetail.teacher_name}}</span></b></div>
 
-	<table class="table table-bordered">
-	    <thead>
-	      <tr>
-	        <th class="col-md-4">
-	        <center><p>{{(teacherdetail.Students).length}}</p>
-	        <p ng-if="!teacherdetail.Students">0</p>
-	        <p>Students</p></center>
-	        </th>
-	        <th class="col-md-4">
-	        <center><p>{{signcount}}</p>
-	        <p>Signed Students</p></center>
-	        </th>
-	        <th class="col-md-4">
-	        <center><p>0</p>
-	        <p>Attempted</p></center>
-	        </th>
-	      </tr>
-	    </thead>
+		<table class="table table-bordered">
+		    <thead>
+		      <tr>
+		        <th class="col-md-4">
+		        <center><p>{{(teacherdetail.Students).length}}</p>
+		        <p ng-if="!teacherdetail.Students">0</p>
+		        <p>Students</p></center>
+		        </th>
+		        <th class="col-md-4">
+		        <center><p>{{signcount}}</p>
+		        <p>Signed Students</p></center>
+		        </th>
+		        <th class="col-md-4">
+		        <center><p>{{attemptedcount}}</p>
+		        <p>Attempted</p></center>
+		        </th>
+		      </tr>
+		    </thead>
 
-	  </table>
-
-
-
-		<div class="tab-container">
+		  </table>
 
 
-			<div class="btn-group btn-group-justified" role="group">
+
+		<div class="tab-container" ng-init="getStuNotReg()">
+
+
+			<div class="btn-group btn-group-justified" role="group" ng-init="stuRegNotAttempt()">
 				  <div class="btn-group" role="group">
-				    <a show-tab href="#qs" data-toggle="tab" class="btn btn-default">Question Summary</a>
+				    <a show-tab href="#qs" data-toggle="tab" class="btn btn-primary">Question Summary</a>
 				  </div>
 				  <div class="btn-group" role="group">
-				    <a show-tab href="#trend" data-toggle="tab" class="btn btn-default">Trend</a>
+				    <a show-tab href="#trend" data-toggle="tab" class="btn btn-primary">Trend</a>
 				  </div>
 				  <div class="btn-group" role="group">
-				    <a show-tab href="#report" data-toggle="tab" class="btn btn-default">Report</a>
+				    <a show-tab href="#report" data-toggle="tab" class="btn btn-primary">Report</a>
 				  </div>
 			</div>
 
@@ -58,28 +58,105 @@
 
 		     <div class="tab-pane cont" id="trend">
 		       <h2>TREND</h2>
-		       <p>Trend data</p>
+		       <p>Will Complete it Soon.. :)</p>
 		     </div>
 
+		     <br>
 		     <div class="tab-pane" id="report">
-		     REPORT<br>
-		     Report Data
+		     <br><br>
+		     	<div class="panel panel-default"">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><b class="text-danger">Students Not Registered</b></div>
+
+			     	<table class="table table-condensed">
+					   <tr>
+					      <th class="col-md-4">Email</th>
+					      <th class="col-md-4">Classrooms</th>
+					      <th class="col-md-4">Date Added</th>
+					   </tr>
+		   
+				     	<tr>
+					      <td class="col-md-4">{{ studentsList1[currentPage1-1]._id }}</td>
+					      <td class="col-md-4" ng-show="studentsList1[currentPage1-1].classroomCount > 1">Multiple</td>
+					      <td class="col-md-4" ng-hide="studentsList1[currentPage1-1].classroomCount > 1">Single</td>
+					      <td class="col-md-4">{{ studentsList1[currentPage1-1].addedAt | date }}</td>
+					   </tr>
+				   </table>
+
+				   <center><uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=1 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+
+				  </div>
+
+
+				   <br>
+		     	<div class="panel panel-default"">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><b class="text-danger">Students Registered but not taken any Test</b></div>
+
+			     	<table class="table table-condensed">
+					   <tr>
+					      <th class="col-md-4">Email</th>
+					      <th class="col-md-4">Name</th>
+					      <th class="col-md-4">Registered Date</th>
+					   </tr>
+		   
+				     	<tr>
+					      <td class="col-md-4">{{ studentsList2[currentPage2-1].email }}</td>
+					      <td class="col-md-4">{{ studentsList2[currentPage2-1].name }}</td>
+					      <td class="col-md-4">{{ studentsList2[currentPage2-1].regdate | date }}</td>
+					   </tr>
+				   </table>
+
+				   <center><uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=1 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+
+				  </div>
+
+				  <br>
+		     	<div class="panel panel-default"">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading"><b class="text-danger">Last Attempt Report</b></div>
+
+			     	<table class="table table-condensed">
+					   <tr>
+					      <th class="col-md-4">Name</th>
+					      <th class="col-md-4">Email</th>
+					      <th class="col-md-2">Classroom</th>
+					      <th class="col-md-2">Attempt Date</th>
+					   </tr>
+		   
+				     	<tr>
+					      <td class="col-md-4">{{ studentsList3[currentPage3-1].name }}</td>
+					      <td class="col-md-4">{{ studentsList3[currentPage3-1].email }}</td>
+					      <td class="col-md-2" ng-show="studentsList3[currentPage3-1].count > 1">Multiple</td>
+					      <td class="col-md-2" ng-hide="studentsList3[currentPage3-1].count > 1">Single</td>
+					      <td class="col-md-2">{{ studentsList3[currentPage3-1].lastAttempt | date }}</td>
+					   </tr>
+				   </table>
+
+				   <center><uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=1 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+
+				  </div>
+
+			  </div>
+			   
 		     </div>
 		  </div>
 		</div>
 
 
-	</div>
 </div>
 <div class="col-md-2"></div>
 
 </div>
 
 
+<!-- {{studentsList}} -->
 
 
-<!-- {{teacherdetail}} -->
-<!-- {{teacherquestions}} -->
+
+
+
+
 
 
 

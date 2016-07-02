@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('TeacherPerfoController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','$location', '$routeParams',
+	function($scope, $http, orderBy, $location, $routeParams){
 	console.log('Teacher Performance controller...');
 
 
@@ -71,6 +71,16 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', '$location', '$ro
 		});
 	}
 
+    $scope.getAttemptedCount = function(){
+        var id = $routeParams.id;
+        $http.get('/api/query20/'+id).success(function(response){
+            if(response)
+                $scope.attemptedcount = response.count;
+            else
+                $scope.attemptedcount = 0;
+        });
+    }
+
 	$scope.getTeacherQ = function(){
 		var id = $routeParams.id;
 		$http.get('/api/query14/'+id).success(function(response){
@@ -87,9 +97,58 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', '$location', '$ro
 	}
 
 
+    $scope.getStuNotReg = function(){
+        var id = $routeParams.id;
+        $http.get('/api/query21/'+id).success(function(response){
+                $scope.studentsList1 = orderBy(response, '_id');
+                /*$scope.studentsList = response;*/
+
+
+                $scope.maxSize1 = 5;
+                $scope.TotalItems1 = response.length;
+                $scope.currentPage1= 1;
+
+        });
+    }
+
+    $scope.stuRegNotAttempt = function(){
+        var id = $routeParams.id;
+        $http.get('/api/query22/'+id).success(function(response){
+                $scope.studentsList2 = orderBy(response, 'name');
+                /*$scope.studentsList = response;*/
+
+
+                $scope.maxSize2 = 5;
+                $scope.TotalItems2 = response.length;
+                $scope.currentPage2 = 1;
+
+        });
+    }
+
+
+    $scope.lastAttempt = function(){
+        var id = $routeParams.id;
+        $http.get('/api/query17/'+id).success(function(response){
+                $scope.studentsList3 = orderBy(response, 'name');
+                /*$scope.studentsList = response;*/
+
+
+                $scope.maxSize3 = 5;
+                $scope.TotalItems3 = response.length;
+                $scope.currentPage3 = 1;
+
+        });
+    }
 
 
 }]);
+
+
+
+
+
+
+
 
 myApp.directive('showTab', function () {
     return {

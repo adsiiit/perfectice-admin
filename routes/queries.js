@@ -52,18 +52,20 @@ app.get('/api/query1/:id', function(req,res){
 	});
 });
 
-//List / count of students who are added to the classroom and registered as well -- Institute wise
+//Count of students who are added to the classroom and registered as well -- Institute wise
 app.get('/api/query2/:id', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
 			res.send(err);
 		db.students.aggregate([
-		{$match: {_id: {$in: id_list}, studentId:{$exists:true}}},
+		{$match: {_id: {$in: id_list}}},
+		{$lookup:{from: "users", localField: "email", foreignField: "email", as:"stuuser"}},
+		{$unwind: "$stuuser"},
 		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
 		{$unwind: "$teacherdetail"},
 		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name", teacher_email: "$teacherdetail.email"}},
 		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name", teacher_email: "$teacher_email"}, Students: {$addToSet: "$email"}}},
-		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}, Students: "$Students"}},
+		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}}},
 		{$match:{teacher_id: mongojs.ObjectId(req.params.id)}}
 		], function(err, que){
 			if(err)
@@ -74,6 +76,122 @@ app.get('/api/query2/:id', function(req,res){
 		
 	});
 });
+
+
+
+//Count of students who attempted  -- Institute wise
+app.get('/api/query20/:id', function(req,res){
+	db.classrooms.distinct("students", {}, function(err, id_list){
+		if(err)
+			res.send(err);
+		db.students.aggregate([
+			{$match: {_id: {$in: id_list}}},
+			{$lookup:{from: "users", localField: "email", foreignField: "email", as:"stuuser"}},
+			{$unwind: "$stuuser"},
+			{$project: {email: 1, createdBy: 1, stuId: "$stuuser._id"}},
+			{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
+			{$lookup:{from: "attempts", localField: "stuId", foreignField: "user", as:"attemptdet"}},
+			{$project: {email: 1, createdBy: 1, stuId: 1, attempts: {$size: "$attemptdet"}}},
+			{$match: {attempts: {$gte: 1}}},
+			{$group: {_id:"$stuId", count: {$sum:1}}},
+			{$group: {_id: null, count: {$sum:1}}},
+			{$project: {count: 1, _id:0}}
+		], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que[0]);
+		});
+			
+		
+	});
+});
+
+
+//List of Students not registered with classroom count-- institute wise
+app.get('/api/query21/:id', function(req,res){
+	db.users.distinct("email", {}, function(err, email_list){
+		if(err)
+			res.send(err);
+		db.students.aggregate([
+		{$match: {email: {$nin: email_list}}},
+		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
+		{$unwind: "$teacherdetail"},
+		{$project: {email: 1, createdAt:1,teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name", teacher_email: "$teacherdetail.email"}},
+		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name", teacher_email: "$teacher_email"}, Students: {$push: {email: "$email", addedAt: "$createdAt"}}}},
+		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}, Students: "$Students"}},
+		{$match:{teacher_id: mongojs.ObjectId(req.params.id)}},
+		{$unwind: "$Students"},
+		{$group: {_id: "$Students.email", addedAt: {$min: "$Students.addedAt"},classroomCount: {$sum:1}}}
+		], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que);
+		});
+			
+		
+	});
+});
+
+
+//List of Students registered but not taken any test-- teacher wise
+app.get('/api/query22/:id', function(req,res){
+	db.users.distinct("email", {}, function(err, reg_list){
+		if(err)
+			res.send(err);
+		db.attempts.distinct("email", {}, function(err, attempt_list){
+			if(err)
+				res.send(err);
+
+			db.students.aggregate([
+				{$match: {email: {$in: reg_list}}},
+				{$match: {email: {$nin: attempt_list}}},
+				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
+				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
+				{$unwind: "$userdetail"},
+				{$project: {email:1,name: "$userdetail.name",regdate: "$userdetail.createdAt",_id:0}},
+				{$group: {_id: {email: "$email", name: "$name", regdate: "$regdate"},count: {$sum:1}}},
+				{$project: {email:"$_id.email",name: "$_id.name",regdate: "$_id.regdate",_id:0}}
+			], function(err, que){
+				if(err)
+					res.send(err);
+				console.log(que.length);
+				res.json(que);
+			});	
+		});	
+	});
+});
+
+
+//Last attempt report-- teacher wise
+app.get('/api/query17/:id', function(req,res){
+	db.users.distinct("email", {}, function(err, reg_list){
+		if(err)
+			res.send(err);
+		db.attempts.distinct("email", {}, function(err, attempt_list){
+			if(err)
+				res.send(err);
+
+			db.students.aggregate([
+				{$match: {email: {$in: reg_list}}},
+				{$match: {email: {$in: attempt_list}}},
+				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
+				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
+				{$unwind: "$userdetail"},
+				{$project: {email:1,name: "$userdetail.name",_id:0,id:"$userdetail._id"}},
+				{$group: {_id: {id: "$id", email: "$email", name: "$name"},count: {$sum:1}}},
+				{$project: {id:"$_id.id", email:"$_id.email",name: "$_id.name",_id:0,count:1}},
+				{$lookup:{from: "attempts", localField: "id", foreignField: "user", as:"attemptdetail"}},
+				{$project: {email:1,name: 1,count:1, lastAttempt: {$max: "$attemptdetail.createdAt"}}}
+			], function(err, que){
+				if(err)
+					res.send(err);
+				console.log(que.length);
+				res.json(que);
+			});	
+		});	
+	});
+});
+
 
 
 
