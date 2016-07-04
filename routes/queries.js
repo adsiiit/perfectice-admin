@@ -180,7 +180,7 @@ app.get('/api/query17/:id', function(req,res){
 			], function(err, que){
 				if(err)
 					res.send(err);
-				console.log(que.length);
+				//console.log(que.length);
 				res.json(que);
 			});	
 		});	

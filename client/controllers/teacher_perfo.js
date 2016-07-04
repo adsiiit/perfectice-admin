@@ -152,7 +152,11 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
         $http.get('/api/query21/'+id).success(function(response){
                 $scope.studentsList1 = orderBy(response, '_id');
                 /*$scope.studentsList = response;*/
-
+                for(i=0;i<response.length;i++)
+                {
+                    var d = new Date(($scope.studentsList1[i]).addedAt);
+                    ($scope.studentsList1[i]).addedAt = d.toLocaleDateString();
+                }
 
                 $scope.maxSize1 = 5;
                 $scope.TotalItems1 = response.length;
@@ -166,7 +170,11 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
         $http.get('/api/query22/'+id).success(function(response){
                 $scope.studentsList2 = orderBy(response, 'name');
                 /*$scope.studentsList = response;*/
-
+                for(i=0;i<response.length;i++)
+                {
+                    var d = new Date(($scope.studentsList2[i]).regdate);
+                    ($scope.studentsList2[i]).regdate = d.toLocaleDateString();
+                }
 
                 $scope.maxSize2 = 5;
                 $scope.TotalItems2 = response.length;
@@ -181,7 +189,11 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
         $http.get('/api/query17/'+id).success(function(response){
                 $scope.studentsList3 = orderBy(response, 'name');
                 /*$scope.studentsList = response;*/
-
+                for(i=0;i<response.length;i++)
+                {
+                    var d = new Date(($scope.studentsList3[i]).lastAttempt);
+                    ($scope.studentsList3[i]).lastAttempt = d.toLocaleDateString();
+                }
 
                 $scope.maxSize3 = 5;
                 $scope.TotalItems3 = response.length;

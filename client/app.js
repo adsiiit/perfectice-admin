@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap']);
+var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap','ngSanitize', 'ngCsv']);
 
 myApp.config(function($routeProvider){
 	$routeProvider.when('/', {

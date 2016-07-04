@@ -116,7 +116,10 @@
 					   </tr>
 				   </table>
 
-				   <center><uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=1 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+				   <center>
+					   <uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=1 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <button class="btn btn-info pull-right" type="button" ng-csv="studentsList1" csv-header="['Email', 'Date Added', 'Classrooms']" filename="studentsNotRegistered.csv">Export</button>
+				   </center>
 
 				  </div>
 
@@ -140,7 +143,10 @@
 					   </tr>
 				   </table>
 
-				   <center><uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=1 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+				   <center>
+					   <uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=1 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name', 'Registration Date']" filename="studentsNotAttempt.csv">Export</button>
+				   </center>
 
 				  </div>
 
@@ -166,7 +172,11 @@
 					   </tr>
 				   </table>
 
-				   <center><uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=1 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination></center>
+				   <center>
+					   <uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=1 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Attempt Date']" filename="lastAttempt.csv">Export</button>
+				   </center>
+
 
 				  </div>
 
@@ -185,11 +195,12 @@
 
 
 
+
+
 			     
 
 				
 
-<!-- {{studentsList}} -->
 
 
 
