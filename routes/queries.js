@@ -651,3 +651,142 @@ app.put('/api/query16/:id', function(req,res){
 });
 
 
+
+
+//Trend of Attempts -- Teacher wise
+app.get('/api/query35/:id', function(req,res){
+	db.students.distinct("email", {}, function(err, stu_list){
+		if(err)
+			res.send(err);
+		db.users.aggregate([
+		{$match: {email: {$in: stu_list}}},
+		{$project: {email:1}},
+		{$lookup:{from: "students", localField: "email", foreignField: "email", as:"studetail"}},
+		{$unwind: "$studetail"},
+		{$match:{"studetail.createdBy": mongojs.ObjectId(req.params.id)}},
+		{$project: {email:1}},
+		{$group : {"_id" : "$_id"}},
+		{$lookup:{from: "attempts", localField: "_id", foreignField: "user", as:"attemptdetail"}},
+		{$unwind: "$attemptdetail"},
+		{$project:{"year":{$year:"$attemptdetail.createdAt"}, 
+		          "month":{$month:"$attemptdetail.createdAt"}, 
+		          "day": {$dayOfMonth:"$attemptdetail.createdAt"}
+		}}, 
+		{$group:{
+		      _id:{year:"$year", month:"$month", day:"$day"},
+		       "count":{$sum:1}
+		}},
+		{$match:{
+		          "_id.year": new Date().getFullYear(),
+		          "_id.month": new Date().getMonth()-1
+		    }},
+		{$project: {day: "$_id.day", count:1, _id: 0}},
+
+		{$sort: {day: 1}}
+		], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que);
+		});
+			
+		
+	});
+});
+
+
+
+//Registration Trend  -- Teacher wise
+
+app.get('/api/query36/:id', function(req,res){
+	db.students.distinct("email", {}, function(err, stu_list){
+		if(err)
+			res.send(err);
+		db.users.aggregate([
+		{$match: {email: {$in: stu_list}}},
+		{$project: {email:1,createdAt:1}},
+		{$lookup:{from: "students", localField: "email", foreignField: "email", as:"studetail"}},
+		{$unwind: "$studetail"},
+		{$match:{"studetail.createdBy": mongojs.ObjectId(req.params.id)}},
+		{$group : {"_id" : "$createdAt"}},
+		{$project:{"year":{$year:"$_id"}, 
+		          "month":{$month:"$_id"}, 
+		          "day": {$dayOfMonth:"$_id"}
+		}}, 
+		{$group:{
+		      _id:{year:"$year", month:"$month", day:"$day"},
+		       "count":{$sum:1}
+		}},
+		{$match:{
+		          "_id.year": new Date().getFullYear(),
+		          "_id.month": new Date().getMonth()-1
+		    }},
+		{$project: {day: "$_id.day", count:1, _id: 0}},
+		{$sort: {day: 1}}
+		], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que);
+		});
+			
+		
+	});
+});
+
+
+//Practice sets created – Institute wise
+
+app.get('/api/query37/:id', function(req,res){
+	db.practicesets.aggregate([
+	
+	{$project: {user:1,createdAt:1}},
+	{$match: {user:mongojs.ObjectId(req.params.id)}},
+
+	{$project:{"year":{$year:"$createdAt"}, 
+	          "month":{$month:"$createdAt"}, 
+	          "day": {$dayOfMonth:"$createdAt"}
+	}}, 
+	{$group:{
+	      _id:{year:"$year", month:"$month", day:"$day"},
+	       "count":{$sum:1}
+	}},
+	{$match:{
+	          "_id.year": new Date().getFullYear(),
+	          "_id.month": new Date().getMonth()-2
+	    }},
+	{$project: {day: "$_id.day", count:1, _id: 0}},
+	{$sort: {day: 1}}
+	], function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+
+//Trend of Questions added  -- Institute wise
+app.get('/api/query38/:id', function(req,res){
+	db.questions.aggregate([
+	
+	{$project: {user:1,createdAt:1}},
+	{$match: {user:mongojs.ObjectId(req.params.id)}},
+
+	{$project:{"year":{$year:"$createdAt"}, 
+          "month":{$month:"$createdAt"}, 
+          "day": {$dayOfMonth:"$createdAt"}
+	}}, 
+	{$group:{
+	      _id:{year:"$year", month:"$month", day:"$day"},
+	       "count":{$sum:1}
+	}},
+	{$match:{
+	          "_id.year": new Date().getFullYear(),
+	          "_id.month": new Date().getMonth()-2
+	    }},
+	{$project: {day: "$_id.day", count:1, _id: 0}},
+	{$sort: {day: 1}}
+	], function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
