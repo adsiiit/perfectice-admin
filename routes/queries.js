@@ -31,24 +31,19 @@ app.get('/api/query0/:email', function(req,res){
 
 //List / count of students who are added to the classroom  -- Institute wise
 app.get('/api/query1/:id', function(req,res){
-	db.classrooms.distinct("students", {}, function(err, id_list){
+	db.users.aggregate([
+	{$match: {role:"teacher"}},
+	{$lookup:{from: "students", localField: "_id", foreignField: "createdBy", as:"students"}},
+	{$project: {name:1,email:1,students:1}},
+	{$unwind: {path: "$students", preserveNullAndEmptyArrays: true}},
+	{$project: {name:1, email:1,stu_email: "$students.email"}},
+	{$group: {_id: {_id: "$_id", name: "$name", email: "$email"}, students: {$addToSet: "$stu_email"}}},
+	{$project: {teacher_id: "$_id._id", teacher_name: "$_id.name", teacher_email: "$_id.email", count: {$size: "$students"}, _id:0}},
+	{$match:{teacher_id: mongojs.ObjectId(req.params.id)}}
+	], function(err, que){
 		if(err)
 			res.send(err);
-		db.students.aggregate([
-		{$match: {_id: {$in: id_list}}},
-		{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
-		{$unwind: "$teacherdetail"},
-		{$project: {email: 1, teacher_id: "$teacherdetail._id", teacher_name: "$teacherdetail.name", teacher_email: "$teacherdetail.email"}},
-		{$group: {_id:{teacher_id: "$teacher_id", teacher_name: "$teacher_name", teacher_email: "$teacher_email"}, Students: {$addToSet: "$email"}}},
-		{$project: {_id: 0, teacher_id: "$_id.teacher_id", teacher_name: "$_id.teacher_name", teacher_email:"$_id.teacher_email", count: {$size: "$Students"}, Students: "$Students"}},
-		{$match:{teacher_id: mongojs.ObjectId(req.params.id)}}
-		], function(err, que){
-			if(err)
-				res.send(err);
-			res.json(que[0]);
-		});
-			
-		
+		res.json(que[0]);
 	});
 });
 
@@ -678,9 +673,9 @@ app.get('/api/query35/:id', function(req,res){
 		}},
 		{$match:{
 		          "_id.year": new Date().getFullYear(),
-		          "_id.month": new Date().getMonth()-1
+		          "_id.month": new Date().getMonth()
 		    }},
-		{$project: {day: "$_id.day", count:1, _id: 0}},
+		{$project: {month: "$_id.month", day: "$_id.day", count:1, _id: 0}},
 
 		{$sort: {day: 1}}
 		], function(err, que){
@@ -718,9 +713,9 @@ app.get('/api/query36/:id', function(req,res){
 		}},
 		{$match:{
 		          "_id.year": new Date().getFullYear(),
-		          "_id.month": new Date().getMonth()-1
+		          "_id.month": new Date().getMonth()
 		    }},
-		{$project: {day: "$_id.day", count:1, _id: 0}},
+		{$project: {month: "$_id.month", day: "$_id.day", count:1, _id: 0}},
 		{$sort: {day: 1}}
 		], function(err, que){
 			if(err)
@@ -751,9 +746,9 @@ app.get('/api/query37/:id', function(req,res){
 	}},
 	{$match:{
 	          "_id.year": new Date().getFullYear(),
-	          "_id.month": new Date().getMonth()-2
+	          "_id.month": new Date().getMonth()
 	    }},
-	{$project: {day: "$_id.day", count:1, _id: 0}},
+	{$project: {month: "$_id.month", day: "$_id.day", count:1, _id: 0}},
 	{$sort: {day: 1}}
 	], function(err, que){
 		if(err)
@@ -780,9 +775,9 @@ app.get('/api/query38/:id', function(req,res){
 	}},
 	{$match:{
 	          "_id.year": new Date().getFullYear(),
-	          "_id.month": new Date().getMonth()-2
+	          "_id.month": new Date().getMonth()
 	    }},
-	{$project: {day: "$_id.day", count:1, _id: 0}},
+	{$project: {month: "$_id.month", day: "$_id.day", count:1, _id: 0}},
 	{$sort: {day: 1}}
 	], function(err, que){
 		if(err)

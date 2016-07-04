@@ -40,7 +40,7 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
             },
             title: {
                 enable: false,
-                text: 'Attempt Trend in last 30 days'
+                text: 'Write your text and enable it'
             }
         };
 

@@ -11,8 +11,7 @@
 		    <thead>
 		      <tr>
 		        <th class="col-md-4">
-		        <center><p>{{(teacherdetail.Students).length}}</p>
-		        <p ng-if="!teacherdetail.Students">0</p>
+		        <center><p>{{teacherdetail.count}}</p>
 		        <p>Students</p></center>
 		        </th>
 		        <th class="col-md-4">
@@ -51,15 +50,49 @@
 		       <li><a show-tab href="#report" data-toggle="tab">Report</a></li>
 		    </ul> -->
 		 <div class="tab-content">
-		    <div class="tab-pane cont" id="qs">
+		    <div class="tab-pane cont active" id="qs">
 		    	<br><br>
 		        <center><nvd3 options="options" data="data"></nvd3></center>
 		     </div>
 
+
+		     <br>
 		     <div class="tab-pane cont" id="trend">
-		       <h2>TREND</h2>
-		       <p>Will Complete it Soon.. :)</p>
+		     <br>
+			     <div class="row">
+			       <div class="col-md-6" ng-init="attemptsTrend()">
+
+					<nvd3 options="optionsline" data="dataAttempt" class="with-3d-shadow with-transitions"></nvd3>
+
+					</div>
+
+					<div class="col-md-6" ng-init="registrationTrend()">
+
+					<nvd3 options="optionsline" data="dataRegistration" class="with-3d-shadow with-transitions"></nvd3>
+
+					</div>
+					<br>
+				</div>
+				<br>
+				<div class="row">
+			       <div class="col-md-6" ng-init="practiceTestTrend()">
+
+					<nvd3 options="optionsline" data="dataPractice" class="with-3d-shadow with-transitions"></nvd3>
+
+					</div>
+
+					<div class="col-md-6" ng-init="questionsTrend()">
+
+					<nvd3 options="optionsline" data="dataQuestions" class="with-3d-shadow with-transitions"></nvd3>
+
+					</div>
+
+				</div>
+				<br>
 		     </div>
+
+
+
 
 		     <br>
 		     <div class="tab-pane" id="report">
@@ -78,7 +111,7 @@
 				     	<tr>
 					      <td class="col-md-4">{{ studentsList1[currentPage1-1]._id }}</td>
 					      <td class="col-md-4" ng-show="studentsList1[currentPage1-1].classroomCount > 1">Multiple</td>
-					      <td class="col-md-4" ng-hide="studentsList1[currentPage1-1].classroomCount > 1">Single</td>
+					      <td class="col-md-4" ng-show="studentsList1[currentPage1-1].classroomCount == 1">Single</td>
 					      <td class="col-md-4">{{ studentsList1[currentPage1-1].addedAt | date }}</td>
 					   </tr>
 				   </table>
@@ -128,7 +161,7 @@
 					      <td class="col-md-4">{{ studentsList3[currentPage3-1].name }}</td>
 					      <td class="col-md-4">{{ studentsList3[currentPage3-1].email }}</td>
 					      <td class="col-md-2" ng-show="studentsList3[currentPage3-1].count > 1">Multiple</td>
-					      <td class="col-md-2" ng-hide="studentsList3[currentPage3-1].count > 1">Single</td>
+					      <td class="col-md-2" ng-show="studentsList3[currentPage3-1].count == 1">Single</td>
 					      <td class="col-md-2">{{ studentsList3[currentPage3-1].lastAttempt | date }}</td>
 					   </tr>
 				   </table>
@@ -149,6 +182,12 @@
 
 </div>
 
+
+
+
+			     
+
+				
 
 <!-- {{studentsList}} -->
 

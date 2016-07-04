@@ -4,6 +4,10 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
 	function($scope, $http, orderBy, $location, $routeParams){
 	console.log('Teacher Performance controller...');
 
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var d = new Date();
+    $scope.month = months[d.getMonth()-1];
+
 
 	$scope.options = {
             chart: {
@@ -36,6 +40,52 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
               "css":{"width":"nullpx",
               "textAlign":"center"}}*/
         };
+
+
+
+
+
+
+        $scope.optionsline = {
+            chart: {
+                type: 'lineChart',
+                height: 300,
+                width: 370,
+                margin : {
+                    top: 20,
+                    right: 20,
+                    bottom: 40,
+                    left: 55
+                },
+                x: function(d){ return d.x; },
+                y: function(d){ return d.y; },
+                useInteractiveGuideline: true,
+                dispatch: {
+                    stateChange: function(e){ console.log("stateChange"); },
+                    changeState: function(e){ console.log("changeState"); },
+                    tooltipShow: function(e){ console.log("tooltipShow"); },
+                    tooltipHide: function(e){ console.log("tooltipHide"); }
+                },
+                xAxis: {
+                    axisLabel: $scope.month
+                },
+                yAxis: {
+                    axisLabel: ' ',
+                    tickFormat: function(d){
+                        return d3.format('.02f')(d);
+                    },
+                    axisLabelDistance: -10
+                },
+                callback: function(chart){
+                    console.log("!!! lineChart callback !!!");
+                }
+            },
+            title: {
+                enable: false,
+                text: 'Write your text and enable it'
+            }
+        };
+
 
 
 	$scope.getID = function(){
@@ -141,47 +191,132 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
     }
 
 
-}]);
 
+    /* Attempts trend last month*/
+    $scope.attemptsTrend = function(){
+        var id = $routeParams.id;
+        $http.get('api/query35/'+id).success(function(response){
+            var trend = response;
+            var chartData = [];
 
+            
 
+              for(i=0,j=0; i<31 ; i++)
+              {
 
-
-
-
-
-myApp.directive('showTab', function () {
-    return {
-        link: function (scope, element, attrs) {
-            element.click(function (e) {
-                e.preventDefault();
-                jQuery(element).tab('show');
-            });
-        }
-    };
-});
-
-
-
-myApp.directive('bsActiveLink', ['$location', function ($location) {
-return {
-    restrict: 'A', //use as attribute 
-    replace: false,
-    link: function (scope, elem) {
-        //after the route has changed
-        scope.$on("$routeChangeSuccess", function () {
-            var hrefs = ['/#' + $location.path(),
-                         '#' + $location.path(), //html5: false
-                         $location.path()]; //html5: true
-            angular.forEach(elem.find('a'), function (a) {
-                a = angular.element(a);
-                if (-1 !== hrefs.indexOf(a.attr('href'))) {
-                    a.parent().addClass('active');
-                } else {
-                    a.parent().removeClass('active');   
-                };
-            });     
+                  if(j<trend.length && trend[j].day==i+1)
+                    {
+                        chartData.push({x: i+1 , y: trend[j].count});
+                        j++;
+                    }
+                  else
+                  chartData.push({x: i+1 , y: 0});
+              }
+            //console.log(chartData);
+            $scope.dataAttempt = [{
+                    values: chartData,    
+                    key: 'Attempts',
+                    color: '#d9534f',  
+                }];
         });
     }
-}
+
+
+    /* Registration trend last month*/
+    $scope.registrationTrend = function(){
+        var id = $routeParams.id;
+        $http.get('api/query36/'+id).success(function(response){
+            var trend = response;
+            var chartData = [];
+
+            
+
+              for(i=0,j=0; i<31 ; i++)
+              {
+
+                  if(j<trend.length && trend[j].day==i+1)
+                    {
+                        chartData.push({x: i+1 , y: trend[j].count});
+                        j++;
+                    }
+                  else
+                  chartData.push({x: i+1 , y: 0});
+              }
+            //console.log(chartData);
+            $scope.dataRegistration = [{
+                    values: chartData,    
+                    key: 'Registration',
+                    color: '#1ca0c3',  
+                }];
+        });
+    }
+
+    /* Practice sets created trend last month*/
+    $scope.practiceTestTrend = function(){
+        var id = $routeParams.id;
+        $http.get('api/query37/'+id).success(function(response){
+            var trend = response;
+            var chartData = [];
+
+            
+
+              for(i=0,j=0; i<31 ; i++)
+              {
+
+                  if(j<trend.length && trend[j].day==i+1)
+                    {
+                        chartData.push({x: i+1 , y: trend[j].count});
+                        j++;
+                    }
+                  else
+                  chartData.push({x: i+1 , y: 0});
+              }
+            //console.log(chartData);
+            $scope.dataPractice = [{
+                    values: chartData,    
+                    key: 'Practice Tests',
+                    color: '#d9534f',  
+                }];
+        });
+    }
+
+    /* Questions added trend last month*/
+    $scope.questionsTrend = function(){
+        var id = $routeParams.id;
+        $http.get('api/query38/'+id).success(function(response){
+            var trend = response;
+            var chartData = [];
+
+            
+
+              for(i=0,j=0; i<31 ; i++)
+              {
+
+                  if(j<trend.length && trend[j].day==i+1)
+                    {
+                        chartData.push({x: i+1 , y: trend[j].count});
+                        j++;
+                    }
+                  else
+                  chartData.push({x: i+1 , y: 0});
+              }
+            
+            $scope.dataQuestions = [{
+                    values: chartData,    
+                    key: 'Questions',
+                    color: '#1ca0c3',  
+                }];
+            //console.log($scope.dataQuestions);
+        });
+    }
+
+
+
+
+
+
+
 }]);
+
+
+
