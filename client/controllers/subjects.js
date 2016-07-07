@@ -55,6 +55,14 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		});
 	}
 
+	$scope.getGradeName = function(){
+		var id = $routeParams.id;
+		$http.get('/api/grades/'+id).success(function(response){
+			$scope.gradeName = response.name;
+		});
+	}
+
+
 
 
 	$scope.getTopics = function(){
@@ -93,15 +101,25 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		var id = $routeParams.id;
 		$http.get('/api/subjects/'+id).success(function(response){
 			$scope.subject = response;
+			$http.get('/api/grades/'+response.grade).success(function(response){
+			$scope.gradeName = response.name;
+			});
 		});
 	}
 
 
 	$scope.addSubject = function(){
+		var id = $routeParams.id;
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
-		$http.post('/api/subjects/', $scope.subject).success(function(response){
+		($scope.subject).grade = String(id);
+		$http.get('/api/grades/'+id).success(function(response1){
+			//console.log(response1.countryCode);
+			($scope.subject).countryCode = String(response1.countryCode);
+			$http.post('/api/subjects/', $scope.subject).success(function(response){
 			window.location.href='#/master_data';
+			});
 		});
+
 	}
 
 	$scope.updateSubject = function(){
@@ -119,11 +137,6 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 	}
 
 
-	$scope.getGrade = function(){
-		var par = $routeParams.id;
-		var subject = {"grade": par}
-		$scope.subject = subject
-	}	
 
 
 }]);

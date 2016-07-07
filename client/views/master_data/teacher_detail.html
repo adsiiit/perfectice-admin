@@ -99,7 +99,10 @@
 		     <br><br>
 		     	<div class="panel panel-default"">
 				  <!-- Default panel contents -->
-				  <div class="panel-heading"><b class="text-danger">Students Not Registered</b></div>
+				  <div class="panel-heading">
+					<button class="btn btn-info pull-right" type="button" ng-csv="studentsList1" csv-header="['Email', 'Date Added', 'Classrooms']" filename="studentsNotRegistered.csv">Export</button>
+					<h5 style="margin: 8px; font-size: 16px;" class="text-danger">Students Not Registered</h5>
+					</div>
 
 			     	<table class="table table-condensed">
 					   <tr>
@@ -118,7 +121,7 @@
 
 				   <center>
 					   <uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=1 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
-					   <button class="btn btn-info pull-right" type="button" ng-csv="studentsList1" csv-header="['Email', 'Date Added', 'Classrooms']" filename="studentsNotRegistered.csv">Export</button>
+					   
 				   </center>
 
 				  </div>
@@ -127,7 +130,9 @@
 				   <br>
 		     	<div class="panel panel-default"">
 				  <!-- Default panel contents -->
-				  <div class="panel-heading"><b class="text-danger">Students Registered but not taken any Test</b></div>
+				  <div class="panel-heading">
+				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name', 'Registration Date']" filename="studentsNotAttempt.csv">Export</button>
+				  	<h5 style="margin: 8px; font-size: 16px;" class="text-danger">Students Registered but not taken any Test</h></div>
 
 			     	<table class="table table-condensed">
 					   <tr>
@@ -145,7 +150,7 @@
 
 				   <center>
 					   <uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=1 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
-					   <button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name', 'Registration Date']" filename="studentsNotAttempt.csv">Export</button>
+					   
 				   </center>
 
 				  </div>
@@ -153,7 +158,9 @@
 				  <br>
 		     	<div class="panel panel-default"">
 				  <!-- Default panel contents -->
-				  <div class="panel-heading"><b class="text-danger">Last Attempt Report</b></div>
+				  <div class="panel-heading">
+				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Attempt Date']" filename="lastAttempt.csv">Export</button>
+				  	<h5 style="margin: 8px; font-size: 16px;" class="text-danger">Last Attempt Report</h></div>
 
 			     	<table class="table table-condensed">
 					   <tr>
@@ -174,7 +181,7 @@
 
 				   <center>
 					   <uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=1 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
-					   <button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Attempt Date']" filename="lastAttempt.csv">Export</button>
+					   
 				   </center>
 
 

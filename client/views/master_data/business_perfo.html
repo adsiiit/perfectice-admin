@@ -1,16 +1,20 @@
 <div class="row">
 <br><br>
-<div class="col-md-6" ng-init="attemptsTrend30()">
+<div class="col-md-6" ng-init="attemptsTrend()">
 
-<center><h4 style="background-color: #5cb85c;">Attempts trend in last 30 days</h4></center><br>
-<nvd3 options="options" data="dataAttempt30" class="with-3d-shadow with-transitions"></nvd3>
+<center><h4 style="background-color: #5cb85c;">Attempts Trend</h4></center><br>
+<rzslider rz-slider-model="slider1.value1"
+          rz-slider-options="slider1.options1"></rzslider>
+<nvd3 options="options" data="dataAttempt" class="with-3d-shadow with-transitions"></nvd3>
 
 </div>
 
-<div class="col-md-6" ng-init="signupTrend30()">
+<div class="col-md-6" ng-init="signupTrend()">
 
-<center><h4 style="background-color: #f0ad4e;">Signup Trend in last 30 days</h4></center><br>
-<nvd3 options="options" data="dataSignup30" class="with-3d-shadow with-transitions"></nvd3>
+<center><h4 style="background-color: #f0ad4e;">Signup Trend</h4></center><br>
+<rzslider rz-slider-model="slider2.value2"
+          rz-slider-options="slider2.options2"></rzslider>
+<nvd3 options="options" data="dataSignup" class="with-3d-shadow with-transitions"></nvd3>
 
 </div>
 <!-- <div class="col-md-6" ng-init="studentsTrend30()">
@@ -19,45 +23,6 @@
 <nvd3 options="options" data="dataStudents30" class="with-3d-shadow with-transitions"></nvd3>
 
 </div> -->
-</div>
-
-<br><br>
-
-<div class="row">
-<br><br>
-<div class="col-md-6" ng-init="attemptsTrend45()">
-
-<center><h4 style="background-color: #5cb85c;">Attempts trend in last 45 days</h4></center><br>
-<nvd3 options="options" data="dataAttempt45" class="with-3d-shadow with-transitions"></nvd3>
-
-</div>
-
-<div class="col-md-6" ng-init="signupTrend45()">
-
-<center><h4 style="background-color: #f0ad4e;">Signup Trend in last 45 days</h4></center><br>
-<nvd3 options="options" data="dataSignup45" class="with-3d-shadow with-transitions"></nvd3>
-
-</div>
-</div>
-
-
-<br><br>
-
-<div class="row">
-<br><br>
-<div class="col-md-6" ng-init="attemptsTrend90()">
-
-<center><h4 style="background-color: #5cb85c;">Attempts trend in last 90 days</h4></center><br>
-<nvd3 options="options" data="dataAttempt90" class="with-3d-shadow with-transitions"></nvd3>
-
-</div>
-
-<div class="col-md-6" ng-init="signupTrend90()">
-
-<center><h4 style="background-color: #f0ad4e;">Signup Trend in last 90 days</h4></center><br>
-<nvd3 options="options" data="dataSignup90" class="with-3d-shadow with-transitions"></nvd3>
-
-</div>
 </div>
 
 

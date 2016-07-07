@@ -51,7 +51,7 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 /* Student added trend -- starts*/
 
 	/* Students added trend last month*/
-	$scope.studentsTrend30 = function(){
+/*	$scope.studentsTrend30 = function(){
 		$http.get('api/query19/30').success(function(response){
 			$scope.studentstrend30 = response;
 			var trend = response;
@@ -67,15 +67,15 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
                 }];
 
 		});
-	}
+	}*/
 
 	/* Students added count last month*/
-	$scope.studentsCount30 = function(){
+/*	$scope.studentsCount30 = function(){
 		$http.get('api/query18/30').success(function(response){
 			$scope.studentscount30 = response;
 		});
 	}
-
+*/
 
 /* Student added trend -- ends*/
 
@@ -83,77 +83,71 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 ///////////////////////////////////////////////////////////////////////////
 
 /* Attempts trend -- starts*/
+
+
+	$scope.attemptsTrend=function()
+	{
+		$http.get('api/query12/7').success(function(response){
+				$scope.attemptstrend = response;
+				var trend = response;
+			    var chartData = [];
+
+				  for(i=0; i<trend.length; i++)
+				  {	
+				      chartData.push({x: i+1 , y: trend[i].count});
+				  }
+			    //console.log(chartData);
+				$scope.dataAttempt = [{
+	                    values: chartData,    
+	                    key: 'Attempt Trend',
+	                    color: '#d9534f',  
+	                }];
+			});
+	}
+
 	
-	/* Attempts trend last month*/
-	$scope.attemptsTrend30 = function(){
-		$http.get('api/query12/30').success(function(response){
-			$scope.attemptstrend30 = response;
-			var trend = response;
-		    var chartData = [];
+	$scope.slider1 = {
+	  value1: 7,
+	  options1: {
+	    showTicksValues: true,
+	    stepsArray: [
+	      {value: 7},
+	      {value: 30},
+	      {value: 45},
+	      {value: 90},
+	      {value: 180}
+	    ],
+	    onChange: function(){
+	    	//console.log(($scope.slider1).value1);
+	    	var val = String(($scope.slider1).value1);
+	    	$http.get('api/query12/'+val).success(function(response){
+				$scope.attemptstrend = response;
+				var trend = response;
+			    var chartData = [];
 
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-		    console.log(chartData);
-			$scope.dataAttempt30 = [{
-                    values: chartData,    
-                    key: 'Attempt Trend',
-                    color: '#d9534f',  
-                }];
-		});
-	}
-
-
-	/* Attempts trend in last 45 days*/
-	$scope.attemptsTrend45 = function(){
-		$http.get('api/query12/45').success(function(response){
-			$scope.attemptstrend45 = response;
-			var trend = response;
-		    var chartData = [];
-
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-		    console.log(chartData);
-			$scope.dataAttempt45 = [{
-                    values: chartData,    
-                    key: 'Attempt Trend', 
-                    color: '#d9534f', 
-                }];
-		});
-	}
-
-
-	/* Attempts trend in last 90 days*/
-	$scope.attemptsTrend90 = function(){
-		$http.get('api/query12/90').success(function(response){
-			$scope.attemptstrend90 = response;
-			var trend = response;
-		    var chartData = [];
-
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-		    console.log(chartData);
-			$scope.dataAttempt90 = [{
-                    values: chartData,      
-                    key: 'Attempt Trend', 
-                    color: '#d9534f',  
-                }];
-		});
-	}
+				  for(i=0; i<trend.length; i++)
+				  {	
+				      chartData.push({x: i+1 , y: trend[i].count});
+				  }
+			    //console.log(chartData);
+				$scope.dataAttempt = [{
+	                    values: chartData,    
+	                    key: 'Attempt Trend',
+	                    color: '#d9534f',  
+	                }];
+			});
+	    }
+	  }
+	};
 
 
 	/* Attempts count last month*/
-	$scope.attemptsCount30 = function(){
+/*	$scope.attemptsCount30 = function(){
 		$http.get('api/query13/30').success(function(response){
 			$scope.attemptscount30 = response;
 		});
 	}
-
+*/
 /* Attempts trend -- ends*/
 
 
@@ -163,65 +157,62 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 
 /* Signup trend -- starts*/
 	
-	/* Signup trend last month*/
-	$scope.signupTrend30 = function(){
-		$http.get('api/query34/30').success(function(response){
-			$scope.signuptrend30 = response;
-			var trend = response;
-		    var chartData = [];
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-			$scope.dataSignup30 = [{
-                    values: chartData,     
-                    key: 'Signup Trend', 
-                    color: '#1ca0c3', 
-                }];
-		});
-	}
+	
+	$scope.signupTrend=function()
+	{
+		$http.get('api/query34/7').success(function(response){
+				$scope.signuptrend = response;
+				var trend = response;
+			    var chartData = [];
+				  for(i=0; i<trend.length; i++)
+				  {	
+				      chartData.push({x: i+1 , y: trend[i].count});
+				  }
+				$scope.dataSignup = [{
+	                    values: chartData,     
+	                    key: 'Signup Trend', 
+	                    color: '#1ca0c3', 
+	                }];
+			});
+	}	
 
-	/* Signup trend in last 45 days*/
-	$scope.signupTrend45 = function(){
-		$http.get('api/query34/45').success(function(response){
-			$scope.signuptrend45 = response;
-			var trend = response;
-		    var chartData = [];
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-			$scope.dataSignup45 = [{
-                    values: chartData,    
-                    key: 'Signup Trend', 
-                    color: '#1ca0c3',  
-                }];
-		});
-	}
 
-	/* Signup trend in last 90 days*/
-	$scope.signupTrend90 = function(){
-		$http.get('api/query34/90').success(function(response){
-			$scope.signuptrend90 = response;
-			var trend = response;
-		    var chartData = [];
-			  for(i=0; i<trend.length; i++)
-			  {	
-			      chartData.push({x: i+1 , y: trend[i].count});
-			  }
-			$scope.dataSignup90 = [{
-                    values: chartData,    
-                    key: 'Signup Trend', 
-                    color: '#1ca0c3',  
-                }];
-		});
-	}
-
+	$scope.slider2 = {
+	  value2: 7,
+	  options2: {
+	    showTicksValues: true,
+	    stepsArray: [
+	      {value: 7},
+	      {value: 30},
+	      {value: 45},
+	      {value: 90},
+	      {value: 180}
+	    ],
+	    onChange: function(){
+	    	//console.log(($scope.slider2).value2);
+	    	var val = String(($scope.slider2).value2);
+			$http.get('api/query34/'+val).success(function(response){
+				$scope.signuptrend = response;
+				var trend = response;
+			    var chartData = [];
+				  for(i=0; i<trend.length; i++)
+				  {	
+				      chartData.push({x: i+1 , y: trend[i].count});
+				  }
+				$scope.dataSignup = [{
+	                    values: chartData,     
+	                    key: 'Signup Trend', 
+	                    color: '#1ca0c3', 
+	                }];
+			});
+	    }
+	  }
+	};
 
 
 /* Signup trend -- ends*/
 
 
-
+	
 
 }]);

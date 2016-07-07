@@ -22,15 +22,28 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 		});
 	}
 
+	$scope.getSubjectName = function(){
+		var id = $routeParams.id;
+		$http.get('/api/subjects/'+id).success(function(response){
+			$scope.subjectName = response.name;
+		});
+	}
+
+
 	$scope.getTopic = function(){
 		var id = $routeParams.id;
 		$http.get('/api/topics/'+id).success(function(response){
 			$scope.topic = response;
+			$http.get('/api/subjects/'+response.subject).success(function(response){
+			$scope.subjectName = response.name;
+			});
 		});
 	}
 
 
 	$scope.addTopic = function(){
+		var id = $routeParams.id;
+		($scope.topic).subject = String(id);
 		($scope.topic).slugfly = Slug.slugify(($scope.topic).name);
 		$http.post('/api/topics/', $scope.topic).success(function(response){
 			window.location.href='#/master_data';
@@ -51,10 +64,5 @@ myApp.controller('TopicsController', ['$scope', '$http', '$location', '$routePar
 		});
 	}
 
-	$scope.getSubject = function(){
-		var par = $routeParams.id;
-		var topic = {"subject": par}
-		$scope.topic = topic
-	}	
 
 }]);

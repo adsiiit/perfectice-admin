@@ -17,26 +17,11 @@
 						    <input type="text" class="form-control" ng-model="subject.name" placeholder="Subject Name">
 						  </div>
 
-<!-- 						  <div class="form-group">
-						    <label>SlugFly</label>
-						    <input type="text" class="form-control" ng-model="subject.slugfly" placeholder="Slugfly">
-						  </div> -->
 
 						  <div class="form-group">
-						    <label>Country Code</label>
-						    <!-- <input type="text" class="form-control" ng-model="subject.countryCode" placeholder="Country Code"> -->
-						    <select class="form-control" ng-model="subject.countryCode">
-							   	<option value="IN">India</option>
-							   	<option value="US">USA</option>
-							</select>
-						  </div>
-
-						  <div class="form-group">
-							  <label>Select Exam:</label>
-							  <select class="form-control" ng-model="subject.grade">
-							   	<option ng-repeat="grade in grades | orderBy:'name' " value="{{ grade._id }}">{{ grade.name }}</option>
-							  </select>
-							</div>
+							  <label>Exam:</label>
+							  <input class="form-control" type="text" value="{{gradeName}}" readonly>
+						   </div>
 
 						   <div class="form-group">
 							  <label>Select Topics:</label>
@@ -44,9 +29,10 @@
 							   	<option ng-repeat="topic in topics | orderBy:'name' " value="{{ topic._id }}">{{ topic.name }}</option>
 							  </select>
 							</div>
-
-						  <button type="submit" class="btn btn-info">Submit</button>
-					      <a class="btn btn-danger pull-right" href="#/grades/details/{{subject.grade}}">Cancel</a>
+							<div class="pull-right">
+							  <button type="submit" class="btn btn-info">Submit</button>
+						      <a class="btn btn-danger" href="#/grades/details/{{subject.grade}}">Cancel</a>
+					        </div>
 						</form>
 					</div>
 				  </div>
