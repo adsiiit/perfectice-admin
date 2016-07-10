@@ -6,6 +6,7 @@ var subjectSchema = mongoose.Schema({
 	name: {type:String, required:true},
 	grade: { type: mongoose.Schema.Types.ObjectId, ref: 'Grade'},
 	countryCode: String,
+	status: { type: Boolean, default: true },
 	topics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Topic' }]},
 	{ timestamps: true }
 
@@ -36,6 +37,7 @@ module.exports.updateSubject = function(id, subject, options, callback){
 		name: subject.name,
 		grade: subject.grade,
 		countryCode: subject.countryCode,
+		status: subject.status,
 		topics: subject.topics
 	}
 	Subject.findOneAndUpdate(query, update, options, callback);

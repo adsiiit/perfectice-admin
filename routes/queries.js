@@ -785,3 +785,38 @@ app.get('/api/query38/:id', function(req,res){
 		res.json(que);
 	});	
 });
+
+
+
+//Update the status of subject
+app.put('/api/query39/:id', function(req,res){
+	var s = req.body.status;
+	db.subjects.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+//Update the status of grade
+app.put('/api/query40/:id', function(req,res){
+	var s = req.body.status;
+	db.grades.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+//Update the status of topic
+app.put('/api/query41/:id', function(req,res){
+	var s = req.body.status;
+	db.topics.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});

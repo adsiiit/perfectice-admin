@@ -12,7 +12,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
                 x: function(d){return d.key;},
                 y: function(d){return d.y;},
                 showLabels: true,
-                "showLegend": false,
+                "showLegend": true,
                 duration: 500,
                 labelThreshold: 0.01,
                 labelSunbeamLayout: true,
@@ -101,8 +101,15 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		var id = $routeParams.id;
 		$http.get('/api/subjects/'+id).success(function(response){
 			$scope.subject = response;
+			$scope.st = response.status;
+			//console.log(response);
+				if($scope.st==false)
+					$scope.sta = 'Deactivate';
+				else
+					$scope.sta = 'Activate';
 			$http.get('/api/grades/'+response.grade).success(function(response){
 			$scope.gradeName = response.name;
+
 			});
 		});
 	}
@@ -114,9 +121,15 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		($scope.subject).grade = String(id);
 		$http.get('/api/grades/'+id).success(function(response1){
 			//console.log(response1.countryCode);
+			$scope.myexam = response1;
 			($scope.subject).countryCode = String(response1.countryCode);
+			//console.log(response1.subjects);
 			$http.post('/api/subjects/', $scope.subject).success(function(response){
-			window.location.href='#/master_data';
+				(($scope.myexam).subjects).push(response._id);
+					$http.put('/api/grades/'+response.grade, $scope.myexam).success(function(response2){
+						//console.log(response2.subjects);
+						window.location.href='#/grades/details/'+response2._id;
+					});
 			});
 		});
 
@@ -126,7 +139,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		var id = $routeParams.id;
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 		$http.put('/api/subjects/'+id, $scope.subject).success(function(response){
-			window.location.href='#/master_data';
+			window.location.href='#/grades/details/'+response.grade;
 		});
 	}
 
@@ -137,6 +150,31 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 	}
 
 
+
+	$scope.updateStatus = function(){
+		var id = $routeParams.id;
+		if($scope.st==true)
+		{
+			$scope.st = false;
+			$scope.sta = 'Deactivate';
+		}
+		else
+		{
+			$scope.st = true;
+			$scope.sta = 'Activate';
+		}
+		var status = $scope.st;
+		$http({
+			    method: 'PUT', 
+			    url: '/api/query39/'+id,
+			    data:{
+			        'status': status
+			    }
+			}).success(function(response){
+			console.log('status update done');
+		});
+	
+	}
 
 
 }]);

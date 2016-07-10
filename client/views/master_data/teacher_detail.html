@@ -97,7 +97,7 @@
 		     <br>
 		     <div class="tab-pane" id="report">
 		     <br><br>
-		     	<div class="panel panel-default"">
+		     	<div class="panel panel-default">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading">
 					<button class="btn btn-info pull-right" type="button" ng-csv="studentsList1" csv-header="['Email', 'Date Added', 'Classrooms']" filename="studentsNotRegistered.csv">Export</button>
@@ -111,16 +111,17 @@
 					      <th class="col-md-4">Date Added</th>
 					   </tr>
 		   
-				     	<tr>
-					      <td class="col-md-4">{{ studentsList1[currentPage1-1]._id }}</td>
-					      <td class="col-md-4" ng-show="studentsList1[currentPage1-1].classroomCount > 1">Multiple</td>
-					      <td class="col-md-4" ng-show="studentsList1[currentPage1-1].classroomCount == 1">Single</td>
-					      <td class="col-md-4">{{ studentsList1[currentPage1-1].addedAt | date }}</td>
+				     	<tr ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]">
+					      <td class="col-md-4">{{ studentsList1[(currentPage1-1)*10 + i]._id }}</td>
+					      <td class="col-md-4" ng-show="studentsList1[(currentPage1-1)*10 + i].classroomCount > 1">Multiple</td>
+					      <td class="col-md-4" ng-show="studentsList1[(currentPage1-1)*10 + i].classroomCount == 1">Single</td>
+					      <td class="col-md-4">{{ studentsList1[(currentPage1-1)*10 + i].addedAt | date }}</td>
 					   </tr>
+					   
 				   </table>
 
 				   <center>
-					   <uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=1 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <uib-pagination total-items="TotalItems1" ng-model="currentPage1" items-per-page=10 max-size="maxSize1" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
 					   
 				   </center>
 
@@ -128,7 +129,7 @@
 
 
 				   <br>
-		     	<div class="panel panel-default"">
+		     	<div class="panel panel-default">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading">
 				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name', 'Registration Date']" filename="studentsNotAttempt.csv">Export</button>
@@ -141,22 +142,22 @@
 					      <th class="col-md-4">Registered Date</th>
 					   </tr>
 		   
-				     	<tr>
-					      <td class="col-md-4">{{ studentsList2[currentPage2-1].email }}</td>
-					      <td class="col-md-4">{{ studentsList2[currentPage2-1].name }}</td>
-					      <td class="col-md-4">{{ studentsList2[currentPage2-1].regdate | date }}</td>
+				     	<tr ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]">
+					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].email }}</td>
+					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].name }}</td>
+					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].regdate | date }}</td>
 					   </tr>
 				   </table>
 
 				   <center>
-					   <uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=1 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <uib-pagination total-items="TotalItems2" ng-model="currentPage2" items-per-page=10 max-size="maxSize2" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
 					   
 				   </center>
 
 				  </div>
 
 				  <br>
-		     	<div class="panel panel-default"">
+		     	<div class="panel panel-default">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading">
 				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Attempt Date']" filename="lastAttempt.csv">Export</button>
@@ -170,17 +171,17 @@
 					      <th class="col-md-2">Attempt Date</th>
 					   </tr>
 		   
-				     	<tr>
-					      <td class="col-md-4">{{ studentsList3[currentPage3-1].name }}</td>
-					      <td class="col-md-4">{{ studentsList3[currentPage3-1].email }}</td>
-					      <td class="col-md-2" ng-show="studentsList3[currentPage3-1].count > 1">Multiple</td>
-					      <td class="col-md-2" ng-show="studentsList3[currentPage3-1].count == 1">Single</td>
-					      <td class="col-md-2">{{ studentsList3[currentPage3-1].lastAttempt | date }}</td>
+				     	<tr ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]">
+					      <td class="col-md-4">{{ studentsList3[(currentPage3-1)*10 + i].name }}</td>
+					      <td class="col-md-4">{{ studentsList3[(currentPage3-1)*10 + i].email }}</td>
+					      <td class="col-md-2" ng-show="studentsList3[(currentPage3-1)*10 + i].count > 1">Multiple</td>
+					      <td class="col-md-2" ng-show="studentsList3[(currentPage3-1)*10 + i].count == 1">Single</td>
+					      <td class="col-md-2">{{ studentsList3[(currentPage3-1)*10 + i].lastAttempt | date }}</td>
 					   </tr>
 				   </table>
 
 				   <center>
-					   <uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=1 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+					   <uib-pagination total-items="TotalItems3" ng-model="currentPage3" items-per-page=10 max-size="maxSize3" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
 					   
 				   </center>
 

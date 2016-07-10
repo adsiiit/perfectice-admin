@@ -78,6 +78,12 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 		var id = $routeParams.id;
 		$http.get('/api/grades/'+id).success(function(response){
 			$scope.exam = response;
+			$scope.st = response.status;
+			//console.log(response);
+				if($scope.st==false)
+					$scope.sta = 'Deactivate';
+				else
+					$scope.sta = 'Activate';
 		});
 	}
 
@@ -101,6 +107,32 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 		$http.delete('/api/grades/'+id).success(function(response){
 			window.location.href='#/master_data';
 		});
+	}
+
+
+	$scope.updateStatus = function(){
+		var id = $routeParams.id;
+		if($scope.st==true)
+		{
+			$scope.st = false;
+			$scope.sta = 'Deactivate';
+		}
+		else
+		{
+			$scope.st = true;
+			$scope.sta = 'Activate';
+		}
+		var status = $scope.st;
+		$http({
+			    method: 'PUT', 
+			    url: '/api/query40/'+id,
+			    data:{
+			        'status': status
+			    }
+			}).success(function(response){
+			console.log('status update done');
+		});
+	
 	}
 
 

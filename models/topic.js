@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var topicSchema = mongoose.Schema({
 	slugfly: {type:String, required:true},
 	name: {type:String, required:true},
+	status: { type: Boolean, default: true },
 	subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required:true}},
 	{ timestamps: true }
 );
@@ -31,7 +32,8 @@ module.exports.updateTopic = function(id, topic, options, callback){
 	var update = {
 		slugfly: topic.slugfly,
 		name: topic.name,
-		subject: topic.subject
+		subject: topic.subject,
+		status: topic.status
 	}
 	Topic.findOneAndUpdate(query, update, options, callback);
 };

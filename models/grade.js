@@ -5,6 +5,7 @@ var gradeSchema = mongoose.Schema({
 	slugfly: {type:String, required:true},
 	name: {type:String, required:true},
 	countryCode: String,
+	status: { type: Boolean, default: true },
 	subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }]},
 	{ timestamps: true }
 
@@ -34,7 +35,8 @@ module.exports.updateGrade = function(id, grade, options, callback){
 		slugfly: grade.slugfly,
 		name: grade.name,
 		countryCode: grade.countryCode,
-		subjects: grade.subjects
+		subjects: grade.subjects,
+		status: grade.status
 	}
 	Grade.findOneAndUpdate(query, update, options, callback);
 };

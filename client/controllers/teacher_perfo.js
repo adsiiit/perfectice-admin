@@ -158,7 +158,7 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
                     ($scope.studentsList1[i]).addedAt = d.toLocaleDateString();
                 }
 
-                $scope.maxSize1 = 10;
+                $scope.maxSize1 = 5;
                 $scope.TotalItems1 = response.length;
                 $scope.currentPage1= 1;
 
@@ -176,7 +176,7 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
                     ($scope.studentsList2[i]).regdate = d.toLocaleDateString();
                 }
 
-                $scope.maxSize2 = 10;
+                $scope.maxSize2 = 5;
                 $scope.TotalItems2 = response.length;
                 $scope.currentPage2 = 1;
 
@@ -195,7 +195,7 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
                     ($scope.studentsList3[i]).lastAttempt = d.toLocaleDateString();
                 }
 
-                $scope.maxSize3 = 10;
+                $scope.maxSize3 = 5;
                 $scope.TotalItems3 = response.length;
                 $scope.currentPage3 = 1;
 
