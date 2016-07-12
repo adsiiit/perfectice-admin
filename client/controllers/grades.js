@@ -81,25 +81,50 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 			$scope.st = response.status;
 			//console.log(response);
 				if($scope.st==false)
-					$scope.sta = 'Deactivate';
+					$scope.sta = 'Enable';
 				else
-					$scope.sta = 'Activate';
+					$scope.sta = 'Disable';
 		});
 	}
 
 
 	$scope.addGrade = function(){
 		($scope.grade).slugfly = Slug.slugify(($scope.grade).name);
-		$http.post('/api/grades/', $scope.grade).success(function(response){
-			window.location.href='#/master_data';
+		
+		$http.get('/api/grades/slugfly/'+($scope.grade).slugfly).success(function(response){
+			if(response)
+			{
+				$scope.err = "Exam Name already exists..";
+			}
+			else
+			{
+				$http.post('/api/grades/', $scope.grade).success(function(response){
+					window.location.href='#/master_data';
+				});
+			}
+			
+
 		});
+
 	}
 
 	$scope.updateGrade = function(){
 		var id = $routeParams.id;
 		($scope.exam).slugfly = Slug.slugify(($scope.exam).name);
-		$http.put('/api/grades/'+id, $scope.exam).success(function(response){
-			window.location.href='#/master_data';
+
+		$http.get('/api/grades/slugfly/'+($scope.exam).slugfly).success(function(response){
+			if(response)
+			{
+				$scope.err = "Exam Name already exists..";
+			}
+			else
+			{
+				$http.put('/api/grades/'+id, $scope.exam).success(function(response){
+					window.location.href='#/master_data';
+				});
+			}
+			
+
 		});
 	}
 
@@ -115,12 +140,12 @@ myApp.controller('GradesController', ['$scope', '$http', '$location', '$routePar
 		if($scope.st==true)
 		{
 			$scope.st = false;
-			$scope.sta = 'Deactivate';
+			$scope.sta = 'Enable';
 		}
 		else
 		{
 			$scope.st = true;
-			$scope.sta = 'Activate';
+			$scope.sta = 'Disable';
 		}
 		var status = $scope.st;
 		$http({

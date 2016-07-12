@@ -1,7 +1,7 @@
 {
   "name": "myperfectice",
   "version": "1.0.0",
-  "description": "Simple CRUD app",
+  "description": "MyPerfectice Admin Panel",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,7 @@
     "express": "*",
     "jsonwebtoken": "^7.0.0",
     "mongojs": "^2.4.0",
-    "mongoose": "*",
+    "mongoose": "^4.5.4",
     "morgan": "^1.7.0"
   },
   "author": "Aman Sachan",

@@ -32,11 +32,21 @@ app.get('/api/subjects/:_id', function(req,res){
 	});
 });
 
+
+app.get('/api/subjects/slugfly/:slug', function(req,res){
+	Subject.getSubjectBySlug(req.params.slug, function(err, subject){
+		if(err){
+			res.json({"code": 500, "error": "some error has been occured.."});
+		}
+		res.json(subject);
+	});
+});
+
 app.post('/api/subjects', function(req,res){
 	var subject = req.body;
 	Subject.addSubject(subject, function(err, subject){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Subject Name already exists.."});
 		}
 		res.json(subject);
 	});
@@ -47,7 +57,7 @@ app.put('/api/subjects/:_id', function(req,res){
 	var subject = req.body;
 	Subject.updateSubject(id, subject, {new: true}, function(err, subject){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Subject Name already exists.."});
 		}
 		res.json(subject);
 	});
@@ -82,13 +92,25 @@ app.get('/api/grades/:_id', function(req,res){
 	});
 });
 
+app.get('/api/grades/slugfly/:slug', function(req,res){
+	Grade.getGradeBySlug(req.params.slug, function(err, grade){
+		if(err){
+			res.json({"code": 500, "error": "some error has been occured.."});
+		}
+		res.json(grade);
+	});
+});
+
+
 app.post('/api/grades', function(req,res){
 	var grade = req.body;
 	
 	Grade.addGrade(grade, function(err, grade){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Exam Name already exists.."});
+			//console.log(err);
 		}
+		//console.log(grade);
 		res.json(grade);
 	});
 });
@@ -98,7 +120,7 @@ app.put('/api/grades/:_id', function(req,res){
 	var grade = req.body;
 	Grade.updateGrade(id, grade, {new: true}, function(err, grade){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Exam Name already exists.."});
 		}
 		res.json(grade);
 	});
@@ -132,11 +154,20 @@ app.get('/api/topics/:_id', function(req,res){
 	});
 });
 
+app.get('/api/topics/slugfly/:slug', function(req,res){
+	Topic.getTopicBySlug(req.params.slug, function(err, topic){
+		if(err){
+			res.json({"code": 500, "error": "some error has been occured.."});
+		}
+		res.json(topic);
+	});
+});
+
 app.post('/api/topics', function(req,res){
 	var topic = req.body;
 	Topic.addTopic(topic, function(err, topic){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Topic Name already exists.."});
 		}
 		res.json(topic);
 	});
@@ -147,7 +178,7 @@ app.put('/api/topics/:_id', function(req,res){
 	var topic = req.body;
 	Topic.updateTopic(id, topic, {new: true}, function(err, topic){
 		if(err){
-			throw err;
+			res.json({"code": 500, "error": "Topic Name already exists.."});
 		}
 		res.json(topic);
 	});

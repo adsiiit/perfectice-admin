@@ -14,6 +14,7 @@ var subjectSchema = mongoose.Schema({
 
 var Subject = module.exports = mongoose.model('Subject', subjectSchema);
 
+
 //Get Subjects
 module.exports.getSubjects = function(callback, limit){
 	Subject.find(callback).limit(limit);
@@ -23,6 +24,13 @@ module.exports.getSubjects = function(callback, limit){
 module.exports.getSubjectById = function(id, callback){
 	Subject.findById(id, callback);
 }
+
+//Get Subject by Slugfly
+module.exports.getSubjectBySlug = function(slug, callback){
+	var query = {slugfly: slug};
+	Subject.findOne(query, callback);
+}
+
 
 //Add Subject
 module.exports.addSubject = function(subject, callback){

@@ -13,6 +13,7 @@ var gradeSchema = mongoose.Schema({
 
 var Grade = module.exports = mongoose.model('Grade', gradeSchema);
 
+
 //Get Grades
 module.exports.getGrades = function(callback, limit){
 	Grade.find(callback).limit(limit);
@@ -21,6 +22,12 @@ module.exports.getGrades = function(callback, limit){
 //Get Grade by Id
 module.exports.getGradeById = function(id, callback){
 	Grade.findById(id, callback);
+}
+
+//Get Grade by Slugfly
+module.exports.getGradeBySlug = function(slug, callback){
+	var query = {slugfly: slug};
+	Grade.findOne(query, callback);
 }
 
 //Add Grade

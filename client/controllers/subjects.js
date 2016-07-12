@@ -104,9 +104,9 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 			$scope.st = response.status;
 			//console.log(response);
 				if($scope.st==false)
-					$scope.sta = 'Deactivate';
+					$scope.sta = 'Enable';
 				else
-					$scope.sta = 'Activate';
+					$scope.sta = 'Disable';
 			$http.get('/api/grades/'+response.grade).success(function(response){
 			$scope.gradeName = response.name;
 
@@ -119,27 +119,53 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		var id = $routeParams.id;
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 		($scope.subject).grade = String(id);
-		$http.get('/api/grades/'+id).success(function(response1){
-			//console.log(response1.countryCode);
-			$scope.myexam = response1;
-			($scope.subject).countryCode = String(response1.countryCode);
-			//console.log(response1.subjects);
-			$http.post('/api/subjects/', $scope.subject).success(function(response){
-				(($scope.myexam).subjects).push(response._id);
-					$http.put('/api/grades/'+response.grade, $scope.myexam).success(function(response2){
-						//console.log(response2.subjects);
-						window.location.href='#/grades/details/'+response2._id;
+
+		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly).success(function(response){
+			if(response)
+			{
+				$scope.err = "Subject Name already exists..";
+			}
+			else
+			{
+				$http.get('/api/grades/'+id).success(function(response1){
+					//console.log(response1.countryCode);
+					$scope.myexam = response1;
+					($scope.subject).countryCode = String(response1.countryCode);
+					//console.log(response1.subjects);
+					$http.post('/api/subjects/', $scope.subject).success(function(response){
+						(($scope.myexam).subjects).push(response._id);
+							$http.put('/api/grades/'+response.grade, $scope.myexam).success(function(response2){
+								//console.log(response2.subjects);
+								window.location.href='#/grades/details/'+response2._id;
+							});
 					});
-			});
+				});
+			}
+			
+
 		});
+
+		
 
 	}
 
 	$scope.updateSubject = function(){
 		var id = $routeParams.id;
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
-		$http.put('/api/subjects/'+id, $scope.subject).success(function(response){
-			window.location.href='#/grades/details/'+response.grade;
+
+		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly).success(function(response){
+			if(response)
+			{
+				$scope.err = "Subject Name already exists..";
+			}
+			else
+			{
+				$http.put('/api/subjects/'+id, $scope.subject).success(function(response){
+					window.location.href='#/grades/details/'+response.grade;
+				});
+			}
+			
+
 		});
 	}
 
@@ -156,12 +182,12 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		if($scope.st==true)
 		{
 			$scope.st = false;
-			$scope.sta = 'Deactivate';
+			$scope.sta = 'Enable';
 		}
 		else
 		{
 			$scope.st = true;
-			$scope.sta = 'Activate';
+			$scope.sta = 'Disable';
 		}
 		var status = $scope.st;
 		$http({

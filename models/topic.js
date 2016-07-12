@@ -11,6 +11,7 @@ var topicSchema = mongoose.Schema({
 
 var Topic = module.exports = mongoose.model('Topic', topicSchema);
 
+
 //Get Topics
 module.exports.getTopics = function(callback, limit){
 	Topic.find(callback).limit(limit);
@@ -19,6 +20,12 @@ module.exports.getTopics = function(callback, limit){
 //Get Topic by Id
 module.exports.getTopicById = function(id, callback){
 	Topic.findById(id, callback);
+}
+
+//Get Topic by Slugfly
+module.exports.getTopicBySlug = function(slug, callback){
+	var query = {slugfly: slug};
+	Topic.findOne(query, callback);
 }
 
 //Add Topic
