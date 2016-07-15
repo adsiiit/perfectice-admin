@@ -168,7 +168,7 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
     $scope.stuRegNotAttempt = function(){
         var id = $routeParams.id;
         $http.get('/api/query22/'+id).success(function(response){
-                $scope.studentsList2 = orderBy(response, 'regdate');
+                $scope.studentsList2 = orderBy(response, 'regdate', true);
                 /*$scope.studentsList = response;*/
                 for(i=0;i<response.length;i++)
                 {
@@ -187,7 +187,7 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
     $scope.lastAttempt = function(){
         var id = $routeParams.id;
         $http.get('/api/query17/'+id).success(function(response){
-                $scope.studentsList3 = orderBy(response, 'lastAttempt');
+                $scope.studentsList3 = orderBy(response, 'lastAttempt', true);
                 /*$scope.studentsList = response;*/
                 for(i=0;i<response.length;i++)
                 {

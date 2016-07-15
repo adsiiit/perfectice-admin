@@ -143,9 +143,14 @@ app.get('/api/query22/:id', function(req,res){
 				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
 				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
 				{$unwind: "$userdetail"},
-				{$project: {email:1,name: "$userdetail.name",regdate: "$userdetail.createdAt",phone: "$userdetail.phoneNumber",_id:0}}	,
-				{$group: {_id: {email: "$email", name: "$name", regdate: "$regdate", phone: "$phone"},count: {$sum:1}}},
-				{$project: {email:"$_id.email",name: "$_id.name",regdate: "$_id.regdate",phone: "$_id.phone",_id:0}}
+				{$project: {email:1,name: "$userdetail.name",regdate: "$userdetail.createdAt",phone: "$userdetail.phoneNumber",gradesid:"$userdetail.grade",_id:0}},
+				{$unwind: {path: "$gradesid", preserveNullAndEmptyArrays: true}},
+				{$lookup:{from: "grades", localField: "gradesid", foreignField: "_id", as:"gradedetail"}},
+				{$unwind: {path: "$gradedetail", preserveNullAndEmptyArrays: true}},
+				{$project: {email:1,name: 1,regdate: 1,phone: 1,gradename:"$gradedetail.name",_id:0}},
+				{$group: {_id: {email: "$email", name: "$name", regdate: "$regdate", phone: "$phone"},exams: {$addToSet: "$gradename"}}},
+				{$project: {email:"$_id.email",name: "$_id.name",regdate: "$_id.regdate",phone: "$_id.phone",exams: "$exams",_id:0}}
+
 			], function(err, que){
 				if(err)
 					res.send(err);
@@ -172,11 +177,21 @@ app.get('/api/query17/:id', function(req,res){
 				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
 				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
 				{$unwind: "$userdetail"},
-				{$project: {email:1,name: "$userdetail.name",_id:0,id:"$userdetail._id",phone:"$userdetail.phoneNumber"}},
-				{$group: {_id: {id: "$id", email: "$email", name: "$name", phone: "$phone"},count: {$sum:1}}},
-				{$project: {id:"$_id.id", email:"$_id.email",name: "$_id.name",phone:"$_id.phone",_id:0,count:1}},
+				{$project: {email:1,classRoom:1,name: "$userdetail.name",_id:0,id:"$userdetail._id",phone:"$userdetail.phoneNumber",gradesid:"$userdetail.grade"}},
+				{$unwind: {path: "$gradesid", preserveNullAndEmptyArrays: true}},
+				{$lookup:{from: "grades", localField: "gradesid", foreignField: "_id", as:"gradedetail"}},
+				{$unwind: {path: "$gradedetail", preserveNullAndEmptyArrays: true}},
+				{$project: {email:1,name: 1,id: 1,phone: 1,classRoom:1,gradename:"$gradedetail.name",_id:0}},
+				{$group: {_id: {email: "$email", name: "$name", classRoom: "$classRoom",id:"$id", phone: "$phone"},exams: {$addToSet: "$gradename"}}},
+				{$project: {email:"$_id.email",name: "$_id.name",classRoom: "$_id.classRoom",id:"$_id.id",phone: "$_id.phone",exams: "$exams",_id:0}},
+
+				{$lookup:{from: "classrooms", localField: "classRoom", foreignField: "_id", as:"crdetail"}},
+				{$unwind: {path: "$crdetail", preserveNullAndEmptyArrays: true}},
+				{$project: {email:1,name: 1,id: 1,phone: 1,crname:"$crdetail.name",exams:1}},
+				{$group: {_id: {email: "$email", name: "$name", exams: "$exams",id:"$id", phone: "$phone"},crooms: {$push: "$crname"}, count: {$sum: 1}}},
+				{$project: {email:"$_id.email",name: "$_id.name",exams: "$_id.exams",id:"$_id.id",phone: "$_id.phone",crooms: "$crooms",count:1,_id:0}},
 				{$lookup:{from: "attempts", localField: "id", foreignField: "user", as:"attemptdetail"}},
-				{$project: {email:1,name: 1,count:1,phone:1, lastAttempt: {$max: "$attemptdetail.createdAt"}}}
+				{$project: {crooms:1,email:1,name: 1,count:1,phone:1,exams:1, lastAttempt: {$max: "$attemptdetail.createdAt"}}}
 			], function(err, que){
 				if(err)
 					res.send(err);
