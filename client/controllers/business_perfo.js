@@ -4,14 +4,16 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 	function($scope, $http, $location, $routeParams){
 	console.log('Business Performance controller...');
 
+	var dates1 = []; //for attempts dates
+	//var dates2 = []; // for signup dates
+
 	$scope.options = {
             chart: {
                 type: 'lineChart',
                 height: 300,
-                width: 550,
                 margin : {
                     top: 20,
-                    right: 20,
+                    right: 30,
                     bottom: 40,
                     left: 55
                 },
@@ -25,7 +27,10 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
                     tooltipHide: function(e){ console.log("tooltipHide"); }
                 },
                 xAxis: {
-                    axisLabel: 'Day'
+                    axisLabel: 'Day',
+                    tickFormat: function(d){
+                        return dates1[d];
+                    },
                 },
                 yAxis: {
                     axisLabel: 'Count',
@@ -91,10 +96,13 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 				$scope.attemptstrend = response;
 				var trend = response;
 			    var chartData = [];
-
+			    dates1 = [];	
 				  for(i=0; i<trend.length; i++)
-				  {	
-				      chartData.push({x: i+1 , y: trend[i].count});
+				  {
+				  	var date = (trend[i]._id).day+"-"+(trend[i]._id).month+"-"+(trend[i]._id).year;
+				  	dates1.push(date);
+				  	//console.log(date);
+				    chartData.push({x:i , y: trend[i].count});
 				  }
 			    //console.log(chartData);
 				$scope.dataAttempt = [{
@@ -124,10 +132,12 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 				$scope.attemptstrend = response;
 				var trend = response;
 			    var chartData = [];
-
+			      dates1 = [];
 				  for(i=0; i<trend.length; i++)
 				  {	
-				      chartData.push({x: i+1 , y: trend[i].count});
+				  	  var date = (trend[i]._id).day+"-"+(trend[i]._id).month+"-"+(trend[i]._id).year;
+				  	  dates1.push(date);
+				      chartData.push({x: i , y: trend[i].count});
 				  }
 			    //console.log(chartData);
 				$scope.dataAttempt = [{
@@ -164,9 +174,12 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 				$scope.signuptrend = response;
 				var trend = response;
 			    var chartData = [];
+			    dates1 = [];
 				  for(i=0; i<trend.length; i++)
-				  {	
-				      chartData.push({x: i+1 , y: trend[i].count});
+				  {	  
+				  	  var date = (trend[i]._id).day+"-"+(trend[i]._id).month+"-"+(trend[i]._id).year;
+				  	  dates1.push(date);
+				      chartData.push({x: i , y: trend[i].count});
 				  }
 				$scope.dataSignup = [{
 	                    values: chartData,     
@@ -195,9 +208,12 @@ myApp.controller('BusinessPerfoController', ['$scope', '$http', '$location', '$r
 				$scope.signuptrend = response;
 				var trend = response;
 			    var chartData = [];
+			    dates1 = [];
 				  for(i=0; i<trend.length; i++)
-				  {	
-				      chartData.push({x: i+1 , y: trend[i].count});
+				  {		
+				  	  var date = (trend[i]._id).day+"-"+(trend[i]._id).month+"-"+(trend[i]._id).year;
+				  	  dates1.push(date);
+				      chartData.push({x: i , y: trend[i].count});
 				  }
 				$scope.dataSignup = [{
 	                    values: chartData,     

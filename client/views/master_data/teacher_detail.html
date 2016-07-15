@@ -1,7 +1,7 @@
 <div class="row" ng-init="getTeacher()">
 <br><br>
-<div class="col-md-2" ng-init="getTeacherQ()"></div>
-<div class="col-md-8" ng-init="getSignedCount()">
+<div class="col-md-1" ng-init="getTeacherQ()"></div>
+<div class="col-md-10" ng-init="getSignedCount()">
 
 	<div class="panel panel-default" ng-init="getAttemptedCount()">
 	  <!-- Default panel contents -->
@@ -132,20 +132,22 @@
 		     	<div class="panel panel-default">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading">
-				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name', 'Registration Date']" filename="studentsNotAttempt.csv">Export</button>
+				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList2" csv-header="['Email', 'Name','Registration Date','Phone Number']" filename="studentsNotAttempt.csv">Export</button>
 				  	<h5 style="margin: 8px; font-size: 16px;" class="text-danger">Students Registered but not taken any Test</h></div>
 
 			     	<table class="table table-condensed">
 					   <tr>
 					      <th class="col-md-4">Email</th>
-					      <th class="col-md-4">Name</th>
-					      <th class="col-md-4">Registered Date</th>
+					      <th class="col-md-3">Name</th>
+					      <th class="col-md-3">Phone No.</th>
+					      <th class="col-md-2">Reg. Date</th>
 					   </tr>
 		   
 				     	<tr ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]">
 					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].email }}</td>
-					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].name }}</td>
-					      <td class="col-md-4">{{ studentsList2[(currentPage2-1)*10 + i].regdate | date }}</td>
+					      <td class="col-md-3">{{ studentsList2[(currentPage2-1)*10 + i].name }}</td>
+					      <td class="col-md-3">{{ studentsList2[(currentPage2-1)*10 + i].phone }}</td>
+					      <td class="col-md-2">{{ studentsList2[(currentPage2-1)*10 + i].regdate | date }}</td>
 					   </tr>
 				   </table>
 
@@ -160,20 +162,22 @@
 		     	<div class="panel panel-default">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading">
-				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Attempt Date']" filename="lastAttempt.csv">Export</button>
+				  	<button type="button" class="btn btn-info pull-right" ng-csv="studentsList3" csv-header="['Classrooms', 'Email','Name','Phone Number','Attempt Date']" filename="lastAttempt.csv">Export</button>
 				  	<h5 style="margin: 8px; font-size: 16px;" class="text-danger">Last Attempt Report</h></div>
 
 			     	<table class="table table-condensed">
 					   <tr>
-					      <th class="col-md-4">Name</th>
-					      <th class="col-md-4">Email</th>
+					      <th class="col-md-3">Name</th>
+					      <th class="col-md-3">Email</th>
+					      <th class="col-md-2">Phone No.</th>
 					      <th class="col-md-2">Classroom</th>
 					      <th class="col-md-2">Attempt Date</th>
 					   </tr>
 		   
 				     	<tr ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]">
-					      <td class="col-md-4">{{ studentsList3[(currentPage3-1)*10 + i].name }}</td>
-					      <td class="col-md-4">{{ studentsList3[(currentPage3-1)*10 + i].email }}</td>
+					      <td class="col-md-3">{{ studentsList3[(currentPage3-1)*10 + i].name }}</td>
+					      <td class="col-md-3">{{ studentsList3[(currentPage3-1)*10 + i].email }}</td>
+					      <td class="col-md-2">{{ studentsList3[(currentPage3-1)*10 + i].phone }}</td>
 					      <td class="col-md-2" ng-show="studentsList3[(currentPage3-1)*10 + i].count > 1">Multiple</td>
 					      <td class="col-md-2" ng-show="studentsList3[(currentPage3-1)*10 + i].count == 1">Single</td>
 					      <td class="col-md-2">{{ studentsList3[(currentPage3-1)*10 + i].lastAttempt | date }}</td>
@@ -196,7 +200,7 @@
 
 
 </div>
-<div class="col-md-2"></div>
+<div class="col-md-1"></div>
 
 </div>
 

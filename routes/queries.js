@@ -143,9 +143,9 @@ app.get('/api/query22/:id', function(req,res){
 				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
 				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
 				{$unwind: "$userdetail"},
-				{$project: {email:1,name: "$userdetail.name",regdate: "$userdetail.createdAt",_id:0}},
-				{$group: {_id: {email: "$email", name: "$name", regdate: "$regdate"},count: {$sum:1}}},
-				{$project: {email:"$_id.email",name: "$_id.name",regdate: "$_id.regdate",_id:0}}
+				{$project: {email:1,name: "$userdetail.name",regdate: "$userdetail.createdAt",phone: "$userdetail.phoneNumber",_id:0}}	,
+				{$group: {_id: {email: "$email", name: "$name", regdate: "$regdate", phone: "$phone"},count: {$sum:1}}},
+				{$project: {email:"$_id.email",name: "$_id.name",regdate: "$_id.regdate",phone: "$_id.phone",_id:0}}
 			], function(err, que){
 				if(err)
 					res.send(err);
@@ -172,11 +172,11 @@ app.get('/api/query17/:id', function(req,res){
 				{$match:{createdBy: mongojs.ObjectId(req.params.id)}},
 				{$lookup:{from: "users", localField: "email", foreignField: "email", as:"userdetail"}},
 				{$unwind: "$userdetail"},
-				{$project: {email:1,name: "$userdetail.name",_id:0,id:"$userdetail._id"}},
-				{$group: {_id: {id: "$id", email: "$email", name: "$name"},count: {$sum:1}}},
-				{$project: {id:"$_id.id", email:"$_id.email",name: "$_id.name",_id:0,count:1}},
+				{$project: {email:1,name: "$userdetail.name",_id:0,id:"$userdetail._id",phone:"$userdetail.phoneNumber"}},
+				{$group: {_id: {id: "$id", email: "$email", name: "$name", phone: "$phone"},count: {$sum:1}}},
+				{$project: {id:"$_id.id", email:"$_id.email",name: "$_id.name",phone:"$_id.phone",_id:0,count:1}},
 				{$lookup:{from: "attempts", localField: "id", foreignField: "user", as:"attemptdetail"}},
-				{$project: {email:1,name: 1,count:1, lastAttempt: {$max: "$attemptdetail.createdAt"}}}
+				{$project: {email:1,name: 1,count:1,phone:1, lastAttempt: {$max: "$attemptdetail.createdAt"}}}
 			], function(err, que){
 				if(err)
 					res.send(err);
