@@ -130,6 +130,16 @@ myApp.config(function($routeProvider){
 	})
 
 
+	.when('/register', {
+		controller: 'AuthCtrl',
+		templateUrl: 'views/authentication/register.html'
+	})
+	.when('/login', {
+		controller: 'AuthCtrl',
+		templateUrl: 'views/authentication/login.html'
+	})
+
+
 
 	.when('/test/:testid/:token', {
 		controller: 'NIITController',

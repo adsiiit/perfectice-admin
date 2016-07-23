@@ -2,6 +2,12 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+var jwt = require('express-jwt');
+
+//acts as middleware
+var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+
+
 module.exports = app;
 
 //to create json document
@@ -511,7 +517,7 @@ app.get('/api/query28', function(req,res){
 
 /*Subjects with question count -- query30*/
 
-app.get('/api/query30', function(req,res){
+app.get('/api/query30',auth, function(req,res){
 	db.subjects.aggregate([
 		{$lookup:{from: "questions", localField: "_id", foreignField: "subject._id", as:"questionsforsubject"}},
 		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", countryCode: "$countryCode", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt", topics: "$topics", grade: "$grade"},
@@ -529,7 +535,7 @@ app.get('/api/query30', function(req,res){
 
 /*Exams with question count -- query31*/
 
-app.get('/api/query31', function(req,res){
+app.get('/api/query31',auth, function(req,res){
 	db.grades.aggregate([
 		{$unwind: {path: "$subjects", preserveNullAndEmptyArrays: true}},
 		{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
@@ -548,7 +554,7 @@ app.get('/api/query31', function(req,res){
 
 /*Topics with question count -- query32*/
 
-app.get('/api/query32', function(req,res){
+app.get('/api/query32',auth, function(req,res){
 	db.topics.aggregate([
 		{$lookup:{from: "questions", localField: "_id", foreignField: "topic._id", as:"questionsfortopic"}},
 		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt",subject: "$subject"},
@@ -650,7 +656,7 @@ app.get('/api/query15/:id', function(req,res){
 
 
 //Update the status of user
-app.put('/api/query16/:id', function(req,res){
+app.put('/api/query16/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.users.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -804,7 +810,7 @@ app.get('/api/query38/:id', function(req,res){
 
 
 //Update the status of subject
-app.put('/api/query39/:id', function(req,res){
+app.put('/api/query39/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.subjects.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -815,7 +821,7 @@ app.put('/api/query39/:id', function(req,res){
 });
 
 //Update the status of grade
-app.put('/api/query40/:id', function(req,res){
+app.put('/api/query40/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.grades.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -826,7 +832,7 @@ app.put('/api/query40/:id', function(req,res){
 });
 
 //Update the status of topic
-app.put('/api/query41/:id', function(req,res){
+app.put('/api/query41/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.topics.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){

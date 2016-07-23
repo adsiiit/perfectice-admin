@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams','Slug',
-	function($scope, $http, $location, $routeParams, Slug){
+myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeParams','Slug','auth',
+	function($scope, $http, $location, $routeParams, Slug,auth){
 	console.log('Subjects controller...');
 	
 	$scope.options = {
@@ -37,27 +37,27 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
         };
 
 	$scope.getSubjects = function(){
-		$http.get('/api/query30').success(function(response){
+		$http.get('/api/query30', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.subjects = response;
 		});
 	}
 
 	$scope.getSubjectsWOC = function(){
-		$http.get('/api/subjects').success(function(response){
+		$http.get('/api/subjects', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.subjects = response;
 
 		});
 	}	
 
 	$scope.getGrades = function(){
-		$http.get('/api/grades').success(function(response){
+		$http.get('/api/grades', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.grades = response;
 		});
 	}
 
 	$scope.getGradeName = function(){
 		var id = $routeParams.id;
-		$http.get('/api/grades/'+id).success(function(response){
+		$http.get('/api/grades/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.gradeName = response.name;
 		});
 	}
@@ -66,13 +66,13 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 
 
 	$scope.getTopics = function(){
-		$http.get('/api/topics').success(function(response){
+		$http.get('/api/topics', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.topics = response;
 		});
 	}
 
 	$scope.getTopicsWQC = function(){
-		$http.get('/api/query32').success(function(response){
+		$http.get('/api/query32', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.topics = response;
 
 			
@@ -99,7 +99,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 
 	$scope.getSubject = function(){
 		var id = $routeParams.id;
-		$http.get('/api/subjects/'+id).success(function(response){
+		$http.get('/api/subjects/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.subject = response;
 			$scope.st = response.status;
 			//console.log(response);
@@ -107,7 +107,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 					$scope.sta = 'Enable';
 				else
 					$scope.sta = 'Disable';
-			$http.get('/api/grades/'+response.grade).success(function(response){
+			$http.get('/api/grades/'+response.grade, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.gradeName = response.name;
 
 			});
@@ -120,21 +120,21 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 		($scope.subject).grade = String(id);
 
-		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly).success(function(response){
+		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			if(response)
 			{
 				$scope.err = "Subject Name already exists..";
 			}
 			else
 			{
-				$http.get('/api/grades/'+id).success(function(response1){
+				$http.get('/api/grades/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response1){
 					//console.log(response1.countryCode);
 					$scope.myexam = response1;
 					($scope.subject).countryCode = String(response1.countryCode);
 					//console.log(response1.subjects);
-					$http.post('/api/subjects/', $scope.subject).success(function(response){
+					$http.post('/api/subjects/', $scope.subject, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 						(($scope.myexam).subjects).push(response._id);
-							$http.put('/api/grades/'+response.grade, $scope.myexam).success(function(response2){
+							$http.put('/api/grades/'+response.grade, $scope.myexam, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response2){
 								//console.log(response2.subjects);
 								window.location.href='#/grades/details/'+response2._id;
 							});
@@ -153,14 +153,14 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		var id = $routeParams.id;
 		($scope.subject).slugfly = Slug.slugify(($scope.subject).name);
 
-		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly).success(function(response){
+		$http.get('/api/subjects/slugfly/'+($scope.subject).slugfly, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			if(response)
 			{
 				$scope.err = "Subject Name already exists..";
 			}
 			else
 			{
-				$http.put('/api/subjects/'+id, $scope.subject).success(function(response){
+				$http.put('/api/subjects/'+id, $scope.subject, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 					window.location.href='#/grades/details/'+response.grade;
 				});
 			}
@@ -170,7 +170,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 	}
 
 	$scope.removeSubject = function(id){
-		$http.delete('/api/subjects/'+id).success(function(response){
+		$http.delete('/api/subjects/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			window.location.href='#/master_data';
 		});
 	}
@@ -193,6 +193,7 @@ myApp.controller('SubjectsController', ['$scope', '$http', '$location', '$routeP
 		$http({
 			    method: 'PUT', 
 			    url: '/api/query39/'+id,
+			    headers:{Authorization: 'Bearer '+auth.getToken()},
 			    data:{
 			        'status': status
 			    }

@@ -1,12 +1,73 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('CommonController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.factory('auth', ['$http', '$window', function($http, $window){
+   var auth = {};
+
+   auth.saveToken = function (token){
+      $window.localStorage['admin-token'] = token;
+    };
+
+    auth.getToken = function (){
+      return $window.localStorage['admin-token'];
+    }
+
+    auth.isLoggedIn = function(){
+      var token = auth.getToken();
+
+      if(token){
+        var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+        return payload.exp > Date.now() / 1000;
+      } else {
+        return false;
+      }
+    };
+
+    auth.currentUser = function(){
+      if(auth.isLoggedIn()){
+        var token = auth.getToken();
+        var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+        return payload.username;
+      }
+    };
+
+    auth.register = function(user){
+      return $http.post('/api/register', user).success(function(data){
+        auth.saveToken(data.token);
+      });
+    };
+
+
+    auth.logIn = function(user){
+      return $http.post('/api/login', user).success(function(data){
+        auth.saveToken(data.token);
+      });
+    };
+
+    auth.logOut = function(){
+      $window.localStorage.removeItem('admin-token');
+    };
+
+
+  return auth;
+}]);
+
+
+myApp.controller('CommonController', ['$scope', '$http', '$location', '$routeParams','auth',
+	function($scope, $http, $location, $routeParams, auth){
+    $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.currentUser = auth.currentUser;
+    $scope.logOut = auth.logOut;
 	console.log('Common controller...');
 
-	$scope.text="Home Page";
+	$scope.text="Welcome to Admin Panel";
 
 }]);
+
+
+
+
 
 
 

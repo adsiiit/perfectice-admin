@@ -1,2 +1,7 @@
-<center><h2> {{ text }} </h2></center>
+<center><h3> {{ text }} <span ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></span></h3></center>
+
+<br><br>
+<center><div ng-show="isLoggedIn()"><a class="btn btn-danger" href="" ng-click="logOut()">Log Out</a></div></center>
+<center><div ng-hide="isLoggedIn()"><a class="btn btn-primary" href="/#/login">Log In</a></div></center><br>
+<center><div ng-hide="isLoggedIn()"><a class="btn btn-primary" href="/#/register">Register</a></div></center>
 

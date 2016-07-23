@@ -2,11 +2,14 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
 
 var morgan      = require('morgan');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 app.use(express.static(__dirname+'/client'));
+app.use(passport.initialize());
+
 //to create json document
 app.use(bodyParser.json());
 
@@ -16,7 +19,10 @@ Subject = require('./models/subject');
 Grade = require('./models/grade');
 Topic = require('./models/topic');
 User = require('./models/user');
+Admin = require('./models/admin')
 
+
+require('./config/passport');
 var config = require('./config');
 
 //Connect to Mongoose

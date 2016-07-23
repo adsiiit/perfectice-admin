@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('UserManageController', ['$scope', '$http', '$location', '$routeParams',
-	function($scope, $http, $location, $routeParams){
+myApp.controller('UserManageController', ['$scope', '$http', '$location', '$routeParams','auth',
+	function($scope, $http, $location, $routeParams,auth){
 	console.log('User Management controller...');
 
 		$scope.getID = function(){
@@ -46,6 +46,7 @@ myApp.controller('UserManageController', ['$scope', '$http', '$location', '$rout
 			$http({
 				    method: 'PUT', 
 				    url: '/api/query16/'+id,
+				    headers: {Authorization: 'Bearer '+auth.getToken()},
 				    data:{
 				        'status': status
 				    }
@@ -55,7 +56,7 @@ myApp.controller('UserManageController', ['$scope', '$http', '$location', '$rout
 			
 		}
 
-
+		$scope.isLoggedIn = auth.isLoggedIn;
 
 
 }]);
