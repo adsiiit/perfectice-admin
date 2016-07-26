@@ -1,0 +1,73 @@
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+
+		<div class="panel panel-default" ng-init="getTopics()">
+		  <div class="panel-heading">
+		    <h3 class="panel-title"><center>List of Videos</center></h3>
+		  </div>
+		  <div class="row" ng-init="getGrades()">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				  <div class="panel-body" ng-init="getSubjects()">
+				    <div class="row">
+						  	<div class="col-md-4">
+							  <label>Exam</label>
+							  <select class="form-control" ng-model="sexam" ng-change="action1()">
+							   	<option ng-repeat="exam in exams | orderBy:'name' " value="{{ exam._id }}">{{ exam.name }}</option>
+							  </select>
+							</div>
+
+							<div class="col-md-4" ng-show="sexam">
+							  <label>Subject</label>
+							  <select class="form-control" ng-model="ssubject" ng-change="action2()">
+							   	<option ng-repeat="subject in subjects | orderBy:'name' " ng-if="subject.grade == sexam" value="{{ subject._id }}">{{ subject.name }}</option>
+							  </select>
+							  
+							</div>
+							
+							<div class="col-md-4" ng-show="ssubject">
+							  <label>Topic</label>
+							  <select class="form-control" ng-model="stopic" ng-change="action3()">
+							   	<option ng-repeat="topic in topics | orderBy:'name' " ng-if="topic.subject == ssubject" value="{{ topic._id }}">{{ topic.name }}</option>
+							  </select>
+							</div>
+					</div>
+
+					<br><br>
+
+					<div class="row" ng-show="stopic">
+						<table>
+						  <tr ng-repeat="video in videosList">
+						    <td><a href="https://www.youtube.com/watch?v={{video.youtubeId}}" target="blank" data-toggle="tooltip" data-placement="left" title="{{video.description}}">{{video.title}}</a></td>
+						    
+						  </tr>
+						</table>
+					</div>
+
+					
+
+
+				  </div>
+			</div>
+			<div class="col-md-1"></div>
+		  </div>
+		</div>
+
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
+<style>
+table, th , td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style> 

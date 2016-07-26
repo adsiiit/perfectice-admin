@@ -139,6 +139,11 @@ myApp.config(function($routeProvider){
 		templateUrl: 'views/authentication/login.html'
 	})
 
+	.when('/video_list', {
+		controller: 'IntegrationController',
+		templateUrl: 'views/integration/video_list.html'
+	})
+
 
 
 	.when('/test/:testid/:token', {
