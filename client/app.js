@@ -145,6 +145,16 @@ myApp.config(function($routeProvider){
 	})
 
 
+	.when('/practice_sets', {
+		controller: 'PTController',
+		templateUrl: 'views/master_data/pt_manage.html'
+	})
+	.when('/practice_sets/:id', {
+		controller: 'PTController',
+		templateUrl: 'views/master_data/pt_detail.html'
+	})
+
+
 
 	.when('/test/:testid/:token', {
 		controller: 'NIITController',

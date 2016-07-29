@@ -1,0 +1,58 @@
+<div class="row" ng-init="getPT()">
+<br><br>
+<div class="col-md-1"></div>
+<div ng-hide="isLoggedIn()">
+<center><h3>Please <a href="#/login">Login</a> to access the User Data.. </h3></center>
+</div>
+<div class="col-md-10" ng-show="isLoggedIn()">
+
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{practiceset.title}}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class=""> 
+                <table class="table table-user-information">
+                  <tbody>
+                    <tr>
+                      <td>Access Mode:</td>
+                      <td>{{practiceset.accessMode}}</td>
+                    </tr>
+                    <tr>
+                      <td>Exam:</td>
+                      <td>{{practiceset.grades[0].name}}</td>
+                    </tr>
+                    <tr>
+                      <td>Subject:</td>
+                      <td>{{practiceset.subject[0].name}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>Creator:</td>
+                      <td>{{practiceset.userInfo.name}}</td>
+                    </tr>
+                    <tr>
+                      <td>Total Time</td>
+                      <td>{{practiceset.totalTime}}</td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+
+                <div class="pull-right" style="padding-right: 10px;">
+                  <button ng-click="updateStatus()" class="btn btn-primary">{{sta}}</button>
+                  <a class="btn btn-danger" href="#/practice_sets/">Back</a>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+</div>
+<div class="col-md-1"></div>
+
+</div>
+

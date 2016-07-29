@@ -841,3 +841,40 @@ app.put('/api/query41/:id',auth, function(req,res){
 		res.json(que);
 	});	
 });
+
+
+
+
+//Update the status of Practice Test -- published or withdrawn
+app.put('/api/query42/:id',function(req,res){
+	var s = req.body.status;
+	//console.log(req.params.id);
+	//console.log(s);
+	db.practicesets.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+
+//Get the practice sets
+app.get('/api/query43',auth, function(req,res){
+	db.practicesets.find({status: { $in: ["published", "withdrawn"] }}, {status:1, title:1, grades:1, userInfo:1}
+	, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+//Pass the practice set id and it will return it.
+app.get('/api/query44/:id', function(req,res){
+	db.practicesets.findOne({_id: mongojs.ObjectId(req.params.id)}
+		, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
