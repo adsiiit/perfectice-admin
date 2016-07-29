@@ -850,7 +850,9 @@ app.put('/api/query42/:id',function(req,res){
 	var s = req.body.status;
 	//console.log(req.params.id);
 	//console.log(s);
-	db.practicesets.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
+	var isodate = new Date().toISOString();
+	console.log(isodate);
+	db.practicesets.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s, updatedAt:new Date(isodate)}}
 	, function(err, que){
 		if(err)
 			res.send(err);

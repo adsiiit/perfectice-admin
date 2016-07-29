@@ -118,7 +118,6 @@ return {
 
 
 
-
  myApp.directive('loading',   ['$http' ,function ($http)
 {
     return {
@@ -140,3 +139,21 @@ return {
         }
     };
 }]);
+
+
+//directive for confirmation click dialogue box.
+
+myApp.directive('ngConfirmClick', [
+    function(){
+        return {
+            link: function (scope, element, attr) {
+                var msg = attr.ngConfirmClick || "Are you sure?";
+                var clickAction = attr.confirmedClick;
+                element.bind('click',function (event) {
+                    if ( window.confirm(msg) ) {
+                        scope.$eval(clickAction)
+                    }
+                });
+            }
+        };
+}]); 

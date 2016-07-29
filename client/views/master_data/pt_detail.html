@@ -2,7 +2,7 @@
 <br><br>
 <div class="col-md-1"></div>
 <div ng-hide="isLoggedIn()">
-<center><h3>Please <a href="#/login">Login</a> to access the User Data.. </h3></center>
+<center><h3>Please <a href="#/login">Login</a> to access the Practice Set Management.. </h3></center>
 </div>
 <div class="col-md-10" ng-show="isLoggedIn()">
 
@@ -33,15 +33,18 @@
                       <td>{{practiceset.userInfo.name}}</td>
                     </tr>
                     <tr>
-                      <td>Total Time</td>
+                      <td>Total Time:</td>
                       <td>{{practiceset.totalTime}}</td>
                     </tr>
-                   
+                   <tr>
+                      <td>Last Updated:</td>
+                      <td>{{practiceset.updatedAt | date}}</td>
+                    </tr>
                   </tbody>
                 </table>
 
                 <div class="pull-right" style="padding-right: 10px;">
-                  <button ng-click="updateStatus()" class="btn btn-primary">{{sta}}</button>
+                  <button confirmed-click="updateStatus()" ng-confirm-click="Confirmation Alert!!" class="btn btn-primary">{{sta}}</button>
                   <a class="btn btn-danger" href="#/practice_sets/">Back</a>
                 </div>
                 
