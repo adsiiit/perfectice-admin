@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                       <td>Total Time:</td>
-                      <td>{{practiceset.totalTime}}</td>
+                      <td>{{practiceset.totalTime / 60}} Mins</td>
                     </tr>
                    <tr>
                       <td>Last Updated:</td>
@@ -44,7 +44,7 @@
                 </table>
 
                 <div class="pull-right" style="padding-right: 10px;">
-                  <button confirmed-click="updateStatus()" ng-confirm-click="Confirmation Alert!!" class="btn btn-primary">{{sta}}</button>
+                  <button confirmed-click="updateStatus()" ng-confirm-click="Are you sure, you want to change status?" class="btn btn-primary">{{sta}}</button>
                   <a class="btn btn-danger" href="#/practice_sets/">Back</a>
                 </div>
                 

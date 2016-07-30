@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 //grade Schema
 var gradeSchema = mongoose.Schema({
-	slugfly: {type:String, required:true},
+	slugfly: {type:String, required:true, unique: true},
 	name: {type:String, required:true},
 	countryCode: String,
 	status: { type: Boolean, default: true },

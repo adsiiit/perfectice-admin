@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 //topic Schema
 var topicSchema = mongoose.Schema({
-	slugfly: {type:String, required:true},
+	slugfly: {type:String, required:true, unique: true},
 	name: {type:String, required:true},
 	status: { type: Boolean, default: true },
 	subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required:true}},

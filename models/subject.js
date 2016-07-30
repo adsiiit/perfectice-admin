@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 //subject Schema
 var subjectSchema = mongoose.Schema({
-	slugfly: {type:String, required:true},
+	slugfly: {type:String, required:true, unique: true},
 	name: {type:String, required:true},
 	grade: { type: mongoose.Schema.Types.ObjectId, ref: 'Grade'},
 	countryCode: String,

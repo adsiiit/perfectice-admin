@@ -12,6 +12,7 @@ myApp.controller('AuthCtrl', [
 	  $scope.register = function(){
 	    auth.register($scope.user).error(function(error){
 	      $scope.error = error;
+	      //console.log(error);
 	    }).then(function(){
 	      window.location.href='#/';
 	    });
