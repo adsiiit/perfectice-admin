@@ -20,6 +20,7 @@ Grade = require('./models/grade');
 Topic = require('./models/topic');
 User = require('./models/user');
 Admin = require('./models/admin')
+Quizattempt = require('./models/quizattempt')
 
 
 require('./config/passport');
@@ -48,6 +49,10 @@ var queries = require('./routes/queries');
 var integration = require('./routes/integration');
 // ROUTES FOR INTEGRATION --END
 
+//ROUTES FOR QUIZ  -- START
+var quiz = require('./routes/quiz');
+// ROUTES FOR QUIZ --END
+
 
 //ROUTES FOR INTEGRATION WITH NIIT  -- START
 var mpniit = require('./routes/perfecticeNiit');
@@ -55,7 +60,7 @@ var mpniit_api = mpniit.app;
 var mpniit_apiR = mpniit.apiRoutes;
 // ROUTES FOR INTEGRATION WITH NIIT  --END
 
-app.use('/', routes,queries, integration, mpniit_api, mpniit_apiR);
+app.use('/', routes,queries, integration,quiz, mpniit_api, mpniit_apiR);
 
 app.listen(3030);
 console.log('Running on  port 3030...');
