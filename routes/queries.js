@@ -25,7 +25,7 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 
 
 //Return id corresponding to email-id
-app.get('/api/query0/:email', function(req,res){
+app.get('/query0/:email', function(req,res){
 	db.users.findOne({email: req.params.email },{_id:1},
 		function(err, que){
 		if(err)
@@ -36,7 +36,7 @@ app.get('/api/query0/:email', function(req,res){
 
 
 //List / count of students who are added to the classroom  -- Institute wise
-app.get('/api/query1/:id', function(req,res){
+app.get('/query1/:id', function(req,res){
 	db.users.aggregate([
 	{$match: {role:"teacher"}},
 	{$lookup:{from: "students", localField: "_id", foreignField: "createdBy", as:"students"}},
@@ -54,7 +54,7 @@ app.get('/api/query1/:id', function(req,res){
 });
 
 //Count of students who are added to the classroom and registered as well -- Institute wise
-app.get('/api/query2/:id', function(req,res){
+app.get('/query2/:id', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
 			res.send(err);
@@ -81,7 +81,7 @@ app.get('/api/query2/:id', function(req,res){
 
 
 //Count of students who attempted  -- Institute wise
-app.get('/api/query20/:id', function(req,res){
+app.get('/query20/:id', function(req,res){
 	db.classrooms.distinct("students", {}, function(err, id_list){
 		if(err)
 			res.send(err);
@@ -109,7 +109,7 @@ app.get('/api/query20/:id', function(req,res){
 
 
 //List of Students not registered with classroom count-- institute wise
-app.get('/api/query21/:id', function(req,res){
+app.get('/query21/:id', function(req,res){
 	db.users.distinct("email", {}, function(err, email_list){
 		if(err)
 			res.send(err);
@@ -135,7 +135,7 @@ app.get('/api/query21/:id', function(req,res){
 
 
 //List of Students registered but not taken any test-- teacher wise
-app.get('/api/query22/:id', function(req,res){
+app.get('/query22/:id', function(req,res){
 	db.users.distinct("email", {}, function(err, reg_list){
 		if(err)
 			res.send(err);
@@ -169,7 +169,7 @@ app.get('/api/query22/:id', function(req,res){
 
 
 //Last attempt report-- teacher wise
-app.get('/api/query17/:id', function(req,res){
+app.get('/query17/:id', function(req,res){
 	db.users.distinct("email", {}, function(err, reg_list){
 		if(err)
 			res.send(err);
@@ -211,7 +211,7 @@ app.get('/api/query17/:id', function(req,res){
 
 
 
-app.get('/api/query3', function(req,res){
+app.get('/query3', function(req,res){
 	db.attempts.distinct("user", {}, function(err, studentsattempt){
 		if(err)
 			res.send(err);
@@ -230,7 +230,7 @@ app.get('/api/query3', function(req,res){
 });
 
 
-app.get('/api/query4', function(req,res){
+app.get('/query4', function(req,res){
 	db.attempts.distinct("user", {}, function(err, studentsattempt){
 		if(err)
 			res.send(err);
@@ -246,7 +246,7 @@ app.get('/api/query4', function(req,res){
 
 
 
-app.get('/api/query5', function(req,res){
+app.get('/query5', function(req,res){
 	db.attempts.aggregate([
 		{$project: {user: 1, studentName: 1, email: 1, updatedAt: 1, isAbandoned: 1}},
 		{$sort: {user: 1, createdAt: 1}},
@@ -268,7 +268,7 @@ app.get('/api/query5', function(req,res){
 
 
 
-app.get('/api/query6', function(req,res){
+app.get('/query6', function(req,res){
 	db.attempts.aggregate([
 		{$unwind: "$practiceSetInfo.grades"},
 		{$group: {_id: "$practiceSetInfo.grades.name",No_of_attempts: {$sum : 1}, Students_attempted: {$addToSet: "$studentName"}}}],
@@ -281,7 +281,7 @@ app.get('/api/query6', function(req,res){
 
 
 
-app.get('/api/query7', function(req,res){
+app.get('/query7', function(req,res){
 	db.questions.aggregate([
 	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
 	{$unwind: "$userinfo"},
@@ -297,7 +297,7 @@ app.get('/api/query7', function(req,res){
 });
 
 
-app.get('/api/query8', function(req,res){
+app.get('/query8', function(req,res){
 	db.questions.aggregate({$group: {_id: "$subject.name",No_of_questions: {$sum : 1}}},
 		function(err, que){
 		if(err)
@@ -307,7 +307,7 @@ app.get('/api/query8', function(req,res){
 });
 
 
-app.get('/api/query9', function(req,res){
+app.get('/query9', function(req,res){
 	db.questions.aggregate({$group: {_id: "$topic.name",No_of_questions: {$sum : 1}}},
 		function(err, que){
 		if(err)
@@ -318,7 +318,7 @@ app.get('/api/query9', function(req,res){
 
 
 
-app.get('/api/query10', function(req,res){
+app.get('/query10', function(req,res){
 	db.grades.aggregate([
 		{$unwind: "$subjects"},
 		{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
@@ -334,7 +334,7 @@ app.get('/api/query10', function(req,res){
 
 
 
-app.get('/api/query11', function(req,res){
+app.get('/query11', function(req,res){
 	db.practicesets.aggregate([{$unwind: "$grades"},
 	{$group: {_id: "$grades.name",No_of_sets: {$sum : 1}, practicesets: {$addToSet: "$title"}}}],
 		function(err, que){
@@ -345,7 +345,7 @@ app.get('/api/query11', function(req,res){
 });
 
 
-app.get('/api/query12/:n', function(req,res){
+app.get('/query12/:n', function(req,res){
 	db.attempts.aggregate([{$match:{
           "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}
     }},
@@ -367,7 +367,7 @@ app.get('/api/query12/:n', function(req,res){
 });
 
 
-app.get('/api/query13/:n', function(req,res){
+app.get('/query13/:n', function(req,res){
 	db.attempts.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}},
 		function(err, que){
 		if(err)
@@ -380,7 +380,7 @@ app.get('/api/query13/:n', function(req,res){
 
 
 
-app.get('/api/query18/:n', function(req,res){
+app.get('/query18/:n', function(req,res){
 	db.students.count({"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}},
 		function(err, que){
 		if(err)
@@ -390,7 +390,7 @@ app.get('/api/query18/:n', function(req,res){
 });
 
 
-app.get('/api/query19/:n', function(req,res){
+app.get('/query19/:n', function(req,res){
 	db.students.aggregate([
     {$match:{"createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}}}, 
     {$project:{
@@ -414,7 +414,7 @@ app.get('/api/query19/:n', function(req,res){
 
 
 
-app.get('/api/query23', function(req,res){
+app.get('/query23', function(req,res){
 	db.questions.aggregate([
 	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
 	{$unwind: "$userinfo"},
@@ -429,7 +429,7 @@ app.get('/api/query23', function(req,res){
 	});
 });
 
-app.get('/api/query24', function(req,res){
+app.get('/query24', function(req,res){
 	db.grades.aggregate([
 	{$unwind: "$subjects"},
 	{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
@@ -452,7 +452,7 @@ app.get('/api/query24', function(req,res){
 
 
 
-app.get('/api/query25', function(req,res){
+app.get('/query25', function(req,res){
 	db.students.aggregate([
 	{$lookup:{from: "users", localField: "createdBy", foreignField: "_id", as:"teacherdetail"}},
 	{$unwind: "$teacherdetail"},
@@ -468,7 +468,7 @@ app.get('/api/query25', function(req,res){
 });
 
 
-app.get('/api/query26', function(req,res){
+app.get('/query26', function(req,res){
 	db.users.count({role: "student"},
 		function(err, que){
 		if(err)
@@ -477,7 +477,7 @@ app.get('/api/query26', function(req,res){
 	});
 });
 
-app.get('/api/query27', function(req,res){
+app.get('/query27', function(req,res){
 	db.attempts.distinct("user", {},
 		function(err, que){
 		if(err)
@@ -486,7 +486,7 @@ app.get('/api/query27', function(req,res){
 	});
 });
 
-app.get('/api/query28', function(req,res){
+app.get('/query28', function(req,res){
 	db.classrooms.distinct("students",{},
 		function(err, que){
 		if(err)
@@ -500,7 +500,7 @@ app.get('/api/query28', function(req,res){
 
 /*No. of questions by subject -- id is passed */
 
-/*app.get('/api/query29/:_id', function(req,res){
+/*app.get('/query29/:_id', function(req,res){
 	db.questions.aggregate([
 		{$group: {_id: {subId: "$subject._id", subName: "$subject.name"},No_of_questions: {$sum : 1}}},
 		{$project: {_id: "$_id.subId", name: "$_id.subName", No_of_questions: "$No_of_questions"}},
@@ -517,7 +517,7 @@ app.get('/api/query28', function(req,res){
 
 /*Subjects with question count -- query30*/
 
-app.get('/api/query30',auth, function(req,res){
+app.get('/query30',auth, function(req,res){
 	db.subjects.aggregate([
 		{$lookup:{from: "questions", localField: "_id", foreignField: "subject._id", as:"questionsforsubject"}},
 		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", countryCode: "$countryCode", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt", topics: "$topics", grade: "$grade"},
@@ -535,7 +535,7 @@ app.get('/api/query30',auth, function(req,res){
 
 /*Exams with question count -- query31*/
 
-app.get('/api/query31',auth, function(req,res){
+app.get('/query31',auth, function(req,res){
 	db.grades.aggregate([
 		{$unwind: {path: "$subjects", preserveNullAndEmptyArrays: true}},
 		{$lookup:{from: "questions", localField: "subjects", foreignField: "subject._id", as:"questionsforexam"}},
@@ -554,7 +554,7 @@ app.get('/api/query31',auth, function(req,res){
 
 /*Topics with question count -- query32*/
 
-app.get('/api/query32',auth, function(req,res){
+app.get('/query32',auth, function(req,res){
 	db.topics.aggregate([
 		{$lookup:{from: "questions", localField: "_id", foreignField: "topic._id", as:"questionsfortopic"}},
 		{$group: {_id: {_id: "$_id", slugfly: "$slugfly", name: "$name", updatedAt: "$updatedAt", createdAt: "$createdAt",subject: "$subject"},
@@ -572,7 +572,7 @@ app.get('/api/query32',auth, function(req,res){
 
 /*Pass id and get email,name and phonenumber of all students who appeared in that practice set*/
 
-app.get('/api/query33/:_id', function(req,res){
+app.get('/query33/:_id', function(req,res){
 	db.practicesets.aggregate([
 		{$lookup:{from: "attempts", localField: "_id", foreignField: "practicesetId", as:"setattempts"}},
 		{$unwind: "$setattempts"},
@@ -594,7 +594,7 @@ app.get('/api/query33/:_id', function(req,res){
 
 /*Signup Trend in last n days */
 
-app.get('/api/query34/:n', function(req,res){
+app.get('/query34/:n', function(req,res){
 	db.users.aggregate([
 		{$match:{
 		          "createdAt":{$gt: new Date(new Date().getTime() - 1000*60*60*24*req.params.n)}
@@ -620,7 +620,7 @@ app.get('/api/query34/:n', function(req,res){
 
 
 //Questions count per subject  ~~~  teacher wise  ~~~  teacher-id is passed
-app.get('/api/query14/:id', function(req,res){
+app.get('/query14/:id', function(req,res){
 	db.questions.aggregate([
 	{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userinfo"}},
 	{$unwind: "$userinfo"},
@@ -638,7 +638,7 @@ app.get('/api/query14/:id', function(req,res){
 
 
 // Pass the _id of user and it will user detail along with last login and last attempt
-app.get('/api/query15/:id', function(req,res){
+app.get('/query15/:id', function(req,res){
 	db.users.aggregate([
 	{$match: {_id:mongojs.ObjectId(req.params.id)}},
 	{$project: {name: 1, email:1, status: 1, createdAt: 1}},
@@ -656,7 +656,7 @@ app.get('/api/query15/:id', function(req,res){
 
 
 //Update the status of user
-app.put('/api/query16/:id',auth, function(req,res){
+app.put('/query16/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.users.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -670,7 +670,7 @@ app.put('/api/query16/:id',auth, function(req,res){
 
 
 //Trend of Attempts -- Teacher wise
-app.get('/api/query35/:id', function(req,res){
+app.get('/query35/:id', function(req,res){
 	db.students.distinct("email", {}, function(err, stu_list){
 		if(err)
 			res.send(err);
@@ -713,7 +713,7 @@ app.get('/api/query35/:id', function(req,res){
 
 //Registration Trend  -- Teacher wise
 
-app.get('/api/query36/:id', function(req,res){
+app.get('/query36/:id', function(req,res){
 	db.students.distinct("email", {}, function(err, stu_list){
 		if(err)
 			res.send(err);
@@ -751,7 +751,7 @@ app.get('/api/query36/:id', function(req,res){
 
 //Practice sets created – Institute wise
 
-app.get('/api/query37/:id', function(req,res){
+app.get('/query37/:id', function(req,res){
 	db.practicesets.aggregate([
 	
 	{$project: {user:1,createdAt:1}},
@@ -780,7 +780,7 @@ app.get('/api/query37/:id', function(req,res){
 
 
 //Trend of Questions added  -- Institute wise
-app.get('/api/query38/:id', function(req,res){
+app.get('/query38/:id', function(req,res){
 	db.questions.aggregate([
 	
 	{$project: {user:1,createdAt:1}},
@@ -810,7 +810,7 @@ app.get('/api/query38/:id', function(req,res){
 
 
 //Update the status of subject
-app.put('/api/query39/:id',auth, function(req,res){
+app.put('/query39/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.subjects.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -821,7 +821,7 @@ app.put('/api/query39/:id',auth, function(req,res){
 });
 
 //Update the status of grade
-app.put('/api/query40/:id',auth, function(req,res){
+app.put('/query40/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.grades.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -832,7 +832,7 @@ app.put('/api/query40/:id',auth, function(req,res){
 });
 
 //Update the status of topic
-app.put('/api/query41/:id',auth, function(req,res){
+app.put('/query41/:id',auth, function(req,res){
 	var s = req.body.status;
 	db.topics.update({_id:mongojs.ObjectId(req.params.id)},{$set:{status:s}}
 	, function(err, que){
@@ -846,7 +846,7 @@ app.put('/api/query41/:id',auth, function(req,res){
 
 
 //Update the status of Practice Test -- published or withdrawn
-app.put('/api/query42/:id',function(req,res){
+app.put('/query42/:id',function(req,res){
 	var s = req.body.status;
 	//console.log(req.params.id);
 	//console.log(s);
@@ -862,7 +862,7 @@ app.put('/api/query42/:id',function(req,res){
 
 
 //Get the practice sets
-app.get('/api/query43',auth, function(req,res){
+app.get('/query43',auth, function(req,res){
 	db.practicesets.find({status: { $in: ["published", "withdrawn"] }}, {status:1, title:1, grades:1, userInfo:1}
 	, function(err, que){
 		if(err)
@@ -872,7 +872,7 @@ app.get('/api/query43',auth, function(req,res){
 });
 
 //Pass the practice set id and it will return it.
-app.get('/api/query44/:id', function(req,res){
+app.get('/query44/:id', function(req,res){
 	db.practicesets.findOne({_id: mongojs.ObjectId(req.params.id)}
 		, function(err, que){
 		if(err)

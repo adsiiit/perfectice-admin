@@ -5,8 +5,9 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/bower_components/nvd3/build/nv.d3.css"/>
     <link rel="stylesheet" href="/bower_components/angularjs-slider/dist/rzslider.css"/>
+    <link rel="stylesheet" href="/bower_components/json-formatter/json-formatter.css"/>
     <link rel="stylesheet" href="/css/style.css"/>
-
+    <!-- <base href="/"></base> -->
 </head>
 <body>
 
@@ -29,7 +30,15 @@
           <li class=""><a style="color: rgb(249, 142, 142);" href="#/teacher_perfo">Teacher Performance</a></li>
          
           <li class=""><a style="color: rgb(249, 142, 142);" href="#/user_manage">User Management</a></li>
-          <li class=""><a style="color: rgb(249, 142, 142);" href="#/video_list">Khan Academy</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" style="color: rgb(249, 142, 142);" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Khan Academy<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#/mapper">Mapper</a></li>
+              <li><a href="#/video_list">Video List</a></li>
+            </ul>
+          </li>
+
+<!--           <li class=""><a style="color: rgb(249, 142, 142);" href="#/video_list">Khan Academy</a></li> -->
           <li class=""><a style="color: rgb(249, 142, 142);" href="#/practice_sets">Practice Sets</a></li>
 
           <!-- <li class="dropdown">
@@ -101,6 +110,7 @@
 <script src="/bower_components/angular-sanitize.min.js"></script>
 <script src="/bower_components/ng-csv.min.js"></script>
 <script src="/bower_components/angularjs-slider/dist/rzslider.min.js"></script>
+<script src="/bower_components/json-formatter/json-formatter.js"></script>
 
 
 

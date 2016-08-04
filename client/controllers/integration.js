@@ -38,6 +38,37 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 		});
 	}
 
+	$scope.action4 = function(){	
+		$scope.errorExists = null;
+	}
 
+	$scope.getKhanAcademy = function(){	
+		$http.get('/api2/khanAcademy').success(function(response){
+			$scope.khanAcademyArray = response;
+		});
+	}
+
+	$scope.map = {};
+
+	$scope.insertMap = function(){
+		$http.get('/api2/mappingDocument/'+$scope.map.perfecticeId).success(function(response){
+			$scope.doc = response;
+			if(response)
+				$scope.errorExists = 'This topic is already mapped.';
+			else
+			{
+				$http.post('/api2/addMapping', $scope.map).success(function(response){
+					window.alert('Mapping Added..');
+				});
+			}
+		});
+/*		
+*/	}
+
+/*	$scope.doSomething = function(id){
+        $scope.kaid = id;
+    }*/
 
 }]);
+
+

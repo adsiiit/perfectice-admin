@@ -23,7 +23,7 @@ var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions',
 
 
 
-app.get('/api/practiceSets', function(req,res){
+app.get('/practiceSets', function(req,res){
 	db.practicesets.find({"status" : "published"},{studentEmails: 0, classRooms:0, inviteeEmails:0, instructions:0, titleLower:0, user:0},
 		function(err, que){
 		if(err)
@@ -33,7 +33,7 @@ app.get('/api/practiceSets', function(req,res){
 });
 
 
-app.get('/api/AttemptSummary', function(req,res){
+app.get('/AttemptSummary', function(req,res){
 	db.attempts.aggregate([
 			{"$project": {"year": {"$year": "$updatedAt"},"month": {"$month": "$updatedAt"},"day": {"$dayOfMonth": "$updatedAt"},
 			_id: 1, practiceTestID: 1, createdAt: 1, totalQuestions: 1, totalTime: 1, totalMark: 1, totalCorrects: 1, totalErrors:1, totalMissed: 1, practicesetId: 1, email: 1
@@ -57,7 +57,7 @@ app.get('/api/AttemptSummary', function(req,res){
 
 
 
-app.get('/api/gradesSubjectsTopics', function(req,res){
+app.get('/gradesSubjectsTopics', function(req,res){
 		db.subjects.aggregate([
 			{$unwind: "$topics"},
 			{$lookup:{from: "topics", localField: "topics", foreignField: "_id", as:"topicDetail"}},
@@ -100,7 +100,7 @@ app.get('/api/gradesSubjectsTopics', function(req,res){
 // get an instance of the router for api routes
 var apiRoutes = express.Router(); 
 
-module.exports = apiRoutes;
+//module.exports = apiRoutes;
 
 //route middleware to verify a token
 apiRoutes.use(function(req,res,next){
@@ -127,8 +127,8 @@ apiRoutes.use(function(req,res,next){
 
 
 
-// route to return all users (GET http://localhost:8080/api/users)
-apiRoutes.get('/api/tokenInfo', function(req, res) {
+// route to return all users (GET http://localhost:8080/users)
+apiRoutes.get('/tokenInfo', function(req, res) {
 	info = {name: req.decoded.name, email: req.decoded.email, examination: req.decoded.examination, country: req.decoded.country, phone: req.decoded.phone};
   res.json(info);
 });
@@ -138,7 +138,7 @@ apiRoutes.get('/api/tokenInfo', function(req, res) {
 /*User.findOneAndUpdate({email: info.email},{$set:{last_login:new Date().toISOString()}},*/
 
 
-apiRoutes.get('/api/niitUser', function(req, res) {
+apiRoutes.get('/niitUser', function(req, res) {
 	info = {name: req.decoded.name, email: req.decoded.email,
 		examination: req.decoded.examination, country: req.decoded.country,
 		phoneNumber: req.decoded.phone, provider: "niit"};

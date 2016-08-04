@@ -98,7 +98,8 @@ function getVideo(document)
 }
 
 
-app.get('/api2/getVideosList/:prov/:id', function(req,res){
+//Pass it the providerId('Khan for current scenario') and perfecticeId of topic and it will return the videos associated with it.
+app.get('/getVideosList/:prov/:id', function(req,res){
 	db.mapping.findOne({"provider":req.params.prov,"perfecticeId":mongojs.ObjectId(req.params.id)},
 		function(err, que){
 		if(err)
@@ -125,5 +126,44 @@ app.get('/api2/getVideosList/:prov/:id', function(req,res){
 		}
 		else
 			res.json([]);
+	});
+});
+
+
+app.get('/khanAcademy', function(req,res){
+	db.KhanAcademy.find({},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+app.post('/addMapping',function(req,res){
+	var map = req.body;
+	console.log(map);
+	if(!map.perfecticeId || !map.providerId)
+		res.json({"code": 500, "error": "Perfectice Id or Provider Id field is null.."})
+	else
+	{
+		map.perfecticeId  = mongojs.ObjectId(map.perfecticeId);
+		map.providerId  = mongojs.ObjectId(map.providerId);
+		console.log('else part');
+		db.mapping.save(map,
+			function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que);
+		});
+	}
+	
+});
+
+app.get('/mappingDocument/:id', function(req,res){
+	db.mapping.findOne({perfecticeId: mongojs.ObjectId(req.params.id)},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
 	});
 });

@@ -1,0 +1,103 @@
+<div class="row" ng-init="getGrades()">
+<center><h2>Mapper</h2></center>
+	<div class="FixedContainerLeft" ng-init="getKhanAcademy()">
+	<center><h3>Provider</h3></center>
+
+
+		<!-- Nested node template -->
+<!-- 		<script type="text/ng-template" id="nodes_renderer.html">
+		  <div ng-click="doSomething(node._id)">
+		    {{node.title}}
+		  </div>
+		  <ul ng-model="node.Children">
+		    <li ng-repeat="node in node.Children" ng-include="'nodes_renderer.html'">
+		    </li>
+		  </ol>
+		</script>
+		<div>
+		  <ul ng-model="khanAcademyArray">
+		    <li ng-repeat="node in khanAcademyArray" ng-include="'nodes_renderer.html'"></li>
+		  </ol>
+		</div> -->
+		
+
+		
+<!-- 		<select class="form-control" ng-model="kaid">
+			<option ng-repeat="node in khanAcademyArray" value="{{ node._id }}">{{ node.title }}</option>
+		</select> -->
+		<div class="Content">
+			<json-formatter json="khanAcademyArray" open="1"></json-formatter>
+		</div>
+	</div>
+
+	<div class="FixedContainerRight" ng-init="getTopics()">
+		<center><h3>Perfectice</h3></center>
+		<div class="Content2" ng-init="getSubjects()">
+			<div class="row" style="padding: 10px;">
+			  <label>Exam</label>
+			  <select class="form-control" ng-model="sexam" ng-change="action1()">
+			   	<option ng-repeat="exam in exams | orderBy:'name' " value="{{ exam._id }}">{{ exam.name }}</option>
+			  </select>
+			</div>
+
+			<div class="row" style="padding: 10px;" ng-show="sexam">
+			  <label>Subject</label>
+			  <select class="form-control" ng-model="ssubject" ng-change="action2()">
+			   	<option ng-repeat="subject in subjects | orderBy:'name' " ng-if="subject.grade == sexam" value="{{ subject._id }}">{{ subject.name }}</option>
+			  </select>
+			  
+			</div>
+			
+			<div class="row" style="padding: 10px;" ng-show="ssubject">
+			  <label>Topic</label>
+			  <select class="form-control" ng-model="map.perfecticeId" ng-change="action4()">
+			   	<option ng-repeat="topic in topics | orderBy:'name' " ng-if="topic.subject == ssubject" value="{{ topic._id }}">{{ topic.name }}</option>
+			  </select>
+			</div>
+		</div>
+
+		<div class="Content2">
+
+			<center>
+			<form name = "mappingForm" novalidate>
+					<div class="row" style="padding: 5px 15px;">
+	                  	<label>Provider:</label><br>
+	                  	<input name = "provider" type = "text" ng-model = "map.provider" size="25" ng-init="map.provider = 'Khan'" required>
+	                     <span style = "color:red" ng-show = "mappingForm.provider.$dirty && mappingForm.provider.$invalid">
+	                        <span ng-show = "mappingForm.provider.$error.required">Provider is required.</span>
+	                     </span>
+	                </div>
+
+	               
+	                <div class="row" style="padding: 5px 15px;">
+	                	<label>Perfectice Id:</label><br>
+	                 	<input name = "perfecticeId"  type = "text" ng-model = "map.perfecticeId" size="25" ng-minlength=24 ng-maxlength=24 ng-change="action4()" required>
+	                     <span style = "color:red" ng-show = "mappingForm.perfecticeId.$dirty && mappingForm.perfecticeId.$invalid">
+	                        <span ng-show = "mappingForm.perfecticeId.$error.required"><br>Perfectice Id is required..</span>
+	                        <span ng-show = "!mappingForm.perfecticeId.$valid && !mappingForm.perfecticeId.$error.required"><br>Invalid Object Id..</span>
+	                     </span>
+	                     <span style = "color:red" ng-show = "errorExists && mappingForm.perfecticeId.$valid && !mappingForm.perfecticeId.$error.required"><br>{{errorExists}}</span>
+	                </div>
+	               
+
+	                <div class="row" style="padding: 5px 15px;">
+	                	<label>Provider Id:</label><br>
+	                  	<input name = "providerId" type = "text" ng-model = "map.providerId" size="25" ng-minlength=24 ng-maxlength=24 required>
+	                     <span style = "color:red" ng-show = "mappingForm.providerId.$dirty && mappingForm.providerId.$invalid">
+	                        <span ng-show = "mappingForm.providerId.$error.required"><br>Provider Id is required..</span>
+	                        <span ng-show = "!mappingForm.providerId.$valid && !mappingForm.providerId.$error.required"><br>Invalid Object Id..</span>
+	                     </span>
+	                </div>
+	               
+	                <div class="row" style="padding: 10px 15px;">
+                     <button class="btn btn-block btn-primary" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
+                        mappingForm.providerId.$invalid" ng-click="insertMap()">Submit</button>
+                    </div>
+
+	         </form>
+	         </center>
+			
+		</div>
+
+	</div>
+</div>

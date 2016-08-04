@@ -7,6 +7,8 @@ var passport = require('passport');
 var morgan      = require('morgan');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
+var path = require('path');
+
 app.use(express.static(__dirname+'/client'));
 app.use(passport.initialize());
 
@@ -36,7 +38,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
 
-
 //ROUTES -- START
 var routes = require('./routes/index');
 //ROUTES --END
@@ -60,7 +61,15 @@ var mpniit_api = mpniit.app;
 var mpniit_apiR = mpniit.apiRoutes;
 // ROUTES FOR INTEGRATION WITH NIIT  --END
 
-app.use('/', routes,queries, integration,quiz, mpniit_api, mpniit_apiR);
+app.use('/api', routes,queries, integration,quiz, mpniit_api, mpniit_apiR);
+app.use('/api2', integration,quiz);
+
+/*app.use('*',function(req,res,next){
+	var indexFile = path.resolve(__dirname,'client/index.html');
+	res.sendFile(indexFile);
+})
+*/
+
 
 app.listen(3030);
 console.log('Running on  port 3030...');

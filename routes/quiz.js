@@ -24,7 +24,7 @@ var db=mongojs("ProdDb",['attempts','users','questions','grades','practicesets',
 //Quiz attempt of one question will be passed(user,questionId,quizId,timeTaken,answerId), it will verify the correctness 
 //of answer and set the values of (plusMark, minusMark, score and missed) fields accordingly and then store it in 'quizattempts'
 // collection as a document
-app.post('/api2/quizattempt',function(req,res){
+app.post('/quizattempt',function(req,res){
 	var quizattempt = req.body;
 	var a,b;
 	//console.log(quizattempt);
@@ -109,7 +109,7 @@ app.post('/api2/quizattempt',function(req,res){
 
 
 //This endpoint returns the list of grades along with their subjects
-app.get('/api2/gradesWithSubjects', function(req,res){
+app.get('/gradesWithSubjects', function(req,res){
 	db.grades.aggregate([
 	{$unwind: "$subjects"},
 	{$lookup:{from: "subjects", localField: "subjects", foreignField: "_id", as:"subjectdet"}},
@@ -127,7 +127,7 @@ app.get('/api2/gradesWithSubjects', function(req,res){
 
 
 //Pass the userId, quizId & subjectId and it will return some random question which has not been already asked.
-app.get('/api2/randomQuestion/:user/:quizId/:subjectId', function(req,res){
+app.get('/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 	db.quizattempts.distinct("questionId",{"user":mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)},
 		function(err, id_list){
 		if(err)
@@ -149,7 +149,7 @@ app.get('/api2/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 
 
 //Returns the options of given question(generally 4-5 options).
-app.get('/api2/questionOptions/:questionId', function(req,res){
+app.get('/questionOptions/:questionId', function(req,res){
 	db.answers.find({"question" : mongojs.ObjectId(req.params.questionId)}, {answerText: 1, isCorrectAnswer:1},
 		function(err, que){
 		if(err)
@@ -160,7 +160,7 @@ app.get('/api2/questionOptions/:questionId', function(req,res){
 
 
 //Pass userid and quizid and it will return all the documents associated with it
-app.get('/api2/detailedSummary/:user/:quizId', function(req,res){
+app.get('/detailedSummary/:user/:quizId', function(req,res){
 	db.quizattempts.find({"user" : mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)},
 		function(err, que){
 		if(err)
@@ -170,7 +170,7 @@ app.get('/api2/detailedSummary/:user/:quizId', function(req,res){
 });
 
 //Pass userid and quizid and it will return the summary.
-app.get('/api2/summary/:user/:quizId', function(req,res){
+app.get('/summary/:user/:quizId', function(req,res){
 	db.quizattempts.aggregate([
 	{$match: {"user" : mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)}},
 	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},

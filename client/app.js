@@ -1,5 +1,7 @@
-var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap','ngSanitize', 'ngCsv', 'rzModule']);
+var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap','ngSanitize', 'ngCsv', 'rzModule','jsonFormatter']);
 
+
+//myApp.config(function($routeProvider, $locationProvider){
 myApp.config(function($routeProvider){
 	$routeProvider.when('/', {
 		controller: 'CommonController',
@@ -143,6 +145,10 @@ myApp.config(function($routeProvider){
 		controller: 'IntegrationController',
 		templateUrl: 'views/integration/video_list.html'
 	})
+	.when('/mapper', {
+		controller: 'IntegrationController',
+		templateUrl: 'views/integration/mapper.html'
+	})
 
 
 	.when('/practice_sets', {
@@ -163,4 +169,6 @@ myApp.config(function($routeProvider){
 	.otherwise({
 		redirectTo: '/'
 	})
+
+	//$locationProvider.html5Mode(true);
 });
