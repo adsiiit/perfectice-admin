@@ -141,14 +141,14 @@ app.get('/khanAcademy', function(req,res){
 
 app.post('/addMapping',function(req,res){
 	var map = req.body;
-	console.log(map);
+	//console.log(map);
 	if(!map.perfecticeId || !map.providerId)
 		res.json({"code": 500, "error": "Perfectice Id or Provider Id field is null.."})
 	else
 	{
 		map.perfecticeId  = mongojs.ObjectId(map.perfecticeId);
 		map.providerId  = mongojs.ObjectId(map.providerId);
-		console.log('else part');
+		//console.log('else part');
 		db.mapping.save(map,
 			function(err, que){
 			if(err)
@@ -166,4 +166,52 @@ app.get('/mappingDocument/:id', function(req,res){
 			res.send(err);
 		res.json(que);
 	});
+});
+
+
+app.put('/editMapping',function(req,res){
+	var map = req.body;
+	console.log(map);
+	if(!map.perfecticeId || !map.providerId)
+	{
+		//console.log('if part');
+		res.json({"code": 500, "error": "Perfectice Id or Provider Id field is null.."})
+	}
+	else
+	{
+		map.perfecticeId  = mongojs.ObjectId(map.perfecticeId);
+		map.providerId  = mongojs.ObjectId(map.providerId);
+		//console.log('else part');
+		db.mapping.findAndModify({
+		    query: { perfecticeId: map.perfecticeId },
+		    update: { $set: { providerId: map.providerId } },
+		    new: true
+		}, function (err, doc, lastErrorObject) {
+		    if(err)
+				res.send(err);
+			res.json(doc);
+		});
+	}
+	
+});
+
+app.delete('/deleteMapping/:perfecticeId',function(req,res){
+	var perfecticeId = req.params.perfecticeId;
+	console.log(perfecticeId);
+	if(!perfecticeId)
+	{
+		console.log('if part');
+		res.json({"code": 500, "error": "Perfectice Id field is null.."})
+	}
+	else
+	{
+		perfecticeId  = mongojs.ObjectId(perfecticeId);
+		//console.log('else part');
+		db.mapping.remove({ perfecticeId: perfecticeId },
+			function (err, doc) {
+		    if(err)
+				res.send(err);
+			res.json(doc);
+		});
+	}
 });

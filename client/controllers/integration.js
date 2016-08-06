@@ -53,8 +53,9 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	$scope.insertMap = function(){
 		$http.get('/api2/mappingDocument/'+$scope.map.perfecticeId).success(function(response){
 			$scope.doc = response;
+			$scope.errorExists = null;
 			if(response)
-				$scope.errorExists = 'This topic is already mapped.';
+				$scope.errorExists = 'This Topic is already mapped.';
 			else
 			{
 				$http.post('/api2/addMapping', $scope.map).success(function(response){
@@ -62,8 +63,41 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 				});
 			}
 		});
-/*		
-*/	}
+		
+	}
+
+	$scope.editMap = function(){
+		$http.get('/api2/mappingDocument/'+$scope.map.perfecticeId).success(function(response){
+			$scope.doc = response;
+			$scope.errorExists = null;
+			if(!response)
+				$scope.errorExists = "This Topic doesn't exist";
+			else
+			{
+				$http.put('/api2/editMapping', $scope.map).success(function(response){
+					window.alert('Mapping Modified..');
+				});
+			}
+		});
+		
+	}
+
+	$scope.deleteMap = function(){
+		$http.get('/api2/mappingDocument/'+$scope.map.perfecticeId).success(function(response){
+			$scope.doc = response;
+			$scope.errorExists = null;
+			if(!response)
+				$scope.errorExists = "This Topic doesn't exist";
+			else
+			{
+				console.log($scope.map.perfecticeId);
+				$http.delete('/api2/deleteMapping/'+$scope.map.perfecticeId).success(function(response){
+					window.alert('Mapping Deleted..');
+				});
+			}
+		});
+		
+	}
 
 /*	$scope.doSomething = function(id){
         $scope.kaid = id;

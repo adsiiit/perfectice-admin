@@ -62,8 +62,11 @@
 	                </div>
 	               
 	                <div class="row" style="padding: 10px 15px;">
-                     <button class="btn btn-block btn-primary" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
-                        mappingForm.providerId.$invalid" ng-click="insertMap()">Submit</button>
+                     <button class="btn btn-primary" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
+                        mappingForm.providerId.$invalid" ng-click="insertMap()">Create</button>
+                    <button class="btn btn-warning" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
+                    mappingForm.providerId.$invalid" confirmed-click="editMap()" ng-confirm-click="Do you really want to MODIFY this mapping?">Modify</button>
+                    <button class="btn btn-danger" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid" confirmed-click="deleteMap()" ng-confirm-click="Do you really want to DELETE this mapping?">Delete</button>
                     </div>
 
 	         </form>
