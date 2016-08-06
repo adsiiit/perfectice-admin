@@ -126,7 +126,7 @@ app.get('/gradesWithSubjects', function(req,res){
 
 
 
-//Pass the userId, quizId & subjectId and it will return some random question which has not been already asked.
+//Pass the userId, quizId & subjectId and it will return some random question(with options) which has not been already asked.
 app.get('/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 	db.quizattempts.distinct("questionId",{"user":mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)},
 		function(err, id_list){
@@ -137,7 +137,9 @@ app.get('/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 			{$project: {plusMark: 1, minusMark: 1,questionHeader:1,questionText:1,
 			  questionType:1,complexity:1}},
 			 {$match: {_id: {$nin: id_list}}},
-			 { $sample: {size: 1} }
+			 { $sample: {size: 1} },
+			 {$lookup:{from: "answers", localField: "_id", foreignField: "question", as:"options"}},
+             {$project: {plusMark: 1, minusMark: 1,questionHeader:1,questionText:1,questionType:1,complexity:1, "options._id":1, "options.answerText":1, "options.isCorrectAnswer":1}}
 			], function(err, que){
 			if(err)
 				res.send(err);
@@ -147,13 +149,15 @@ app.get('/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 });
 
 
-//Pass the userId, quizId & subjectId and it will return some random question which has not been already asked.
+//Pass the subjectId and it will return some random question(with options).
 app.get('/randomQuestionWOLogin/:subjectId', function(req,res){
 		db.questions.aggregate([
 			{$match:{"subject._id": mongojs.ObjectId(req.params.subjectId)}},
 			{$project: {plusMark: 1, minusMark: 1,questionHeader:1,questionText:1,
 			  questionType:1,complexity:1}},
-			 { $sample: {size: 1} }
+			 { $sample: {size: 1} },
+			 {$lookup:{from: "answers", localField: "_id", foreignField: "question", as:"options"}},
+             {$project: {plusMark: 1, minusMark: 1,questionHeader:1,questionText:1,questionType:1,complexity:1, "options._id":1, "options.answerText":1, "options.isCorrectAnswer":1}}
 			], function(err, que){
 			if(err)
 				res.send(err);
