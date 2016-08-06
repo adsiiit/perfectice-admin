@@ -7,14 +7,14 @@
 {
   float:left;
   height: 250px;
-  width:70%; 
+  width:30%; 
 }
 
 .FixedContainerRight
 {
   float:right;
   height: 250px;
-  width:30%; 
+  width:70%; 
  
 }
 

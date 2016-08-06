@@ -147,6 +147,21 @@ app.get('/randomQuestion/:user/:quizId/:subjectId', function(req,res){
 });
 
 
+//Pass the userId, quizId & subjectId and it will return some random question which has not been already asked.
+app.get('/randomQuestionWOLogin/:subjectId', function(req,res){
+		db.questions.aggregate([
+			{$match:{"subject._id": mongojs.ObjectId(req.params.subjectId)}},
+			{$project: {plusMark: 1, minusMark: 1,questionHeader:1,questionText:1,
+			  questionType:1,complexity:1}},
+			 { $sample: {size: 1} }
+			], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que[0]);
+		});
+});
+
+
 
 //Returns the options of given question(generally 4-5 options).
 app.get('/questionOptions/:questionId', function(req,res){
