@@ -8,12 +8,12 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 //to create json document
 app.use(bodyParser.json());
 
-
+var config = require('../config');
 
 //connect to database using mongojs
 
 var mongojs = require('mongojs');
-var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions','grades','practicesets','topics','subjects']);
+var db=mongojs(config.mongo.db,['students','classrooms','attempts','users','questions','grades','practicesets','topics','subjects']);
 
 
 /* **************************************************************  */

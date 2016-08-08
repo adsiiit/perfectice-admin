@@ -4,8 +4,10 @@ var bodyParser = require('body-parser');
 
 var jwt = require('express-jwt');
 
+
 //acts as middleware
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var config = require('../config');
+var auth = jwt({secret: config.secret, userProperty: 'payload'});
 
 
 module.exports = app;
@@ -17,7 +19,7 @@ app.use(bodyParser.json());
 //connect to database using mongojs
 
 var mongojs = require('mongojs');
-var db=mongojs("ProdDb",['students','classrooms','attempts','users','questions','grades','practicesets','topics','subjects']);
+var db=mongojs(config.mongo.db,['students','classrooms','attempts','users','questions','grades','practicesets','topics','subjects']);
 
 
 

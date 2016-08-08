@@ -7,7 +7,8 @@ var Admin = mongoose.model('Admin');
 var jwt = require('express-jwt');
 
 //acts as middleware
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var config = require('../config');
+var auth = jwt({secret: config.secret, userProperty: 'payload'});
 
 
 module.exports = app;

@@ -6,22 +6,23 @@
 .FixedContainerLeft
 {
   float:left;
-  height: 250px;
-  width:30%; 
+  height: 500px;
+  width:40%; 
 }
 
 .FixedContainerRight
 {
   float:right;
-  height: 250px;
-  width:70%; 
+  height: 500px;
+  width:60%; 
  
 }
+
 
 .Content
 {
    overflow:auto;
-   	height: 600px;
+   	height: 550px;
     background:#fff;
     border: 3px solid #618BCB;
     padding: 10px 30px;
@@ -30,8 +31,25 @@
 .Content2
 {
    overflow:auto;
-   	height: 300px;
+   	height: 550px;
     background:#fff;
     border: 3px solid #618BCB;
-    padding: 0px 20px;
+    padding: 10px 30px;
+}
+
+.Content3
+{
+    background:#fff;
+    border: 3px solid #618BCB;
+    padding: 25px;
+    margin: 15px;
+}
+.Content4
+{
+    overflow:auto;
+    background:#fff;
+    height: 325px;
+    border: 3px solid #618BCB;
+    padding: 25px;
+    margin: 15px;
 }

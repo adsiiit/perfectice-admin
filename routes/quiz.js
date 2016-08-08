@@ -7,7 +7,8 @@ var Quizattempt = mongoose.model('Quizattempt');
 var jwt = require('express-jwt');
 
 //acts as middleware
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var config = require('../config');
+var auth = jwt({secret: config.secret, userProperty: 'payload'});
 
 
 module.exports = app;
@@ -18,7 +19,7 @@ app.use(bodyParser.json());
 
 //connect to database using mongojs
 var mongojs = require('mongojs');
-var db=mongojs("ProdDb",['attempts','users','questions','grades','practicesets','subjects','quizattempts','answers']);
+var db=mongojs(config.mongo.db,['attempts','users','questions','grades','practicesets','subjects','quizattempts','answers']);
 
 
 //Quiz attempt of one question will be passed(user,questionId,quizId,timeTaken,answerId), it will verify the correctness 

@@ -29,8 +29,8 @@ require('./config/passport');
 var config = require('./config');
 
 //Connect to Mongoose
-mongoose.connect('mongodb://localhost/ProdDb');
-app.set('SecretKey', config.secret);
+mongoose.connect(config.mongo.uri);
+app.set('SecretKey', config.niit.secret);
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -70,6 +70,5 @@ app.use('/api2', integration,quiz);
 })
 */
 
-
-app.listen(3030);
-console.log('Running on  port 3030...');
+app.listen(config.port);
+console.log('Running on  port '+config.port+' ...');

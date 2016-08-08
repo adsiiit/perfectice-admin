@@ -5,7 +5,8 @@ var bodyParser = require('body-parser');
 var jwt = require('express-jwt');
 
 //acts as middleware
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var config = require('../config');
+var auth = jwt({secret: config.secret, userProperty: 'payload'});
 
 
 module.exports = app;
@@ -15,9 +16,8 @@ app.use(bodyParser.json());
 
 
 //connect to database using mongojs
-
 var mongojs = require('mongojs');
-var db=mongojs("ProdDb",['KhanAcademy','mapping']);
+var db=mongojs(config.mongo.db,['KhanAcademy','mapping','subjects','topics','grades']);
 
 
 // myid will store the id corresponding to the myperfectice topic id in Provider table.
@@ -214,4 +214,44 @@ app.delete('/deleteMapping/:perfecticeId',function(req,res){
 			res.json(doc);
 		});
 	}
+});
+
+
+
+//Perfectice Grades-Subjects-Topics Tree
+
+app.get('/perfecticeTree', function(req,res){
+	db.subjects.aggregate([
+		{$lookup:{from: "grades", localField: "grade", foreignField: "_id", as:"gradedet"}},
+		{$unwind: "$gradedet"},
+		{$project: {name: 1, topics:1, "gradedet.name": 1, "gradedet._id": 1}},
+		{$unwind: "$topics"},
+		{$lookup:{from: "topics", localField: "topics", foreignField: "_id", as:"topicdet"}},
+		{$unwind: "$topicdet"},
+		{$project: {name: 1, "gradedet":1, "topicdet._id":1, "topicdet.name":1}},
+		{$group: {_id: { _id: "$_id", name: "$name", grade: "$gradedet"},children: {$addToSet: "$topicdet"}}},
+		{$project: {_id: "$_id._id", name:"$_id.name", grade:"$_id.grade", children:1}},
+		{$group: {_id: { _id: "$grade"},children: {$addToSet: {_id: "$_id", name:"$name",children:"$children"}}}},
+		{$project: {_id: "$_id._id._id", name:"$_id._id.name", children:1}},
+		{$sort : {name : 1}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+app.get('/mappingTable', function(req,res){
+	db.mapping.aggregate([
+		{$lookup:{from: "topics", localField: "perfecticeId", foreignField: "_id", as:"topicdet"}},
+		{$unwind: "$topicdet"},
+		{$project: {provider: 1, perfecticeId: 1, perfecticeName: "$topicdet.name", providerId: 1}}
+		],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
 });
