@@ -1,4 +1,8 @@
-<div class="row">
+<div ng-hide="isLoggedIn()">
+<center><h3>Please <a href="#/login">Login</a> to access the Video List.. </h3></center>
+</div>
+
+<div class="row" ng-show="isLoggedIn()">
 	<div class="col-md-2"></div>
 	<div class="col-md-8">
 

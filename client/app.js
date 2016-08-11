@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap','ngSanitize', 'ngCsv', 'rzModule','jsonFormatter','angularTreeview']);
+var myApp = angular.module('myApp', ['ngRoute', 'nvd3', 'slugifier','ui.bootstrap','ngSanitize', 'ngCsv', 'rzModule','angularTreeview']);
 
 
 //myApp.config(function($routeProvider, $locationProvider){

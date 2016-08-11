@@ -33,7 +33,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	}
 
 	$scope.action3 = function(){	
-		$http.get('/api2/getVideosList/Khan/'+$scope.stopic).success(function(response){
+		$http.get('/api2/getVideosList/Khan/'+$scope.stopic, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 			$scope.videosList = response;
 		});
 	}
@@ -42,11 +42,11 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 		$scope.errorExists = null;
 	}
 
-	$scope.getKhanAcademy = function(){	
+/*	$scope.getKhanAcademy = function(){	
 		$http.get('/api2/khanAcademy').success(function(response){
 			$scope.khanAcademyArray = response;
 		});
-	}
+	}*/
 
 	$scope.getMyPerfectice = function(){	
 		$http.get('/api2/perfecticeTree').success(function(response){
@@ -64,7 +64,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 				$scope.errorExists = 'This Topic is already mapped.';
 			else
 			{
-				$http.post('/api2/addMapping', $scope.map).success(function(response){
+				$http.post('/api2/addMapping', $scope.map, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 					$http.get('/api2/mappingTable').success(function(response){
 						$scope.mappingTable = response;
 						window.alert('Mapping Added..');
@@ -83,7 +83,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 				$scope.errorExists = "This Topic doesn't exist";
 			else
 			{
-				$http.put('/api2/editMapping', $scope.map).success(function(response){
+				$http.put('/api2/editMapping', $scope.map, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 					window.alert('Mapping Modified..');
 				});
 			}
@@ -100,7 +100,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 			else
 			{
 				//console.log($scope.map.perfecticeId);
-				$http.delete('/api2/deleteMapping/'+id).success(function(response){
+				$http.delete('/api2/deleteMapping/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 					$http.get('/api2/mappingTable').success(function(response){
 						$scope.mappingTable = response;
 						//window.alert('Mapping Deleted..');
@@ -115,6 +115,22 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 		$http.get('/api2/mappingTable').success(function(response){
 			$scope.mappingTable = response;
 		});
+		
+	}
+
+
+	$scope.retrieveData = function(){
+			if($scope.map.provider=='Khan')
+			{
+				$http.get('/api2/khanAcademy', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
+					$scope.providerArray = response;
+					console.log("Khan is provider");
+				});
+			}
+			else if($scope.map.provider=='NIIT')
+			{
+				console.log("NIIT is provider");
+			}
 		
 	}
 
@@ -138,7 +154,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	}, false);
 
 
-
+	$scope.isLoggedIn = auth.isLoggedIn;
 /*	$scope.doSomething = function(id){
         $scope.kaid = id;
     }*/

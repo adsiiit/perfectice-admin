@@ -130,7 +130,7 @@ app.get('/getVideosList/:prov/:id', function(req,res){
 });
 
 
-app.get('/khanAcademy', function(req,res){
+app.get('/khanAcademy',auth, function(req,res){
 	db.KhanAcademy.find({},
 		function(err, que){
 		if(err)
@@ -139,7 +139,7 @@ app.get('/khanAcademy', function(req,res){
 	});
 });
 
-app.post('/addMapping',function(req,res){
+app.post('/addMapping',auth,function(req,res){
 	var map = req.body;
 	//console.log(map);
 	if(!map.perfecticeId || !map.providerId)
@@ -169,7 +169,7 @@ app.get('/mappingDocument/:id', function(req,res){
 });
 
 
-app.put('/editMapping',function(req,res){
+app.put('/editMapping',auth,function(req,res){
 	var map = req.body;
 	console.log(map);
 	if(!map.perfecticeId || !map.providerId)
@@ -195,7 +195,7 @@ app.put('/editMapping',function(req,res){
 	
 });
 
-app.delete('/deleteMapping/:perfecticeId',function(req,res){
+app.delete('/deleteMapping/:perfecticeId',auth,function(req,res){
 	var perfecticeId = req.params.perfecticeId;
 	console.log(perfecticeId);
 	if(!perfecticeId)
@@ -230,9 +230,9 @@ app.get('/perfecticeTree', function(req,res){
 		{$unwind: "$topicdet"},
 		{$project: {name: 1, "gradedet":1, "topicdet._id":1, "topicdet.name":1}},
 		{$group: {_id: { _id: "$_id", name: "$name", grade: "$gradedet"},children: {$addToSet: "$topicdet"}}},
-		{$project: {_id: "$_id._id", name:"$_id.name", grade:"$_id.grade", children:1}},
-		{$group: {_id: { _id: "$grade"},children: {$addToSet: {_id: "$_id", name:"$name",children:"$children"}}}},
-		{$project: {_id: "$_id._id._id", name:"$_id._id.name", children:1}},
+		{$project: {_id: "$_id._id", name:"$_id.name", grade:"$_id.grade", children:1, collapsed: {$literal: true}}},
+        {$group: {_id: { _id: "$grade"},children: {$addToSet: {_id: "$_id", name:"$name",children:"$children", collapsed:"$collapsed"}}}},
+		{$project: {_id: "$_id._id._id", name:"$_id._id.name", children:1, collapsed: {$literal: true}}},
 		{$sort : {name : 1}}
 		],
 		function(err, que){

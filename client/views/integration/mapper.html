@@ -1,7 +1,13 @@
-<div class="row">
+<div ng-hide="isLoggedIn()">
+<center><h3>Please <a href="#/login">Login</a> to access the Mapper.. </h3></center>
+</div>
+
+<div class="row" ng-show="isLoggedIn()">
 <center><h2>Mapper</h2></center>
 	
+
 	<div class="row">
+
 		<div class="col-md-5" ng-init="getMyPerfectice()">
 			<center><h3>Perfectice</h3></center>
 			<div class="Content2">
@@ -42,8 +48,20 @@
 		</div>
 
 
-		<div class="col-md-7" ng-init="getKhanAcademy()">
-			<center><h3>Provider</h3></center>
+		<div class="col-md-7">
+
+			
+			<div class="row">
+				<center><h3 class="col-md-8">Provider</h3></center>
+				<div class="col-md-4">
+					  <label>Select</label>
+					  <select class="form-control" ng-model="map.provider" ng-change="retrieveData()">
+					   	<option value="Khan">Khan</option>
+					   	<option value="NIIT">NIIT</option>
+					  </select>
+				</div>
+			</div>
+			
 
 
 			<!-- Nested node template -->
@@ -70,11 +88,14 @@
 			<!-- <div class="Content">
 				<json-formatter json="khanAcademyArray" open="1"></json-formatter>
 			</div> -->
+
+
+
 			<div class="Content">
 				<div
 				    data-angular-treeview="true"
 				    data-tree-id="providerTree"
-				    data-tree-model="khanAcademyArray"
+				    data-tree-model="providerArray"
 				    data-node-id="_id"
 				    data-node-label="title"
 				    data-node-children="Children" >
@@ -90,7 +111,7 @@
 			<form class="form-inline" name="mappingForm" novalidate>
 					<div class="form-group" style="padding-right:10px;">
 	                  	<label>Provider:</label>
-	                  	<input name = "provider" type = "text" ng-model = "map.provider" size="25" ng-init="map.provider = 'Khan'" required>
+	                  	<input name = "provider" type = "text" ng-model = "map.provider" size="25" required readonly>
 	                     <span style = "color:red" ng-show = "mappingForm.provider.$dirty && mappingForm.provider.$invalid">
 	                        <span ng-show = "mappingForm.provider.$error.required">Provider is required.</span>
 	                     </span>
@@ -99,7 +120,7 @@
 	               
 	                <div class="form-group" style="padding-right:10px;">
 	                	<label>Perfectice Id:</label>
-	                 	<input name = "perfecticeId"  type = "text" ng-model = "map.perfecticeId" size="25" ng-minlength=24 ng-maxlength=24 ng-change="action4()" required>
+	                 	<input name = "perfecticeId"  type = "text" ng-model = "map.perfecticeId" size="25" ng-minlength=24 ng-maxlength=24 ng-change="action4()" required readonly/>
 	                     <span style = "color:red" ng-show = "mappingForm.perfecticeId.$dirty && mappingForm.perfecticeId.$invalid">
 	                        <span ng-show = "mappingForm.perfecticeId.$error.required"><br>Perfectice Id is required..</span>
 	                        <span ng-show = "!mappingForm.perfecticeId.$valid && !mappingForm.perfecticeId.$error.required"><br>Invalid Object Id..</span>
@@ -110,7 +131,7 @@
 
 	                <div class="form-group" style="padding-right:10px;">
 	                	<label>Provider Id:</label>
-	                  	<input name = "providerId" type = "text" ng-model = "map.providerId" size="25" ng-minlength=24 ng-maxlength=24 required>
+	                  	<input name = "providerId" type = "text" ng-model = "map.providerId" size="25" ng-minlength=24 ng-maxlength=24 required readonly />
 	                     <span style = "color:red" ng-show = "mappingForm.providerId.$dirty && mappingForm.providerId.$invalid">
 	                        <span ng-show = "mappingForm.providerId.$error.required"><br>Provider Id is required..</span>
 	                        <span ng-show = "!mappingForm.providerId.$valid && !mappingForm.providerId.$error.required"><br>Invalid Object Id..</span>
