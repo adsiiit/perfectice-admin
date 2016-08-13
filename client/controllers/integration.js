@@ -42,6 +42,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 		$scope.errorExists = null;
 	}
 
+
 /*	$scope.getKhanAcademy = function(){	
 		$http.get('/api2/khanAcademy').success(function(response){
 			$scope.khanAcademyArray = response;
@@ -61,11 +62,12 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 			$scope.doc = response;
 			$scope.errorExists = null;
 			if(response)
-				$scope.errorExists = 'This Topic is already mapped.';
+				window.alert('This Topic is already mapped.');
+				//$scope.errorExists = 'This Topic is already mapped.';
 			else
 			{
 				$http.post('/api2/addMapping', $scope.map, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
-					$http.get('/api2/mappingTable').success(function(response){
+					$http.get('/api2/mappingTable/'+$scope.map.provider).success(function(response){
 						$scope.mappingTable = response;
 						window.alert('Mapping Added..');
 					});
@@ -75,7 +77,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 		
 	}
 
-	$scope.editMap = function(){
+/*	$scope.editMap = function(){
 		$http.get('/api2/mappingDocument/'+$scope.map.perfecticeId).success(function(response){
 			$scope.doc = response;
 			$scope.errorExists = null;
@@ -89,7 +91,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 			}
 		});
 		
-	}
+	}*/
 
 	$scope.deleteMap = function(id){
 		$http.get('/api2/mappingDocument/'+id).success(function(response){
@@ -101,7 +103,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 			{
 				//console.log($scope.map.perfecticeId);
 				$http.delete('/api2/deleteMapping/'+id, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
-					$http.get('/api2/mappingTable').success(function(response){
+					$http.get('/api2/mappingTable/'+$scope.map.provider).success(function(response){
 						$scope.mappingTable = response;
 						//window.alert('Mapping Deleted..');
 					});	
@@ -112,7 +114,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	}
 
 	$scope.mappingTable = function(){
-		$http.get('/api2/mappingTable').success(function(response){
+		$http.get('/api2/mappingTable/'+$scope.map.provider).success(function(response){
 			$scope.mappingTable = response;
 		});
 		
@@ -124,11 +126,18 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 			{
 				$http.get('/api2/khanAcademy', { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
 					$scope.providerArray = response;
+					$http.get('/api2/mappingTable/'+$scope.map.provider).success(function(response){
+						$scope.mappingTable = response;
+					});
 					console.log("Khan is provider");
 				});
 			}
 			else if($scope.map.provider=='NIIT')
 			{
+				$scope.providerArray = [];
+				$http.get('/api2/mappingTable/'+$scope.map.provider).success(function(response){
+					$scope.mappingTable = response;
+				});
 				console.log("NIIT is provider");
 			}
 		
@@ -140,7 +149,8 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	$scope.$watch( 'providerTree.currentNode', function( newObj, oldObj ) {
 	    if( $scope.providerTree && angular.isObject($scope.providerTree.currentNode) ) {
 	    	$scope.map.providerId = $scope.providerTree.currentNode._id;
-	        console.log( 'Node Selected!!' );
+	    	$scope.map.nameFromProvider = $scope.providerTree.currentNode.title;
+	        //console.log( 'Node Selected!!' );
 	        console.log( $scope.providerTree.currentNode );
 	    }
 	}, false);
@@ -148,7 +158,7 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 	$scope.$watch( 'perfecticeTree.currentNode', function( newObj, oldObj ) {
 	    if( $scope.perfecticeTree && angular.isObject($scope.perfecticeTree.currentNode) ) {
 	    	$scope.map.perfecticeId = $scope.perfecticeTree.currentNode._id;
-	        console.log( 'Node Selected!!' );
+	        //console.log( 'Node Selected!!' );
 	        console.log( $scope.perfecticeTree.currentNode );
 	    }
 	}, false);

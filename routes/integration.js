@@ -148,6 +148,7 @@ app.post('/addMapping',auth,function(req,res){
 	{
 		map.perfecticeId  = mongojs.ObjectId(map.perfecticeId);
 		map.providerId  = mongojs.ObjectId(map.providerId);
+		map.nameFromProvider = String(map.nameFromProvider);
 		//console.log('else part');
 		db.mapping.save(map,
 			function(err, que){
@@ -168,7 +169,7 @@ app.get('/mappingDocument/:id', function(req,res){
 	});
 });
 
-
+/*
 app.put('/editMapping',auth,function(req,res){
 	var map = req.body;
 	console.log(map);
@@ -181,10 +182,11 @@ app.put('/editMapping',auth,function(req,res){
 	{
 		map.perfecticeId  = mongojs.ObjectId(map.perfecticeId);
 		map.providerId  = mongojs.ObjectId(map.providerId);
+		map.nameFromProvider = String(map.nameFromProvider);
 		//console.log('else part');
 		db.mapping.findAndModify({
 		    query: { perfecticeId: map.perfecticeId },
-		    update: { $set: { providerId: map.providerId } },
+		    update: { $set: { providerId: map.providerId, nameFromProvider: map.nameFromProvider} },
 		    new: true
 		}, function (err, doc, lastErrorObject) {
 		    if(err)
@@ -193,7 +195,7 @@ app.put('/editMapping',auth,function(req,res){
 		});
 	}
 	
-});
+});*/
 
 app.delete('/deleteMapping/:perfecticeId',auth,function(req,res){
 	var perfecticeId = req.params.perfecticeId;
@@ -243,11 +245,19 @@ app.get('/perfecticeTree', function(req,res){
 });
 
 
-app.get('/mappingTable', function(req,res){
+app.get('/mappingTable/:provider', function(req,res){
+	var provider = String(req.params.provider);
 	db.mapping.aggregate([
-		{$lookup:{from: "topics", localField: "perfecticeId", foreignField: "_id", as:"topicdet"}},
-		{$unwind: "$topicdet"},
-		{$project: {provider: 1, perfecticeId: 1, perfecticeName: "$topicdet.name", providerId: 1}}
+			{$match: {"provider": provider}},
+			{$lookup:{from: "topics", localField: "perfecticeId", foreignField: "_id", as:"topicdet"}},
+			{$unwind: "$topicdet"},
+			{$project: {provider: 1, topicId: "$topicdet._id", subjectId: "$topicdet.subject", topicName: "$topicdet.name", providerId: 1, nameFromProvider:1}},
+			{$lookup:{from: "subjects", localField: "subjectId", foreignField: "_id", as:"subdet"}},
+			{$unwind: "$subdet"},
+			{$project: {provider: 1, topicId: 1, subjectId: "$topicdet.subject", topicName: 1,subjectName: "$subdet.name", providerId: 1, gradeId:"$subdet.grade", nameFromProvider:1}},
+			{$lookup:{from: "grades", localField: "gradeId", foreignField: "_id", as:"gradedet"}},
+			{$unwind: "$gradedet"},
+			{$project: {provider: 1, providerId: 1, perfecticeId: "$topicId", topicName: 1,subjectName: 1, gradeName:"$gradedet.name", nameFromProvider:1}}
 		],
 		function(err, que){
 		if(err)
@@ -255,3 +265,56 @@ app.get('/mappingTable', function(req,res){
 		res.json(que);
 	});
 });
+
+
+
+
+/*var requiredHierarchy = [];
+var tempHierarchy = [];
+//this function will recursively search from the nested documents and store hierarchy in requiredHierarchy variable
+function searchHierarchyKhan(document) {
+	
+	if("Children" in document && document["Children"].length!=0)
+	{
+		tempHierarchy.push(document["title"]);
+		if(document["_id"].toString() == myid.toString())
+		{
+			console.log("andar aaya");
+			requiredHierarchy = tempHierarchy;
+			return;
+		}
+
+		for(var j=0;j<document["Children"].length;j++)
+		{
+
+			searchHierarchyKhan(document["Children"][j]);
+
+		}
+	}
+	else
+	{
+		tempHierarchy = [];
+		return
+	}
+	
+
+}
+
+
+app.get('/getHierarchyKhan/:id', function(req,res){
+	db.KhanAcademy.find({}, function(err, que){
+		if(err)
+			res.send(err);
+		myid = req.params.id;
+
+		for (var i=0; i < que.length; i++)
+		{
+			tempHierarchy.push(que[i]["title"]);
+			searchHierarchyKhan(que[i]);
+			tempHierarchy = [];
+
+		}
+
+		res.json(requiredHierarchy);
+	});
+});*/

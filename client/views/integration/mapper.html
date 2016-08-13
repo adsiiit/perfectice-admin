@@ -81,14 +81,6 @@
 			</div> -->
 			
 
-			
-	<!-- 		<select class="form-control" ng-model="kaid">
-				<option ng-repeat="node in khanAcademyArray" value="{{ node._id }}">{{ node.title }}</option>
-			</select> -->
-			<!-- <div class="Content">
-				<json-formatter json="khanAcademyArray" open="1"></json-formatter>
-			</div> -->
-
 
 
 			<div class="Content">
@@ -103,10 +95,13 @@
 			</div>
 
 		</div>
+
+		<button class="btn btn-primary pull-right" style="width: 140px; margin: 1%;" ng-disabled = "!map.provider || !map.perfecticeId || !map.providerId" ng-click="insertMap()">Add</button>
+
 	</div>
 
 
-	<div class="row">
+	<!-- <div class="row">
 		<div class="Content3">
 			<form class="form-inline" name="mappingForm" novalidate>
 					<div class="form-group" style="padding-right:10px;">
@@ -139,40 +134,33 @@
 	                </div>
 	               
 	                
-	                 <button class="btn btn-primary" style="width: 140px;" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
-	                    mappingForm.providerId.$invalid" ng-click="insertMap()">Add</button>
-	<!--                 <button class="btn btn-warning" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid || 
-	                mappingForm.providerId.$invalid" confirmed-click="editMap()" ng-confirm-click="Do you really want to MODIFY this mapping?">Modify</button> -->
-<!-- 	                <button class="btn btn-danger" ng-disabled = "mappingForm.provider.$invalid || mappingForm.perfecticeId.$invalid" confirmed-click="deleteMap()" ng-confirm-click="Do you really want to DELETE this mapping?">Delete</button> -->
-	                
+	                 
 
 	         </form>
          </div>
 		
-	</div>
+	</div> -->
 
 
-	<div class="row" ng-init="mappingTable()">
+	<div class="row">
 		<div class="Content4">
 			<table class="table">
-			    <thead>
+<!-- 			    <thead>
 			      <tr>
 			        <th>Serial No.</th>
 			        <th>Topic Name</th>
-			        <th>Perfectice Id</th>
 			        <th>Provider Id</th>
 			        <th></th>
 			      </tr>
-			    </thead>
-			    <tbody>
-			      <tr ng-repeat="map in mappingTable">
-			        <td>{{$index + 1}}</td>
-			        <td>{{map.perfecticeName}}</td>
-			        <td>{{map.perfecticeId}}</td>
-			        <td>{{map.providerId}}</td>
-			        <td><button class="btn btn-danger" confirmed-click="deleteMap(map.perfecticeId)" ng-confirm-click="Do you really want to DELETE this mapping?">Delete</button></td>
+			    </thead> -->
+			    <!-- <tbody> -->
+			      <tr ng-repeat="mapping in mappingTable">
+			        <td>{{$index + 1}}.</td>
+			        <td>{{mapping.gradeName}} => {{mapping.subjectName}} => {{mapping.topicName}}</td>
+			        <td>{{mapping.nameFromProvider}}</td>
+			        <td><button class="btn btn-danger" confirmed-click="deleteMap(mapping.perfecticeId)" ng-confirm-click="Do you really want to DELETE this mapping?">Delete</button></td>
 			      </tr>
-			    </tbody>
+			    <!-- </tbody> -->
 			  </table>
 
         </div>
