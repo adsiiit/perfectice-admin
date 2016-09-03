@@ -160,8 +160,8 @@ app.post('/addMapping',auth,function(req,res){
 	
 });
 
-app.get('/mappingDocument/:id', function(req,res){
-	db.mapping.findOne({perfecticeId: mongojs.ObjectId(req.params.id)},
+app.get('/mappingDocument/:perfecticeid/:providerId', function(req,res){
+	db.mapping.findOne({perfecticeId: mongojs.ObjectId(req.params.perfecticeid), providerId: mongojs.ObjectId(req.params.providerId)},
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -197,19 +197,21 @@ app.put('/editMapping',auth,function(req,res){
 	
 });*/
 
-app.delete('/deleteMapping/:perfecticeId',auth,function(req,res){
+app.delete('/deleteMapping/:perfecticeId/:providerId',auth,function(req,res){
+	var providerId = req.params.providerId;
 	var perfecticeId = req.params.perfecticeId;
-	console.log(perfecticeId);
-	if(!perfecticeId)
+	//console.log(providerId);
+	if(!providerId || !perfecticeId)
 	{
 		console.log('if part');
-		res.json({"code": 500, "error": "Perfectice Id field is null.."})
+		res.json({"code": 500, "error": "Provider or Perfectice Id field is null.."})
 	}
 	else
 	{
+		providerId  = mongojs.ObjectId(providerId);
 		perfecticeId  = mongojs.ObjectId(perfecticeId);
 		//console.log('else part');
-		db.mapping.remove({ perfecticeId: perfecticeId },
+		db.mapping.remove({ providerId: providerId, perfecticeId: perfecticeId},
 			function (err, doc) {
 		    if(err)
 				res.send(err);
@@ -245,10 +247,10 @@ app.get('/perfecticeTree', function(req,res){
 });
 
 
-app.get('/mappingTable/:provider', function(req,res){
-	var provider = String(req.params.provider);
+app.get('/mappingTable', function(req,res){
+	/*var provider = String(req.params.provider);*/
 	db.mapping.aggregate([
-			{$match: {"provider": provider}},
+/*			{$match: {"provider": provider}},*/
 			{$lookup:{from: "topics", localField: "perfecticeId", foreignField: "_id", as:"topicdet"}},
 			{$unwind: "$topicdet"},
 			{$project: {provider: 1, topicId: "$topicdet._id", subjectId: "$topicdet.subject", topicName: "$topicdet.name", providerId: 1, nameFromProvider:1}},
@@ -265,7 +267,6 @@ app.get('/mappingTable/:provider', function(req,res){
 		res.json(que);
 	});
 });
-
 
 
 

@@ -13,6 +13,6 @@ config.mongo.uri = 'mongodb://localhost/ProdDb';
 config.mongo.db = 'ProdDb';
 
 //Port to run the server
-config.port = 4040;
+config.port = 3030;
 
 module.exports = config;

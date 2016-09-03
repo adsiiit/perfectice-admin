@@ -23,6 +23,11 @@ Topic = require('./models/topic');
 User = require('./models/user');
 Admin = require('./models/admin')
 Quizattempt = require('./models/quizattempt')
+QContactList = require('./models/qContactList')
+QFriendList = require('./models/qFriendList')
+QInvitation = require('./models/qInvitation')
+QNewGame = require('./models/qNewGame')
+NewAttempt = require('./models/newattempt')
 
 
 require('./config/passport');
@@ -61,8 +66,13 @@ var mpniit_api = mpniit.app;
 var mpniit_apiR = mpniit.apiRoutes;
 // ROUTES FOR INTEGRATION WITH NIIT  --END
 
-app.use('/api', routes,queries, integration,quiz, mpniit_api, mpniit_apiR);
+//ROUTES FOR ATTEMPT REDESIGN  -- START
+var newattempt = require('./routes/newAttempt');
+// ROUTES FOR ATTEMPT REDESIGN --END
+
+app.use('/api', routes, queries, mpniit_api, mpniit_apiR);
 app.use('/api2', integration,quiz);
+/*app.use('/api3', newattempt);*/
 
 /*app.use('*',function(req,res,next){
 	var indexFile = path.resolve(__dirname,'client/index.html');

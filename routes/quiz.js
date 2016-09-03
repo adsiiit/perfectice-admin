@@ -3,8 +3,15 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var Quizattempt = mongoose.model('Quizattempt');
 var jwt = require('express-jwt');
+var randomstring = require("randomstring");
+
+var Quizattempt = mongoose.model('Quizattempt');
+var QContactList = mongoose.model('QContactList');
+var QFriendList = mongoose.model('QFriendList');
+var QInvitation = mongoose.model('QInvitation');
+var QNewGame = mongoose.model('QNewGame');
+var User = mongoose.model('User');
 
 //acts as middleware
 var config = require('../config');
@@ -19,10 +26,10 @@ app.use(bodyParser.json());
 
 //connect to database using mongojs
 var mongojs = require('mongojs');
-var db=mongojs(config.mongo.db,['attempts','users','questions','grades','practicesets','subjects','quizattempts','answers']);
+var db=mongojs(config.mongo.db,['attempts','users','questions','grades','practicesets','subjects','quizattempts','answers','qfriendlists']);
 
 
-//Quiz attempt of one question will be passed(user,questionId,quizId,timeTaken,answerId), it will verify the correctness 
+//Quiz attempt of one question will be passed(user,questionId,quizId,timeTaken,answerId, grade), it will verify the correctness 
 //of answer and set the values of (plusMark, minusMark, score and missed) fields accordingly and then store it in 'quizattempts'
 // collection as a document
 app.post('/quizattempt',function(req,res){
@@ -179,6 +186,231 @@ app.get('/questionOptions/:questionId', function(req,res){
 });
 
 
+
+//Pass the quizId and it will return scores of all the invited friends.
+app.get('/getPlayingGame/:quizId', function(req,res){
+	db.quizattempts.aggregate([
+		{$match: {"quizId" : mongojs.ObjectId(req.params.quizId)}},
+		{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1,user:1, _id: 0}},
+		{$lookup:{from: "users", localField: "user", foreignField: "_id", as:"userDetails"}},
+		{$unwind: "$userDetails"},
+		{$project: {plusMark:1, minusMark:1, timeTaken:1, score:1, missed: 1,
+		  "user.id": "$user", "user.name": "$userDetails.name", "user.phoneNumber": "$userDetails.phoneNumber"}},
+		{$group: {_id: "$user", plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+		{$project: {playedId: "$_id.id", playerName: "$_id.name", playerContact: "$_id.phoneNumber",_id:0,plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+		], function(err, que){
+			if(err)
+				res.send(err);
+			res.json(que);
+		});
+});
+
+
+
+//Pass user-ID, name, grade-ID, invitees-ARRAY and it will return gameId and invitationCode
+app.post('/newGame',function(req,res){
+	var newGame = req.body;
+	//console.log(newGame);
+	newGame.invitationCode = randomstring.generate(10);
+	QNewGame.addNewGame(newGame, function(err, newgame){
+		if(err){
+			res.json({"code": 500, "error": "Some error occured."});
+		}
+		var invitees = newgame.invitees;
+		var invitations = [];
+		for (var i = 0; i < invitees.length; i++)
+		{
+			var doc = {"user": newgame.user, "invitationCode": newgame.invitationCode,
+				"quizId": newgame._id, "invitee": invitees[i].user};
+			//doc.invitee = invitees[i].user;
+
+		    invitations.push(doc);
+		    console.log(invitations);
+		}
+		QInvitation.insertMany(invitations, function(error, docs) {
+			//console.log(docs);
+			var response = {"quizId": newgame._id, "invitationCode": newgame.invitationCode};
+			res.json(response);
+		});
+	});
+});
+
+
+//Pass invitationCode and user-ID and it returns quizId
+app.get('/joinGame/:user/:invitationCode', function(req,res){
+	var query = {invitee: req.params.user, invitationCode: req.params.invitationCode};
+	QInvitation.findOne(query,
+		function(err, que){
+		if(err)
+			res.send(err);
+		if(que)
+			res.json(que.quizId);
+		else
+			res.json({"code": 500, "error": "Either invitation code is invalid or User is not invited."});
+		
+	});
+});
+
+
+
+/////// FRIEND REQUEST PART   -- STARTS  ////////////////////
+
+
+//Pass (user, fName, fPhoneNumber, friendId)
+app.post('/addFriend',function(req,res){
+	var friend = req.body;
+	var instance = {"user": friend.user, "fName": friend.fName, "fPhoneNumber": friend.fPhoneNumber,
+						"friendId": friend.friendId}
+	QFriendList.addFriend(instance, function(err, friend){
+		if(err){
+			res.json({"code": 500, "error": "Some error occured."});
+		}
+		res.json(friend);
+	});
+});
+
+
+//This will return all the users(_id, name, phoneNumber) that we can use for searching.
+app.get('/getUsers', function(req,res){
+	db.users.find({}, {name:1, phoneNumber:1},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+//Pass userId and it will return all the friends of that user(fName, fPhoneNumber, friendId) that we can use for searching friends.
+app.get('/searchFriends/:user', function(req,res){
+	var user = req.params.user;
+	db.qfriendlists.find({user: mongojs.ObjectId(user)}, {fName:1, fPhoneNumber:1, friendId:1},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+//Pass userId and friendId and it will remove their documents in qfriendlists collection.
+app.delete('/removeFriend/:user/:friend', function(req,res){
+	var userId = req.params.user;
+	var friendId = req.params.friend;
+	db.qfriendlists.remove({user : mongojs.ObjectId(userId), friendId: mongojs.ObjectId(friendId)},
+		function(err, que1){
+		if(err)
+			res.send(err);
+		db.qfriendlists.remove({user : mongojs.ObjectId(friendId), friendId: mongojs.ObjectId(userId)},
+			function(err, que2){
+			if(err)
+				res.send(err);
+			res.json(que2);
+		});
+	});
+});
+
+
+
+//Endpoint to reject friend request.
+app.get('/rejectInvitationRequest/:user/:friend', function(req,res){
+	var userId = req.params.friend;
+	var friendId = req.params.user;
+	QFriendList.findOne({user: userId, friendId: friendId},
+		function(err, que){
+		if(err)
+			res.send(err);
+		QFriendList.rejectInvitation(userId, friendId, que, {new: true}, function(err, updobj){
+			if(err){
+				res.send(err);
+			}
+			res.json(updobj);
+		});
+	});
+});
+
+
+//Endpoint to accept friend request
+//Status of existing document is changed to 1
+//New Document is created with inverse relationship and status 1( user-friend <=> friend-user).
+app.get('/acceptInvitationRequest/:user/:friend', function(req,res){
+	var userId = req.params.friend;
+	var friendId = req.params.user;
+	QFriendList.findOne({user: userId, friendId: friendId},
+		function(err, que){
+		if(err)
+			res.send(err);
+		var update = {
+			user: que.user,
+			fName: que.fName,
+			fPhoneNumber: que.fPhoneNumber,
+			friendId: que.friendId,
+			status: 1
+		}
+		QFriendList.findOneAndUpdate({user: userId, friendId: friendId}, update, {new: true},
+			function(err, updobj){
+			if(err){
+				res.send(err);
+			}
+
+			User.findOne({_id: userId},{name:1, phoneNumber:1},
+				function(err, que2){
+				if(err)
+					res.send(err);
+				console.log(que2);
+				var instance = {
+					user: friendId,
+					fName: que2.name,
+					fPhoneNumber: que2.phoneNumber,
+					friendId: que2._id,
+					status: 1
+				}
+				QFriendList.addFriend(instance, function(err, friend){
+					if(err){
+						res.json({"code": 500, "error": "Some error occured."});
+					}
+					res.json(friend);
+				});
+				//res.json(updobj);
+			});
+
+		});
+
+	});
+});
+
+
+//Pending requests of some user
+app.get('/pendingRequests/:user', function(req,res){
+	var userId = req.params.user;
+	QFriendList.find({user: userId, status:0},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+//Rejected requests of some user
+app.get('/rejectedRequests/:user', function(req,res){
+	var userId = req.params.user;
+	QFriendList.find({user: userId, status:2},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+
+
+/////// FRIEND REQUEST PART   -- ENDS  ////////////////////
+
+
+/////// PERFORMANCE PART   - -- STARTS   ///////////////////
+
+
+
 //Pass userid and quizid and it will return all the documents associated with it
 app.get('/detailedSummary/:user/:quizId', function(req,res){
 	db.quizattempts.find({"user" : mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)},
@@ -194,8 +426,8 @@ app.get('/summary/:user/:quizId', function(req,res){
 	db.quizattempts.aggregate([
 	{$match: {"user" : mongojs.ObjectId(req.params.user), "quizId" : mongojs.ObjectId(req.params.quizId)}},
 	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
-	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"}}},
-	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1}}
+	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
 	],
 		function(err, que){
 		if(err)
@@ -203,4 +435,58 @@ app.get('/summary/:user/:quizId', function(req,res){
 		res.json(que[0]);
 	});
 });
+
+
+
+// When only userId is passed
+app.get('/getPerformance/:user', function(req,res){
+	db.quizattempts.aggregate([
+	{$match: {"user" : mongojs.ObjectId(req.params.user)}},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
+	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que[0]);
+	});
+});
+
+
+//When userId and GradeId are passed
+app.get('/getPerformance/:user/:grade', function(req,res){
+	db.quizattempts.aggregate([
+	{$match: {"user" : mongojs.ObjectId(req.params.user), "grade" : mongojs.ObjectId(req.params.grade)}},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
+	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que[0]);
+	});
+});
+
+
+//When userId, subjectId and GradeId are passed
+app.get('/getPerformance/:user/:grade/:subject', function(req,res){
+	db.quizattempts.aggregate([
+	{$match: {"user" : mongojs.ObjectId(req.params.user), "grade" : mongojs.ObjectId(req.params.grade)}},
+	{$lookup:{from: "questions", localField: "questionId", foreignField: "_id", as:"questionDetails"}},
+	{$unwind: "$questionDetails"},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0, subject: "$questionDetails.subject._id"}},
+	{$match: {"subject": mongojs.ObjectId(req.params.subject)}},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
+	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+	],
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que[0]);
+	});
+});
+
 
