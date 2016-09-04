@@ -244,7 +244,21 @@ app.get('/joinGame/:user/:invitationCode', function(req,res){
 		if(err)
 			res.send(err);
 		if(que)
-			res.json(que.quizId);
+		{
+			var update = {
+			user: que.user,
+			invitationCode: que.invitationCode,
+			quizId: que.quizId,
+			invitee: que.invitee,
+			status: 1
+			}
+			QInvitation.findOneAndUpdate(query, update, {new: true},
+				function(err, updobj){
+				if(err)
+					res.send(err);
+				res.json(updobj.quizId);
+				});
+		}
 		else
 			res.json({"code": 500, "error": "Either invitation code is invalid or User is not invited."});
 		
