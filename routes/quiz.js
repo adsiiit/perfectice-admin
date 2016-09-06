@@ -188,7 +188,30 @@ app.get('/questionOptions/:questionId', function(req,res){
 
 
 //Pass the quizId and it will return scores of all the invited friends.
-app.get('/getPlayingGame/:quizId', function(req,res){
+app.get('/getPlayingGame/:userId', function(req,res){
+	QInvitation.findOne({user: req.params.userId}, {_id: 0,quizId:1}, {sort:{'createdAt': -1}},
+		function(err, que) {
+	  	if(err)
+			res.send(err);
+		if(que)
+			res.json(que);
+		else
+		{
+			QInvitation.findOne({invitee: req.params.userId, status:1}, {_id: 0,quizId:1}, {sort:{'createdAt': -1}},
+				function(err,que1){
+					if(err)
+						res.send(err);
+					else
+						res.json(que1);
+				});
+			
+		}
+		
+	});
+});
+
+
+app.get('/getPlayersScores/:quizId', function(req,res){
 	db.quizattempts.aggregate([
 		{$match: {"quizId" : mongojs.ObjectId(req.params.quizId)}},
 		{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1,user:1, _id: 0}},
@@ -204,6 +227,7 @@ app.get('/getPlayingGame/:quizId', function(req,res){
 			res.json(que);
 		});
 });
+
 
 
 
@@ -229,7 +253,7 @@ app.post('/newGame',function(req,res){
 		}
 		QInvitation.insertMany(invitations, function(error, docs) {
 			//console.log(docs);
-			var response = {"quizId": newgame._id, "invitationCode": newgame.invitationCode};
+			var response = {"quizId": newgame._id, "userId": newgame.user, "userName": newgame.name, "gradeId": newgame.grade, "invitationCode": newgame.invitationCode, "invitees": newgame.invitees};
 			res.json(response);
 		});
 	});
@@ -256,8 +280,14 @@ app.get('/joinGame/:user/:invitationCode', function(req,res){
 				function(err, updobj){
 				if(err)
 					res.send(err);
-				res.json(updobj.quizId);
+				QNewGame.findOne({_id: updobj.quizId},
+					function(err, result){
+					if(err)
+						res.send(err);
+					res.json({"quizId": result._id, "userId": result.user, "userName": result.name, "gradeId": result.grade, "invitationCode": result.invitationCode, "invitees": result.invitees});
 				});
+				
+			});
 		}
 		else
 			res.json({"code": 500, "error": "Either invitation code is invalid or User is not invited."});
@@ -265,6 +295,17 @@ app.get('/joinGame/:user/:invitationCode', function(req,res){
 	});
 });
 
+
+//Pending game requests to some user
+app.get('/pendingGameRequests/:user', function(req,res){
+	var userId = req.params.user;
+	QInvitation.find({invitee: userId, status:0},{_id:0, createdAt:1, quizId:1, invitationCode:1, user:1},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
 
 
 /////// FRIEND REQUEST PART   -- STARTS  ////////////////////

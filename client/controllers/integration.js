@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$routeParams','auth',
-	function($scope, $http, $location, $routeParams,auth){
+myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$routeParams','auth','$q',
+	function($scope, $http, $location, $routeParams,auth, $q){
 	console.log('Master Data controller...');
 
 
@@ -31,7 +31,28 @@ myApp.controller('IntegrationController', ['$scope', '$http', '$location', '$rou
 
 	$scope.action2 = function(){	
 			$scope.stopic = null;
+			var responses = [];
+			$scope.videosList = [];
+			var promises = [];
+			($scope.topics).forEach(function(d){
+				if(d["subject"] == $scope.ssubject)
+					promises.push($http.get('/api2/getVideosList/Khan/'+d._id, { headers: {Authorization: 'Bearer '+auth.getToken()}}))
+			});
+			$q.all(promises).then(function(results){
+				results.forEach(function(data){
+					var x = data["data"];
+					if(x.length != 0)
+						responses = responses.concat(x);
+			    	
+			  	})
+			  	$scope.videosList = responses;
+			  	//console.log(responses);
+			})
+
 	}
+
+
+
 
 	$scope.action3 = function(){	
 		$http.get('/api2/getVideosList/Khan/'+$scope.stopic, { headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){

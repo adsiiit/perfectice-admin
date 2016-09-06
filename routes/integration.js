@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 
 var jwt = require('express-jwt');
+var async = require('async');
 
 //acts as middleware
 var config = require('../config');
@@ -20,15 +21,14 @@ var mongojs = require('mongojs');
 var db=mongojs(config.mongo.db,['KhanAcademy','mapping','subjects','topics','grades']);
 
 
-// myid will store the id corresponding to the myperfectice topic id in Provider table.
-var myid;
+
 // requiredDocument will contain the document which will be matched with idInProvider.
 var requiredDocument = {};
 
 var videoList = [];
 
 //this function will recursively search from the nested documents for the idByProvider.
-function searching(document) {
+function searching(document, myid) {
 	if("Children" in document && document["Children"].length!=0)
 	{
 		for(var j=0;j<document["Children"].length;j++)
@@ -38,10 +38,11 @@ function searching(document) {
 			if(document["Children"][j]["_id"].toString() == myid.toString())
 			{
 				requiredDocument = document["Children"][j];
+				//console.log(requiredDocument);
 				return;
 			}
 			else
-				searching(document["Children"][j]);
+				searching(document["Children"][j], myid);
 
 			//console.log(document["Children"][j]["_id"]);
 		}
@@ -99,7 +100,7 @@ function getVideo(document)
 
 
 //Pass it the providerId('Khan for current scenario') and perfecticeId of topic and it will return the videos associated with it.
-app.get('/getVideosList/:prov/:id', function(req,res){
+/*app.get('/getVideosList/:prov/:id', function(req,res){
 	db.mapping.findOne({"provider":req.params.prov,"perfecticeId":mongojs.ObjectId(req.params.id)},
 		function(err, que){
 		if(err)
@@ -127,6 +128,51 @@ app.get('/getVideosList/:prov/:id', function(req,res){
 		else
 			res.json([]);
 	});
+});*/
+
+
+
+app.get('/getVideosList/:prov/:id', function(req,res){
+	db.mapping.find(
+    { "provider":req.params.prov, "perfecticeId":mongojs.ObjectId(req.params.id) },
+    function(err, que){
+        if(err)
+            res.send(err);
+        else if(que)
+        {
+            totalVideoList = [];
+
+            async.each(que, function(item, callback){
+            // myid will store the id corresponding to the myperfectice topic id in Provider table.
+            	var myid = item.providerId;
+
+                db.KhanAcademy.find({}, function(err, item1){
+                    if(err)
+                        return callback(err);
+
+                    var x = {};
+                    requiredDocument = {};
+                    for (var j=0; j < item1.length; j++)
+                    {
+                        searching(item1[j], myid);
+                    }
+
+                    videoList = [];
+                    getVideo(requiredDocument);
+
+                    totalVideoList = totalVideoList.concat(videoList);
+                    callback(null);
+
+                });
+            }, function(asyncErr){
+              if(asyncErr)
+                 return res.json(asyncErr);
+                 res.json(totalVideoList);
+            });            
+        }
+        else
+            res.json([]);
+    });
 });
 
 

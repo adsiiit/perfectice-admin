@@ -40,7 +40,7 @@
 
 					<br><br>
 
-					<div class="row" ng-show="stopic">
+					<div class="row" ng-show="stopic || ssubject">
 						<table>
 						  <tr ng-repeat="video in videosList">
 						    <td><a href="https://www.youtube.com/watch?v={{video.youtubeId}}" target="blank" data-toggle="tooltip" data-placement="left" title="{{video.description}}">{{video.title}}</a></td>
