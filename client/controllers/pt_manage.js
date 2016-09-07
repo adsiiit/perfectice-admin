@@ -11,9 +11,6 @@ myApp.controller('PTController', ['$scope', '$http', '$location', '$routeParams'
 				$scope.maxSize = 5;
                 $scope.TotalItems = response.length;
                 $scope.page= 1;
-
-                $scope.displayItems = $scope.practicesets.slice(0, 10);
-				
 			});
 		}
 
@@ -55,13 +52,6 @@ myApp.controller('PTController', ['$scope', '$http', '$location', '$routeParams'
 			
 		}
 
-
-	
-		$scope.pageChanged = function() {
-		  var startPos = ($scope.page - 1) * 10;
-		  //$scope.displayItems = $scope.totalItems.slice(startPos, startPos + 3);
-		  console.log($scope.page);
-		};
 
 		$scope.isLoggedIn = auth.isLoggedIn;
 

@@ -21,7 +21,7 @@
       </thead>
       <tbody>
        
-        <tr ng-repeat="pt in filterData = (practicesets | filter : {title: searchText}) | limitTo:10:10*(page-1)">
+        <tr ng-repeat="pt in filterData = (practicesets | filter : {title: searchText}) | limitTo:20:20*(page-1)">
           <td class="col-md-7">{{pt.title}}</td>
           <td class="col-md-2"><span class="text-danger">{{pt.grades[0].name}}</span></td>
           <td class="col-md-2">{{pt.userInfo.name}}</td>
@@ -32,7 +32,7 @@
     </table>
 
     <uib-pagination class="pagination-sm pagination" total-items="filterData.length" ng-model="page"
-      ng-change="pageChanged()" max-size="maxSize" boundary-link-numbers="true" rotate="false" items-per-page=10></uib-pagination>
+      max-size="maxSize" boundary-link-numbers="true" rotate="false" items-per-page=20></uib-pagination>
 
 </div>
 <div class="col-md-1"></div>
