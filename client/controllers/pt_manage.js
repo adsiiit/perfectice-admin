@@ -1,12 +1,18 @@
 var myApp = angular.module('myApp');
 
-myApp.controller('PTController', ['$scope', '$http', '$location', '$routeParams','auth',
-	function($scope, $http, $location, $routeParams,auth){
+myApp.controller('PTController', ['$scope', '$http', '$location', '$routeParams','auth','orderByFilter',
+	function($scope, $http, $location, $routeParams,auth,orderBy){
 	console.log('Practice Test Management controller...');
 
 		$scope.getPTs = function(){
 			$http.get('/api/query43',{ headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(response){
-				$scope.practicesets = response;
+
+				$scope.practicesets = orderBy(response, 'title');
+				$scope.maxSize = 5;
+                $scope.TotalItems = response.length;
+                $scope.page= 1;
+
+                $scope.displayItems = $scope.practicesets.slice(0, 10);
 				
 			});
 		}
@@ -49,6 +55,13 @@ myApp.controller('PTController', ['$scope', '$http', '$location', '$routeParams'
 			
 		}
 
+
+	
+		$scope.pageChanged = function() {
+		  var startPos = ($scope.page - 1) * 10;
+		  //$scope.displayItems = $scope.totalItems.slice(startPos, startPos + 3);
+		  console.log($scope.page);
+		};
 
 		$scope.isLoggedIn = auth.isLoggedIn;
 

@@ -284,7 +284,7 @@ app.get('/joinGame/:user/:invitationCode', function(req,res){
 					function(err, result){
 					if(err)
 						res.send(err);
-					res.json({"quizId": result._id, "userId": result.user, "userName": result.name, "gradeId": result.grade, "invitationCode": result.invitationCode, "invitees": result.invitees});
+					res.json({"quizId": result._id, "userId": result.user, "name": result.name, "gradeId": result.grade, "invitationCode": result.invitationCode, "invitees": result.invitees});
 				});
 				
 			});
