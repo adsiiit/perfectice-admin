@@ -194,7 +194,15 @@ app.get('/getPlayingGame/:userId', function(req,res){
 	  	if(err)
 			res.send(err);
 		if(que)
-			res.json(que);
+		{
+			QNewGame.findOne({_id: que.quizId},{name:1,grade:1, invitationCode:1}, 
+				function(err, que2){
+					if(err)
+						res.send(err);
+					else
+						res.json(que2);
+				});
+		}
 		else
 		{
 			QInvitation.findOne({invitee: req.params.userId, status:1}, {_id: 0,quizId:1}, {sort:{'createdAt': -1}},
@@ -202,13 +210,22 @@ app.get('/getPlayingGame/:userId', function(req,res){
 					if(err)
 						res.send(err);
 					else
-						res.json(que1);
+					{
+						QNewGame.findOne({_id: que1.quizId}, {name:1,grade:1, invitationCode:1},
+						function(err, que2){
+							if(err)
+								res.send(err);
+							else
+								res.json(que2);
+						});
+					}
 				});
 			
 		}
 		
 	});
 });
+
 
 
 app.get('/getPlayersScores/:quizId', function(req,res){
@@ -255,7 +272,7 @@ app.post('/newGame',function(req,res){
 			}
 			QInvitation.insertMany(invitations, function(error, docs) {
 				//console.log(docs);
-				var response = {"quizId": newgame._id, "userId": newgame.user, "userName": newgame.name, "gradeId": newgame.grade, "invitationCode": newgame.invitationCode, "invitees": newgame.invitees};
+				var response = {"quizId": newgame._id, "userId": newgame.user, "gameName": newgame.name, "gradeId": newgame.grade, "invitationCode": newgame.invitationCode, "invitees": newgame.invitees};
 				res.json(response);
 			});
 		}
@@ -287,7 +304,7 @@ app.get('/joinGame/:user/:invitationCode', function(req,res){
 					function(err, result){
 					if(err)
 						res.send(err);
-					res.json({"quizId": result._id, "userId": result.user, "name": result.name, "gradeId": result.grade, "invitationCode": result.invitationCode, "invitees": result.invitees});
+					res.json({"quizId": result._id, "userId": result.user, "gameName": result.name, "gradeId": result.grade, "invitationCode": result.invitationCode, "invitees": result.invitees});
 				});
 				
 			});
