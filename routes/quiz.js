@@ -240,22 +240,25 @@ app.post('/newGame',function(req,res){
 		if(err){
 			res.json({"code": 500, "error": "Some error occured."});
 		}
-		var invitees = newgame.invitees;
-		var invitations = [];
-		for (var i = 0; i < invitees.length; i++)
+		else
 		{
-			var doc = {"user": newgame.user, "invitationCode": newgame.invitationCode,
-				"quizId": newgame._id, "invitee": invitees[i].user};
-			//doc.invitee = invitees[i].user;
+			var invitees = newgame.invitees;
+			var invitations = [];
+			for (var i = 0; i < invitees.length; i++)
+			{
+				var doc = {"user": newgame.user, "invitationCode": newgame.invitationCode,
+					"quizId": newgame._id, "invitee": invitees[i].user};
+				//doc.invitee = invitees[i].user;
 
-		    invitations.push(doc);
-		    console.log(invitations);
+			    invitations.push(doc);
+			    console.log(invitations);
+			}
+			QInvitation.insertMany(invitations, function(error, docs) {
+				//console.log(docs);
+				var response = {"quizId": newgame._id, "userId": newgame.user, "userName": newgame.name, "gradeId": newgame.grade, "invitationCode": newgame.invitationCode, "invitees": newgame.invitees};
+				res.json(response);
+			});
 		}
-		QInvitation.insertMany(invitations, function(error, docs) {
-			//console.log(docs);
-			var response = {"quizId": newgame._id, "userId": newgame.user, "userName": newgame.name, "gradeId": newgame.grade, "invitationCode": newgame.invitationCode, "invitees": newgame.invitees};
-			res.json(response);
-		});
 	});
 });
 
