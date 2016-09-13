@@ -51,7 +51,8 @@ app.post('/quizattempt',function(req,res){
 							if(err)
 								res.send(err);
 							b = que1;
-							quizattempt.plusMark = b.plusMark;
+							/*quizattempt.plusMark = b.plusMark;*/
+							quizattempt.plusMark = 1;
 							quizattempt.minusMark = 0;
 							quizattempt.score = 1;
 							quizattempt.missed = 0;
@@ -75,7 +76,8 @@ app.post('/quizattempt',function(req,res){
 								res.send(err);
 							b = que1;
 							quizattempt.plusMark = 0;
-							quizattempt.minusMark = b.minusMark;
+							/*quizattempt.minusMark = b.minusMark;*/
+							quizattempt.minusMark = -1;
 							quizattempt.score = 0;
 							quizattempt.missed = 0;
 
@@ -359,7 +361,7 @@ app.get('/getUsers', function(req,res){
 //Pass userId and it will return all the friends of that user(fName, fPhoneNumber, friendId) that we can use for searching friends.
 app.get('/searchFriends/:user', function(req,res){
 	var user = req.params.user;
-	db.qfriendlists.find({user: mongojs.ObjectId(user)}, {fName:1, fPhoneNumber:1, friendId:1},
+	db.qfriendlists.find({user: mongojs.ObjectId(user), status:1}, {fName:1, fPhoneNumber:1, friendId:1},
 		function(err, que){
 		if(err)
 			res.send(err);
@@ -455,7 +457,7 @@ app.get('/acceptInvitationRequest/:user/:friend', function(req,res){
 });
 
 
-//Pending requests of some user
+//Pending requests OF some user
 app.get('/pendingRequests/:user', function(req,res){
 	var userId = req.params.user;
 	QFriendList.find({user: userId, status:0},
@@ -466,7 +468,18 @@ app.get('/pendingRequests/:user', function(req,res){
 	});
 });
 
-//Rejected requests of some user
+//Pending requests TO some user
+app.get('/pendingRequestsTo/:user', function(req,res){
+	var userId = req.params.user;
+	QFriendList.find({friendId: userId, status:0},
+		function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});
+});
+
+//Rejected requests OF some user
 app.get('/rejectedRequests/:user', function(req,res){
 	var userId = req.params.user;
 	QFriendList.find({user: userId, status:2},
