@@ -359,11 +359,25 @@ app.post('/addFriend',function(req,res){
 		}
 		else
 		{
-			QFriendList.addFriend(instance, function(err, friend){
-				if(err){
-					res.json({"code": 500, "error": "Some error occured."});
+
+			QFriendList.findOne({user: friend.friendId, friendId: friend.user},
+				function(err, que1){
+				if(err)
+					res.send(err);
+				if(que1)
+				{
+					res.json({"error": "Your friend has already sent you the request."});
 				}
-				res.json(friend);
+				else
+				{
+					QFriendList.addFriend(instance, function(err, friend){
+						if(err){
+							res.json({"code": 500, "error": "Some error occured."});
+						}
+						res.json(friend);
+					});
+				}
+
 			});
 		}
 	});
