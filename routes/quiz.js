@@ -349,11 +349,23 @@ app.post('/addFriend',function(req,res){
 	var friend = req.body;
 	var instance = {"user": friend.user, "fName": friend.fName, "fPhoneNumber": friend.fPhoneNumber,
 						"friendId": friend.friendId}
-	QFriendList.addFriend(instance, function(err, friend){
-		if(err){
-			res.json({"code": 500, "error": "Some error occured."});
+	QFriendList.findOne({user: friend.user, friendId: friend.friendId},
+		function(err, que){
+		if(err)
+			res.send(err);
+		if(que)
+		{
+			res.json({"error": "Request has been already sent."});
 		}
-		res.json(friend);
+		else
+		{
+			QFriendList.addFriend(instance, function(err, friend){
+				if(err){
+					res.json({"code": 500, "error": "Some error occured."});
+				}
+				res.json(friend);
+			});
+		}
 	});
 });
 
@@ -389,12 +401,20 @@ app.delete('/removeFriend/:user/:friend', function(req,res){
 		function(err, que1){
 		if(err)
 			res.send(err);
-		db.qfriendlists.remove({user : mongojs.ObjectId(friendId), friendId: mongojs.ObjectId(userId)},
-			function(err, que2){
-			if(err)
-				res.send(err);
-			res.json(que2);
-		});
+		if(que1)
+		{
+			db.qfriendlists.remove({user : mongojs.ObjectId(friendId), friendId: mongojs.ObjectId(userId)},
+				function(err, que2){
+				if(err)
+					res.send(err);
+				res.json(que2);
+			});
+		}
+		else
+		{
+			res.json({"error": "pass valid userId and friendId."});
+		}
+		
 	});
 });
 
@@ -408,12 +428,19 @@ app.get('/rejectInvitationRequest/:user/:friend', function(req,res){
 		function(err, que){
 		if(err)
 			res.send(err);
-		QFriendList.rejectInvitation(userId, friendId, que, {new: true}, function(err, updobj){
-			if(err){
-				res.send(err);
-			}
-			res.json(updobj);
-		});
+		else if(que)
+		{
+			QFriendList.rejectInvitation(userId, friendId, que, {new: true}, function(err, updobj){
+				if(err){
+					res.send(err);
+				}
+				res.json(updobj);
+			});
+		}
+		else
+		{
+			res.json({"error": "Wrong userId or friendId is passed."});
+		}
 	});
 });
 
@@ -428,41 +455,48 @@ app.get('/acceptInvitationRequest/:user/:friend', function(req,res){
 		function(err, que){
 		if(err)
 			res.send(err);
-		var update = {
+		if(que)
+		{
+			var update = {
 			user: que.user,
 			fName: que.fName,
 			fPhoneNumber: que.fPhoneNumber,
 			friendId: que.friendId,
 			status: 1
-		}
-		QFriendList.findOneAndUpdate({user: userId, friendId: friendId}, update, {new: true},
-			function(err, updobj){
-			if(err){
-				res.send(err);
 			}
-
-			User.findOne({_id: userId},{name:1, phoneNumber:1},
-				function(err, que2){
-				if(err)
+			QFriendList.findOneAndUpdate({user: userId, friendId: friendId}, update, {new: true},
+				function(err, updobj){
+				if(err){
 					res.send(err);
-				console.log(que2);
-				var instance = {
-					user: friendId,
-					fName: que2.name,
-					fPhoneNumber: que2.phoneNumber,
-					friendId: que2._id,
-					status: 1
 				}
-				QFriendList.addFriend(instance, function(err, friend){
-					if(err){
-						res.json({"code": 500, "error": "Some error occured."});
-					}
-					res.json(friend);
-				});
-				//res.json(updobj);
-			});
 
-		});
+				User.findOne({_id: userId},{name:1, phoneNumber:1},
+					function(err, que2){
+					if(err)
+						res.send(err);
+					console.log(que2);
+					var instance = {
+						user: friendId,
+						fName: que2.name,
+						fPhoneNumber: que2.phoneNumber,
+						friendId: que2._id,
+						status: 1
+					}
+					QFriendList.addFriend(instance, function(err, friend){
+						if(err){
+							res.json({"code": 500, "error": "Some error occured."});
+						}
+						res.json(friend);
+					});
+					//res.json(updobj);
+				});
+
+			});
+		}
+		else
+		{
+			res.json({"error": "Wrong userId or friendId is passed."});
+		}
 
 	});
 });

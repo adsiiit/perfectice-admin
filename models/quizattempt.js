@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 //Quiz Attempt Schema
+//score is 0 when answer is incorrect and 1 when it correct.
 var quizattemptSchema = mongoose.Schema({
 	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	questionId: { type: mongoose.Schema.Types.ObjectId },
@@ -9,7 +10,6 @@ var quizattemptSchema = mongoose.Schema({
 	timeTaken: Number,
 	missed: Number,
 	grade: { type: mongoose.Schema.Types.ObjectId, ref: 'Grade'},
-	//correct: Boolean,
 	plusMark: Number,
 	minusMark: Number,
 	score: Number},
