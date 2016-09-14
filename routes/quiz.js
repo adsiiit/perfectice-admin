@@ -189,7 +189,7 @@ app.get('/questionOptions/:questionId', function(req,res){
 
 
 
-//Pass the quizId and it will return scores of all the invited friends.
+//Pass the userId and quizId, name, grade and invitationCode of latest game.
 app.get('/getPlayingGame/:userId', function(req,res){
 	QInvitation.findOne({user: req.params.userId}, {_id: 0,quizId:1}, {sort:{'createdAt': -1}},
 		function(err, que) {
@@ -211,7 +211,7 @@ app.get('/getPlayingGame/:userId', function(req,res){
 				function(err,que1){
 					if(err)
 						res.send(err);
-					else
+					else if(que1)
 					{
 						QNewGame.findOne({_id: que1.quizId}, {name:1,grade:1, invitationCode:1},
 						function(err, que2){
@@ -221,6 +221,10 @@ app.get('/getPlayingGame/:userId', function(req,res){
 								res.json(que2);
 						});
 					}
+					else
+					{
+						res.json({"error": "User neither played any game nor invited to play."});
+					}
 				});
 			
 		}
@@ -229,7 +233,7 @@ app.get('/getPlayingGame/:userId', function(req,res){
 });
 
 
-
+//Pass the quizId and it will return scores of all the invited friends.
 app.get('/getPlayersScores/:quizId', function(req,res){
 	db.quizattempts.aggregate([
 		{$match: {"quizId" : mongojs.ObjectId(req.params.quizId)}},
