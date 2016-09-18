@@ -250,7 +250,7 @@ app.get('/getPlayersScores/:quizId', function(req,res){
 		{$project: {plusMark:1, minusMark:1, timeTaken:1, score:1, missed: 1,
 		  "user.id": "$user", "user.name": "$userDetails.name", "user.phoneNumber": "$userDetails.phoneNumber"}},
 		{$group: {_id: "$user", plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
-		{$project: {playedId: "$_id.id", playerName: "$_id.name", playerContact: "$_id.phoneNumber",_id:0,plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+		{$project: {playerId: "$_id.id", playerName: "$_id.name", playerContact: "$_id.phoneNumber",_id:0,plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1, score: {$add:["$plusMarks","$minusMarks"]}}}
 		], function(err, que){
 			if(err)
 				res.send(err);
@@ -398,14 +398,13 @@ app.get('/getUsers', function(req,res){
 //Pass userId and it will return all the friends of that user(fName, fPhoneNumber, friendId) that we can use for searching friends.
 app.get('/searchFriends/:user', function(req,res){
 	var user = req.params.user;
-	db.qfriendlists.find({user: mongojs.ObjectId(user), status:1}, {fName:1, fPhoneNumber:1, friendId:1},
+	db.qfriendlists.find({user: mongojs.ObjectId(user), status: { $in: [0, 1] }}, {fName:1, fPhoneNumber:1, friendId:1},
 		function(err, que){
 		if(err)
 			res.send(err);
 		res.json(que);
 	});
 });
-
 
 //Pass userId and friendId and it will remove their documents in qfriendlists collection.
 app.delete('/removeFriend/:user/:friend', function(req,res){
@@ -588,15 +587,18 @@ app.get('/summary/:user/:quizId', function(req,res){
 // When only userId is passed
 app.get('/getPerformance/:user', function(req,res){
 	db.quizattempts.aggregate([
-	{$match: {"user" : mongojs.ObjectId(req.params.user)}},
-	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
-	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
-	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+	{$lookup:{from: "questions", localField: "questionId", foreignField: "_id", as:"questionDetails"}},
+	{$unwind: "$questionDetails"},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0, subject: "$questionDetails.subject._id"}},
+	{$lookup:{from: "subjects", localField: "subject", foreignField: "_id", as:"subjectDetails"}},
+	{$unwind: "$subjectDetails"},
+	{$group: {_id: {subjectId: "$subjectDetails._id", subjectName: "$subjectDetails.name"}, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {subjectId: "$_id.subjectId", subjectName: "$_id.subjectName", plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1, _id:0}}
 	],
 		function(err, que){
 		if(err)
 			res.send(err);
-		res.json(que[0]);
+		res.json(que);
 	});
 });
 
@@ -605,14 +607,18 @@ app.get('/getPerformance/:user', function(req,res){
 app.get('/getPerformance/:user/:grade', function(req,res){
 	db.quizattempts.aggregate([
 	{$match: {"user" : mongojs.ObjectId(req.params.user), "grade" : mongojs.ObjectId(req.params.grade)}},
-	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0}},
-	{$group: {_id: null, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
-	{$project: {_id: 0, plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1}}
+	{$lookup:{from: "questions", localField: "questionId", foreignField: "_id", as:"questionDetails"}},
+	{$unwind: "$questionDetails"},
+	{$project: {timeTaken:1, plusMark:1, minusMark:1, score:1, missed:1, _id: 0, subject: "$questionDetails.subject._id"}},
+	{$lookup:{from: "subjects", localField: "subject", foreignField: "_id", as:"subjectDetails"}},
+	{$unwind: "$subjectDetails"},
+	{$group: {_id: {subjectId: "$subjectDetails._id", subjectName: "$subjectDetails.name"}, plusMarks: {$sum : "$plusMark"},minusMarks: {$sum : "$minusMark"},totalCorrect: {$sum : "$score"}, totalQuestions: {$sum: 1}, totalMissed: {$sum: "$missed"},totalTime: {$sum: "$timeTaken"}}},
+	{$project: {subjectId: "$_id.subjectId", subjectName: "$_id.subjectName", plusMarks:1, minusMarks:1, totalCorrect:1, totalQuestions:1, totalMissed: 1, totalTime:1, _id:0}}
 	],
 		function(err, que){
 		if(err)
 			res.send(err);
-		res.json(que[0]);
+		res.json(que);
 	});
 });
 
