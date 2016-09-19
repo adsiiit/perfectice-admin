@@ -66,9 +66,6 @@ var mpniit_api = mpniit.app;
 var mpniit_apiR = mpniit.apiRoutes;
 // ROUTES FOR INTEGRATION WITH NIIT  --END
 
-//ROUTES FOR ATTEMPT REDESIGN  -- START
-var newattempt = require('./routes/newAttempt');
-// ROUTES FOR ATTEMPT REDESIGN --END
 
 app.use('/api', routes, queries, mpniit_api, mpniit_apiR);
 app.use('/api2', integration,quiz);
