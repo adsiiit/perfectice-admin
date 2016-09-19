@@ -22,11 +22,6 @@ Grade = require('./models/grade');
 Topic = require('./models/topic');
 User = require('./models/user');
 Admin = require('./models/admin')
-Quizattempt = require('./models/quizattempt')
-QContactList = require('./models/qContactList')
-QFriendList = require('./models/qFriendList')
-QInvitation = require('./models/qInvitation')
-QNewGame = require('./models/qNewGame')
 NewAttempt = require('./models/newattempt')
 
 
@@ -55,10 +50,6 @@ var queries = require('./routes/queries');
 var integration = require('./routes/integration');
 // ROUTES FOR INTEGRATION --END
 
-//ROUTES FOR QUIZ  -- START
-var quiz = require('./routes/quiz');
-// ROUTES FOR QUIZ --END
-
 
 //ROUTES FOR INTEGRATION WITH NIIT  -- START
 var mpniit = require('./routes/perfecticeNiit');
@@ -68,7 +59,7 @@ var mpniit_apiR = mpniit.apiRoutes;
 
 
 app.use('/api', routes, queries, mpniit_api, mpniit_apiR);
-app.use('/api2', integration,quiz);
+app.use('/api2', integration);
 /*app.use('/api3', newattempt);*/
 
 /*app.use('*',function(req,res,next){
