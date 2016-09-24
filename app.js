@@ -21,8 +21,8 @@ Subject = require('./models/subject');
 Grade = require('./models/grade');
 Topic = require('./models/topic');
 User = require('./models/user');
-Admin = require('./models/admin')
-NewAttempt = require('./models/newattempt')
+Admin = require('./models/admin');
+NewAttempt = require('./models/newattempt');
 
 
 require('./config/passport');

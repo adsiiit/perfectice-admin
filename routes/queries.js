@@ -882,3 +882,64 @@ app.get('/query44/:id', function(req,res){
 		res.json(que);
 	});	
 });
+
+
+
+
+
+//Pass the teacherId and it will all the students in his all classrooms 
+//along with their details of last attempt, registered at, last login etc.
+app.get('/query45/:teacherId', function(req,res){
+	db.classrooms.aggregate([
+		{$match: {"user" : mongojs.ObjectId(req.params.teacherId)}},
+		{$unwind: {path: "$students"}},
+		{$project: {name:1,createdAt: 1,students:1}},
+		{$lookup:{from: "students", localField: "students", foreignField: "_id", as:"studentDetail"}},
+		{$unwind: {path: "$studentDetail"}},
+		{$project: {name:1,createdAt: 1,studentEmail:"$studentDetail.email"}},
+		{$lookup:{from: "users", localField: "studentEmail", foreignField: "email", as:"userDetail"}},
+		{$unwind: {path: "$userDetail", preserveNullAndEmptyArrays: true}},
+		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: "$userDetail.createdAt", studentRegisteredId: "$userDetail._id", studentName: "$userDetail.name"}},
+		{$lookup:{from: "attempts", localField: "studentRegisteredId", foreignField: "user", as:"attemptDetail"}},
+		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: 1, studentRegisteredId: 1,studentName:1, studentLastAttempt: {$max: "$attemptDetail.updatedAt"}}},
+		{$lookup:{from: "userlogs", localField: "studentRegisteredId", foreignField: "user", as:"userLogDetail"}},
+		{$project: {name:1,studentAddedAt: "$createdAt",studentEmail:1, studentRegisteredAt: 1, studentName:1, studentLastAttempt: 1, studentLastLogin: {$max: "$userLogDetail.updatedAt"}}},
+		{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
+						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}},
+		]
+		, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+
+//Pass the classRoomId and it will return all the students in this classroom 
+//along with their details of last attempt, registered at, last login etc.:
+app.get('/query46/:classId', function(req,res){
+	db.classrooms.aggregate([
+		{$match: {"_id" : mongojs.ObjectId(req.params.classId)}},
+		{$unwind: {path: "$students"}},
+		{$project: {name:1,createdAt: 1,students:1}},
+		{$lookup:{from: "students", localField: "students", foreignField: "_id", as:"studentDetail"}},
+		{$unwind: {path: "$studentDetail"}},
+		{$project: {name:1,createdAt: 1,studentEmail:"$studentDetail.email"}},
+		{$lookup:{from: "users", localField: "studentEmail", foreignField: "email", as:"userDetail"}},
+		{$unwind: {path: "$userDetail", preserveNullAndEmptyArrays: true}},
+		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: "$userDetail.createdAt", studentRegisteredId: "$userDetail._id", studentName: "$userDetail.name"}},
+		{$lookup:{from: "attempts", localField: "studentRegisteredId", foreignField: "user", as:"attemptDetail"}},
+		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: 1, studentRegisteredId: 1,studentName:1, studentLastAttempt: {$max: "$attemptDetail.updatedAt"}}},
+		{$lookup:{from: "userlogs", localField: "studentRegisteredId", foreignField: "user", as:"userLogDetail"}},
+		{$project: {name:1,studentAddedAt: "$createdAt",studentEmail:1, studentRegisteredAt: 1, studentName:1, studentLastAttempt: 1, studentLastLogin: {$max: "$userLogDetail.updatedAt"}}},
+		{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
+						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}}
+		]
+		, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});
+
+
