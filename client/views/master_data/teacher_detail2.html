@@ -1,0 +1,83 @@
+<div class="row" ng-init="getClassrooms()">
+<br><br>
+<div class="col-md-1" ng-init="getTeacher()"></div>
+<div class="col-md-10">
+
+<h3>{{teacherdetail.teacher_name}}</h3>
+
+<div class="pull-right">
+    <label>Select Classroom:</label>
+	<select class="form-control" ng-model="class" ng-change="action()">
+		<option value="all">All Classrooms</option>
+		<option ng-repeat="classroom in classrooms| orderBy:'name' " value="{{ classroom._id }}">{{ classroom.name }}</option>
+	</select>
+
+</div>
+
+
+<br><br><br><br>
+
+<table class="table">
+	<thead>
+	  <tr>
+	    <th class="col-md-2">Email</th>
+	    <th class="col-md-2">Name</th>
+	    <th class="col-md-2">Added Date</th>
+	    <th class="col-md-2">Regiter Date</th>
+	    <th class="col-md-2">Last Attempt</th>
+	    <th class="col-md-2">Last Login</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr ng-repeat="i in [0,1,2,3,4]">
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentEmail}}</td>
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentName}}</td>
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentAddedAt | date}}</td>
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentRegisteredAt | date}}</td>
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentLastAttempt | date}}</td>
+	    <td class="col-md-2">{{classStudents[(currentPage4-1)*5 + i].studentLastLogin | date}}</td>
+	  </tr>
+	</tbody>
+</table>
+
+<center>
+   <uib-pagination total-items="TotalItems4" ng-model="currentPage4" items-per-page=5 max-size="maxSize4" class="pagination-sm" boundary-link-numbers="true" rotate="false" num-pages="numPages"></uib-pagination>
+</center>
+
+<!-- {{classStudents}} -->
+
+<button class="btn btn-info pull-right" type="button" ng-csv="studentsCsv" csv-header="['Email', 'Name', 'Added Date', 'Register Date', 'Last Attempt', 'Last Login']" filename="classroomSummary.csv">Export</button>
+
+</div>
+<div class="col-md-1"></div>
+
+</div>
+
+
+<br><br>
+
+<style>
+
+table tbody tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style> 
+
+
+
+			     
+
+				
+
+
+
+
+
+
+
+
+
+

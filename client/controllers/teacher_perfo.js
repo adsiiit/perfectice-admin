@@ -102,6 +102,20 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
 		});
 	}
 
+    $scope.getID2 = function(){
+        var email = String($scope.emailid);
+        $http.get('/api/query0/'+email).success(function(response){
+            if(response)
+            {
+                var tid = response._id;
+                window.location.href='#/teacher_perfo2/'+tid;
+            }
+            else
+                $scope.err = "*Email address is incorrect";
+            
+        });
+    }
+
 	
 
 	$scope.getTeacher = function(){
@@ -325,7 +339,107 @@ myApp.controller('TeacherPerfoController', ['$scope', '$http', 'orderByFilter','
 
 
 
+//Task of date : 24th september 2016
 
+    $scope.getClassrooms = function(){
+        var id = $routeParams.id;
+        $http.get('/api/query47/'+id).success(function(response){
+            $scope.classrooms=response;
+        });
+    }
+
+    $scope.action = function(){
+        if($scope.class == 'all')
+        {
+            var id = $routeParams.id;
+            $http.get('/api/query45/'+id).success(function(response){
+                $scope.classStudents=response;
+
+                $scope.maxSize4 = 5;
+                $scope.TotalItems4 = response.length;
+                $scope.currentPage4 = 1;
+
+                $scope.studentsCsv = [];
+                for(i=0;i<response.length;i++)
+                {
+
+                    var stu =
+                    {"email": response[i]["studentEmail"],
+                     "name": response[i]["studentName"]
+                    };
+
+                    if(response[i].studentAddedAt)
+                    {
+                        var d1 = new Date(response[i].studentAddedAt);
+                        stu["added"] = d1.toLocaleDateString();
+                    }
+                    if(response[i].studentRegisteredAt)
+                    {
+                        var d2 = new Date(response[i].studentRegisteredAt);
+                        stu["register"] = d2.toLocaleDateString();
+                    }
+                    if(response[i].studentLastAttempt)
+                    {
+                        var d3 = new Date(response[i].studentLastAttempt);
+                        stu["lastattempt"] = d3.toLocaleDateString();
+                    }
+                    if(response[i].studentLastLogin)
+                    {
+                        var d4 = new Date(response[i].studentLastLogin);
+                        stu["lastlogin"] = d4.toLocaleDateString();
+                    }
+
+                    $scope.studentsCsv.push(stu);
+                }
+            });
+            console.log("fadsfsa");
+        }
+        else
+        {
+            $http.get('/api/query46/'+ $scope.class).success(function(response){
+                $scope.classStudents=response;
+
+                $scope.maxSize4 = 5;
+                $scope.TotalItems4 = response.length;
+                $scope.currentPage4 = 1;
+
+                $scope.studentsCsv = [];
+                for(i=0;i<response.length;i++)
+                {
+
+                    var stu =
+                    {"email": response[i]["studentEmail"],
+                     "name": response[i]["studentName"]
+                    };
+
+                    if(response[i].studentAddedAt)
+                    {
+                        var d1 = new Date(response[i].studentAddedAt);
+                        stu["added"] = d1.toLocaleDateString();
+                    }
+                    if(response[i].studentRegisteredAt)
+                    {
+                        var d2 = new Date(response[i].studentRegisteredAt);
+                        stu["register"] = d2.toLocaleDateString();
+                    }
+                    if(response[i].studentLastAttempt)
+                    {
+                        var d3 = new Date(response[i].studentLastAttempt);
+                        stu["lastattempt"] = d3.toLocaleDateString();
+                    }
+                    if(response[i].studentLastLogin)
+                    {
+                        var d4 = new Date(response[i].studentLastLogin);
+                        stu["lastlogin"] = d4.toLocaleDateString();
+                    }
+
+                    $scope.studentsCsv.push(stu);
+                }
+            });
+            console.log($scope.class);
+        }    
+
+    }
 
 
 }]);

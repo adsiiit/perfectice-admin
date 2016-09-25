@@ -904,8 +904,8 @@ app.get('/query45/:teacherId', function(req,res){
 		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: 1, studentRegisteredId: 1,studentName:1, studentLastAttempt: {$max: "$attemptDetail.updatedAt"}}},
 		{$lookup:{from: "userlogs", localField: "studentRegisteredId", foreignField: "user", as:"userLogDetail"}},
 		{$project: {name:1,studentAddedAt: "$createdAt",studentEmail:1, studentRegisteredAt: 1, studentName:1, studentLastAttempt: 1, studentLastLogin: {$max: "$userLogDetail.updatedAt"}}},
-		{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
-						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}},
+		/*{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
+						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}},*/
 		]
 		, function(err, que){
 		if(err)
@@ -932,8 +932,8 @@ app.get('/query46/:classId', function(req,res){
 		{$project: {name:1,createdAt: 1,studentEmail:1, studentRegisteredAt: 1, studentRegisteredId: 1,studentName:1, studentLastAttempt: {$max: "$attemptDetail.updatedAt"}}},
 		{$lookup:{from: "userlogs", localField: "studentRegisteredId", foreignField: "user", as:"userLogDetail"}},
 		{$project: {name:1,studentAddedAt: "$createdAt",studentEmail:1, studentRegisteredAt: 1, studentName:1, studentLastAttempt: 1, studentLastLogin: {$max: "$userLogDetail.updatedAt"}}},
-		{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
-						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}}
+		/*{$project: {className:"$name","studentDetail.studentAddedAt": "$studentAddedAt","studentDetail.studentEmail": "$studentEmail", "studentDetail.studentRegisteredAt": "$studentRegisteredAt",
+						"studentDetail.studentName": "$studentName", "studentDetail.studentLastAttempt": "$studentLastAttempt", "studentDetail.studentLastLogin": "$studentLastLogin"}}*/
 		]
 		, function(err, que){
 		if(err)
@@ -943,3 +943,12 @@ app.get('/query46/:classId', function(req,res){
 });
 
 
+
+app.get('/query47/:teacherId', function(req,res){
+	db.classrooms.find({"user" : mongojs.ObjectId(req.params.teacherId)}, {name:1}
+		, function(err, que){
+		if(err)
+			res.send(err);
+		res.json(que);
+	});	
+});

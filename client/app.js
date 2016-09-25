@@ -122,6 +122,10 @@ myApp.config(function($routeProvider){
 		controller: 'TeacherPerfoController',
 		templateUrl: 'views/master_data/teacher_detail.html'
 	})
+	.when('/teacher_perfo2/:id', {
+		controller: 'TeacherPerfoController',
+		templateUrl: 'views/master_data/teacher_detail2.html'
+	})
 	.when('/user_manage', {
 		controller: 'UserManageController',
 		templateUrl: 'views/master_data/user_manage.html'
